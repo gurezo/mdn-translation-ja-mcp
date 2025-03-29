@@ -1,0 +1,1 @@
+# mdn-translation-ja-mcp

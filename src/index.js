@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const axios = require('axios');
+const { translate } = require('./utils/translator');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,13 +24,13 @@ app.post('/api/translate', async (req, res) => {
       return res.status(400).json({ error: 'Text is required' });
     }
 
-    // TODO: Implement actual translation logic here
-    // This is a placeholder response
+    const translatedText = await translate(text, sourceLang, targetLang);
+
     res.json({
-      translatedText: text,
+      original: text,
+      translated: translatedText,
       sourceLang,
       targetLang,
-      status: 'success',
     });
   } catch (error) {
     console.error('Translation error:', error);
@@ -40,5 +40,5 @@ app.post('/api/translate', async (req, res) => {
 
 // Start server
 app.listen(port, () => {
-  console.log(`MCP server running on port ${port}`);
+  console.log(`MCP server is running on port ${port}`);
 });

@@ -1,0 +1,10 @@
+{
+  "mdn-wdb-doc-ja-mcp": {
+    "url": "http://localhost:3000",
+    "endpoints": {
+      "events": "/api/events",
+      "rules": "/api/rules",
+      "validate": "/api/validate"
+    }
+  }
+}

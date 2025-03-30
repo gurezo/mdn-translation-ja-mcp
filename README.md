@@ -1,11 +1,6 @@
 # MDN Web Docs 日本語翻訳 MCP サーバー
 
-このプロジェクトは、MDN Web Docs の日本語翻訳を支援するための MCP (Machine Translation Control Protocol) サーバーです。
-
-## 機能
-
-- テキストの翻訳エンドポイント (`/api/translate`)
-- ヘルスチェックエンドポイント (`/health`)
+このプロジェクトは、MDN Web Docs の日本語翻訳のための MCP サーバーを提供します。
 
 ## セットアップ
 
@@ -15,38 +10,33 @@
 npm install
 ```
 
-2. 環境変数の設定:
-
-```bash
-cp .env.example .env
-# .env ファイルを編集して必要な設定を行う
-```
-
-3. 開発サーバーの起動:
-
-```bash
-npm run dev
-```
-
-4. 本番サーバーの起動:
+2. サーバーの起動:
 
 ```bash
 npm start
 ```
 
-## API エンドポイント
+開発モードで起動する場合:
 
-### POST /api/translate
+```bash
+npm run dev
+```
 
-テキストの翻訳を行います。
+## エンドポイント
+
+### GET /api/rules
+
+翻訳に関するルールとガイドラインのリンクを取得します。
+
+### POST /api/validate
+
+翻訳テキストの検証を行います。
 
 リクエストボディ:
 
 ```json
 {
-  "text": "翻訳するテキスト",
-  "sourceLang": "en",
-  "targetLang": "ja"
+  "text": "検証するテキスト"
 }
 ```
 
@@ -54,13 +44,26 @@ npm start
 
 ```json
 {
-  "translatedText": "翻訳されたテキスト",
-  "sourceLang": "en",
-  "targetLang": "ja",
-  "status": "success"
+  "isValid": true,
+  "issues": []
 }
 ```
 
-## ライセンス
+### GET /api/events
 
-MIT
+Server-Sent Events (SSE) エンドポイント。リアルタイムな更新を受け取ります。
+
+## Cursor 設定
+
+Cursor の設定に以下の設定を追加してください：
+
+```json
+"mdn-wdb-doc-ja-mcp": {
+  "url": "http://localhost:3000",
+  "endpoints": {
+    "events": "/api/events",
+    "rules": "/api/rules",
+    "validate": "/api/validate"
+  }
+}
+```

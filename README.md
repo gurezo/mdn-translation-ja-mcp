@@ -22,6 +22,13 @@
 1. **環境変数（任意）** — `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**指定すると、その絶対パスをそのまま使います。片方だけの指定はできません（誤設定防止のためエラーになります）。
 2. **兄弟ディレクトリ** — どちらの環境変数も未設定のとき、本リポジトリのルート（ビルド後は `dist/` の親）の**ひとつ上のディレクトリ**を親とみなし、そこにある `content` と `translated-content` を参照します。`cwd` には依存しません。
 
+### 用語集 JSON（ツール `mdn_glossary_replacement_candidates`）
+
+`{{glossary("term")}}` の第2引数（表示名）の置換候補は、[src/data/glossary-terms.json](src/data/glossary-terms.json) をビルド時に `dist/data/` にコピーしたものを既定で参照します。
+
+- **上書き** — 環境変数 `MDN_GLOSSARY_JSON_PATH` に別ファイルの絶対パスを指定するか、MCP ツール引数 `glossary_path` でパスを渡すと、その JSON を使います。
+- **未登録のスラグ** — 用語集にキーが無いマクロは `status: "missing"` として返します（推測で第2引数は埋めません）。
+
 ## 前提条件
 
 - [Node.js](https://nodejs.org/)（LTS 推奨）
@@ -62,6 +69,6 @@ npm run build
 ## 開発メモ
 
 - 品質チェック: `npm run lint` / `npm run typecheck` / `npm run format:check` / `npm test`
-- MCP ツール: `translation_rules`（ガイドラインリンク）、`mdn_workspace_paths`（上記の content / translated-content パス解決）
+- MCP ツール: `translation_rules`（ガイドラインリンク）、`mdn_workspace_paths`（上記の content / translated-content パス解決）、`mdn_glossary_replacement_candidates`（用語集 JSON に基づく `{{glossary}}` 第2引数の候補一覧）
 - 旧 HTTP API（`/api/rules`、`/api/validate`、`/api/events`）は削除済みです。同等の機能は今後、MCP の tools / resources として追加する予定です。
 - 開発コンセプト（将来のコマンド案など）は [Wiki](https://github.com/gurezo/mdn-translation-ja-mcp/wiki) を参照してください。

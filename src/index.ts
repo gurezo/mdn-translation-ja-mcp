@@ -6,6 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
+import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
 import { TRANSLATION_RULES } from "./translation-rules.js";
 import { resolveMdnWorkspacePaths } from "./workspace.js";
 
@@ -42,6 +43,29 @@ server.registerTool(
   },
   async () => {
     const result = await resolveMdnWorkspacePaths();
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  },
+);
+
+server.registerTool(
+  "mdn_resolve_page_paths",
+  {
+    title: "Resolve MDN page paths from URL",
+    description:
+      "MDN のページ URL から locale・正規化 slug、ローカルの英語原文（files/en-us/.../index.md）と日本語（files/ja/.../index.md）の絶対パス、および日本語翻訳ファイルの有無を返す。",
+    inputSchema: z.object({
+      url: z.url("有効な URL を指定してください。"),
+    }),
+  },
+  async ({ url }) => {
+    const result = await resolveMdnPageFromUrl(url.toString());
     return {
       content: [
         {

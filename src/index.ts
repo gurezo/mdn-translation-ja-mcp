@@ -13,6 +13,7 @@ import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
 import { runMdnTransCommitGet } from "./mdn-trans-commit-get.js";
 import { runMdnTransSourceCommitSet } from "./mdn-trans-source-commit-set.js";
 import { runMdnTransStart } from "./mdn-trans-start.js";
+import { runReviewTranslation } from "./review-translation.js";
 import { loadTranslationRules } from "./translation-rules.js";
 import { resolveMdnWorkspacePaths } from "./workspace.js";
 
@@ -257,6 +258,38 @@ server.registerTool(
     const result = await runMdnGlossaryApply({
       url: url.toString(),
       dryRun,
+      glossaryPath,
+    });
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  },
+);
+
+server.registerTool(
+  "review_translation",
+  {
+    title: "Rule-based translation review (v1)",
+    description:
+      "日本語 index.md をルールベースでレビューし、front-matter・未翻訳の疑い・{{glossary}}・文体（簡易）に関する findings（JSON）を返す。rules/translation-rules.json と用語集 JSON（glossary_path または MDN_GLOSSARY_JSON_PATH）を参照。",
+    inputSchema: z.object({
+      url: z.url("有効な URL を指定してください。"),
+      glossary_path: z
+        .string()
+        .optional()
+        .describe(
+          "用語集 JSON の絶対パス（省略時は MDN_GLOSSARY_JSON_PATH または同梱の data/glossary-terms.json）。",
+        ),
+    }),
+  },
+  async ({ url, glossary_path: glossaryPath }) => {
+    const result = await runReviewTranslation({
+      url: url.toString(),
       glossaryPath,
     });
     return {

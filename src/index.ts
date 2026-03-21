@@ -6,6 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
+import { runMdnGlossaryReplacementCandidates } from "./glossary-replacement-candidates.js";
 import { runMdnGlossaryMacroScan } from "./glossary-macro-scan.js";
 import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
 import { runMdnTransCommitGet } from "./mdn-trans-commit-get.js";
@@ -184,6 +185,38 @@ server.registerTool(
   async ({ url }) => {
     const result = await runMdnGlossaryMacroScan({
       url: url.toString(),
+    });
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  },
+);
+
+server.registerTool(
+  "mdn_glossary_replacement_candidates",
+  {
+    title: "Suggest {{glossary}} second-arg replacements from glossary JSON",
+    description:
+      "日本語 index.md 内の {{glossary(\"…\")}} を走査し、同梱の用語集 JSON（または glossary_path / 環境変数 MDN_GLOSSARY_JSON_PATH）に基づき第2引数の置換候補を一覧で返す。未登録のスラグは status: missing。既に第2引数があるマクロは already_set。",
+    inputSchema: z.object({
+      url: z.url("有効な URL を指定してください。"),
+      glossary_path: z
+        .string()
+        .optional()
+        .describe(
+          "用語集 JSON の絶対パス（省略時は MDN_GLOSSARY_JSON_PATH または同梱の data/glossary-terms.json）。",
+        ),
+    }),
+  },
+  async ({ url, glossary_path: glossaryPath }) => {
+    const result = await runMdnGlossaryReplacementCandidates({
+      url: url.toString(),
+      glossaryPath,
     });
     return {
       content: [

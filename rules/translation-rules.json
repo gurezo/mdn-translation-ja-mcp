@@ -1,0 +1,21 @@
+{
+  "$schema": "./translation-rules.schema.json",
+  "version": "1",
+  "editorial": {
+    "url": "https://github.com/mozilla-japan/translation/wiki/Editorial-Guideline",
+    "title": "表記ガイドライン"
+  },
+  "l10n": {
+    "url": "https://github.com/mozilla-japan/translation/wiki/L10N-Guideline",
+    "title": "L10N ガイドライン"
+  },
+  "glossary": {
+    "url": "https://github.com/mozilla-japan/translation/wiki/Mozilla-L10N-Glossary",
+    "title": "Mozilla 用語集"
+  },
+  "style": {
+    "url": "https://docs.google.com/spreadsheets/d/1y-hC-xMXawCgcYZwJDnvuSlAOTgMRLLyqXurpYkJbYE/edit#gid=0",
+    "title": "日本語の文体",
+    "description": "mozilla-japan 翻訳作業で参照する文体表（旧 spreadsheet キー相当）"
+  }
+}

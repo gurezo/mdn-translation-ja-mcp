@@ -13,7 +13,7 @@ import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
 import { runMdnTransCommitGet } from "./mdn-trans-commit-get.js";
 import { runMdnTransSourceCommitSet } from "./mdn-trans-source-commit-set.js";
 import { runMdnTransStart } from "./mdn-trans-start.js";
-import { TRANSLATION_RULES } from "./translation-rules.js";
+import { loadTranslationRules } from "./translation-rules.js";
 import { resolveMdnWorkspacePaths } from "./workspace.js";
 
 const server = new McpServer({
@@ -26,17 +26,20 @@ server.registerTool(
   {
     title: "Translation guideline links",
     description:
-      "日本語 MDN 翻訳向けの表記・L10N・用語集・スプレッドシートへのリンクを返す（旧 HTTP GET /api/rules 相当）。",
+      "日本語 MDN 翻訳向けの表記・L10N・用語集・文体（rules/translation-rules.json）を読み込み、検証済み JSON を返す。",
     inputSchema: z.object({}),
   },
-  async () => ({
-    content: [
-      {
-        type: "text",
-        text: JSON.stringify(TRANSLATION_RULES, null, 2),
-      },
-    ],
-  }),
+  async () => {
+    const result = loadTranslationRules();
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  },
 );
 
 server.registerTool(
@@ -178,7 +181,7 @@ server.registerTool(
   {
     title: "Scan {{glossary}} macros in Japanese index.md",
     description:
-      "MDN のページ URL に対応する日本語 index.md を読み、{{glossary(\"…\")}} / {{Glossary(\"…\")}} を行番号付きで列挙する。第2引数の有無も返す。日本語ファイルが無い場合はエラー。",
+      'MDN のページ URL に対応する日本語 index.md を読み、{{glossary("…")}} / {{Glossary("…")}} を行番号付きで列挙する。第2引数の有無も返す。日本語ファイルが無い場合はエラー。',
     inputSchema: z.object({
       url: z.url("有効な URL を指定してください。"),
     }),
@@ -203,7 +206,7 @@ server.registerTool(
   {
     title: "Suggest {{glossary}} second-arg replacements from glossary JSON",
     description:
-      "日本語 index.md 内の {{glossary(\"…\")}} を走査し、同梱の用語集 JSON（または glossary_path / 環境変数 MDN_GLOSSARY_JSON_PATH）に基づき第2引数の置換候補を一覧で返す。未登録のスラグは status: missing。既に第2引数があるマクロは already_set。",
+      '日本語 index.md 内の {{glossary("…")}} を走査し、同梱の用語集 JSON（または glossary_path / 環境変数 MDN_GLOSSARY_JSON_PATH）に基づき第2引数の置換候補を一覧で返す。未登録のスラグは status: missing。既に第2引数があるマクロは already_set。',
     inputSchema: z.object({
       url: z.url("有効な URL を指定してください。"),
       glossary_path: z
@@ -235,7 +238,7 @@ server.registerTool(
   {
     title: "Apply {{glossary}} second-arg from glossary JSON (safe)",
     description:
-      "日本語 index.md 内の {{glossary(\"…\")}} のうち第2引数が無く、用語集 JSON にスラグがあるものだけを第2引数付きに置換する。既に第2引数があるマクロ・用語集に無いスラグは変更しない。dry_run: true のときはファイルに書かず置換予定のみ返す。書き込み前に候補を再計算し一致しない場合は FILE_CHANGED で失敗する（Issue #11 / Wiki の mdn-trans-replace-glossary 相当）。",
+      '日本語 index.md 内の {{glossary("…")}} のうち第2引数が無く、用語集 JSON にスラグがあるものだけを第2引数付きに置換する。既に第2引数があるマクロ・用語集に無いスラグは変更しない。dry_run: true のときはファイルに書かず置換予定のみ返す。書き込み前に候補を再計算し一致しない場合は FILE_CHANGED で失敗する（Issue #11 / Wiki の mdn-trans-replace-glossary 相当）。',
     inputSchema: z.object({
       url: z.url("有効な URL を指定してください。"),
       dry_run: z

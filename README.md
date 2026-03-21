@@ -17,6 +17,11 @@
 └── mdn-translation-ja-mcp/  # 本リポジトリ
 ```
 
+### パスの解決順（MCP ツール `mdn_workspace_paths`）
+
+1. **環境変数（任意）** — `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**指定すると、その絶対パスをそのまま使います。片方だけの指定はできません（誤設定防止のためエラーになります）。
+2. **兄弟ディレクトリ** — どちらの環境変数も未設定のとき、本リポジトリのルート（ビルド後は `dist/` の親）の**ひとつ上のディレクトリ**を親とみなし、そこにある `content` と `translated-content` を参照します。`cwd` には依存しません。
+
 ## 前提条件
 
 - [Node.js](https://nodejs.org/)（LTS 推奨）
@@ -57,5 +62,6 @@ npm run build
 ## 開発メモ
 
 - 品質チェック: `npm run lint` / `npm run typecheck` / `npm run format:check` / `npm test`
+- MCP ツール: `translation_rules`（ガイドラインリンク）、`mdn_workspace_paths`（上記の content / translated-content パス解決）
 - 旧 HTTP API（`/api/rules`、`/api/validate`、`/api/events`）は削除済みです。同等の機能は今後、MCP の tools / resources として追加する予定です。
 - 開発コンセプト（将来のコマンド案など）は [Wiki](https://github.com/gurezo/mdn-translation-ja-mcp/wiki) を参照してください。

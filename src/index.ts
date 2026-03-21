@@ -7,6 +7,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 
 import { TRANSLATION_RULES } from "./translation-rules.js";
+import { resolveMdnWorkspacePaths } from "./workspace.js";
 
 const server = new McpServer({
   name: "mdn-translation-ja-mcp",
@@ -29,6 +30,27 @@ server.registerTool(
       },
     ],
   }),
+);
+
+server.registerTool(
+  "mdn_workspace_paths",
+  {
+    title: "MDN content / translated-content paths",
+    description:
+      "ローカルの mdn/content と mdn/translated-content に相当するディレクトリの絶対パスを解決する。推奨は親ディレクトリに content・translated-content・本リポジトリを並べる構成。任意で環境変数 MDN_CONTENT_ROOT / MDN_TRANSLATED_CONTENT_ROOT（両方）で上書き可能。",
+    inputSchema: z.object({}),
+  },
+  async () => {
+    const result = await resolveMdnWorkspacePaths();
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  },
 );
 
 const transport = new StdioServerTransport();

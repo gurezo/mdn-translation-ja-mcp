@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
 import { runMdnTransCommitGet } from "./mdn-trans-commit-get.js";
+import { runMdnTransSourceCommitSet } from "./mdn-trans-source-commit-set.js";
 import { runMdnTransStart } from "./mdn-trans-start.js";
 import { TRANSLATION_RULES } from "./translation-rules.js";
 import { resolveMdnWorkspacePaths } from "./workspace.js";
@@ -84,7 +85,7 @@ server.registerTool(
   {
     title: "Start Japanese translation (copy en-US index.md to ja)",
     description:
-      "MDN のページ URL から英語原文（content/files/en-us/.../index.md）を読み、translated-content/files/ja/.../index.md にコピーして翻訳を開始する。既に日本語ファイルがある場合は force: true が無い限りエラー。dry_run: true では実行せず予定のみ返す。",
+      "MDN のページ URL から英語原文（content/files/en-us/.../index.md）を読み、translated-content/files/ja/.../index.md にコピーして翻訳を開始する。front-matter には英語原文の最新コミットを l10n.sourceCommit として書き込む。既に日本語ファイルがある場合は force: true が無い限りエラー。dry_run: true では実行せず予定のみ返す。",
     inputSchema: z.object({
       url: z.url("有効な URL を指定してください。"),
       dry_run: z
@@ -127,6 +128,36 @@ server.registerTool(
   async ({ url }) => {
     const result = await runMdnTransCommitGet({
       url: url.toString(),
+    });
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  },
+);
+
+server.registerTool(
+  "mdn_trans_source_commit_set",
+  {
+    title: "Set l10n.sourceCommit on existing Japanese index.md",
+    description:
+      "既存の files/ja/.../index.md の front-matter に、対応する英語原文の最新コミットハッシュを l10n.sourceCommit として追加または更新する。本文は変更しない。dry_run: true のときはファイルに書き込まず、取得した sourceCommit のみ返す。",
+    inputSchema: z.object({
+      url: z.url("有効な URL を指定してください。"),
+      dry_run: z
+        .boolean()
+        .optional()
+        .describe("true のとき front-matter を更新せず、結果のみ返す。"),
+    }),
+  },
+  async ({ url, dry_run: dryRun }) => {
+    const result = await runMdnTransSourceCommitSet({
+      url: url.toString(),
+      dryRun,
     });
     return {
       content: [

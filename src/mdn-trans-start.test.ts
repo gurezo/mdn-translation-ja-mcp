@@ -4,6 +4,15 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { runMdnTransStart } from "./mdn-trans-start.js";
+
+const MOCK_SOURCE_COMMIT = "2547f622337d6cbf8c3794776b17ed377d6aad57";
+
+function mockGitLog() {
+  return async () => ({
+    stdout: `${MOCK_SOURCE_COMMIT}\n`,
+    stderr: "",
+  });
+}
 import {
   ENV_MDN_CONTENT_ROOT,
   ENV_MDN_TRANSLATED_CONTENT_ROOT,
@@ -71,17 +80,21 @@ body
     const result = await runMdnTransStart({
       url: "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API",
       packageRoot,
+      gitLog: mockGitLog(),
     });
 
     expect(result.ok).toBe(true);
     if (!result.ok) throw new Error("expected ok");
     expect(result.copied).toBe(true);
     expect(result.dryRun).toBe(false);
+    expect(result.sourceCommit).toBe(MOCK_SOURCE_COMMIT);
     expect(result.jaIndexPath).toBe(jaPath);
     const jaContent = await fs.readFile(jaPath, "utf8");
     expect(jaContent).toBe(`---
 title: Fetch API
 slug: Web/API/Fetch_API
+l10n:
+  sourceCommit: ${MOCK_SOURCE_COMMIT}
 ---
 
 # English
@@ -116,6 +129,7 @@ slug: Glossary/JIT
     const result = await runMdnTransStart({
       url: "https://developer.mozilla.org/ja/docs/Glossary/JIT",
       packageRoot,
+      gitLog: mockGitLog(),
     });
 
     expect(result.ok).toBe(false);
@@ -157,11 +171,13 @@ slug: Glossary/JIT
       url: "https://developer.mozilla.org/ja/docs/Glossary/JIT",
       packageRoot,
       force: true,
+      gitLog: mockGitLog(),
     });
 
     expect(result.ok).toBe(true);
     if (!result.ok) throw new Error("expected ok");
     expect(result.copied).toBe(true);
+    expect(result.sourceCommit).toBe(MOCK_SOURCE_COMMIT);
     const jaContent = await fs.readFile(
       path.join(translatedRoot, ...jaRel),
       "utf8",
@@ -169,6 +185,8 @@ slug: Glossary/JIT
     expect(jaContent).toBe(`---
 title: JIT
 slug: Glossary/JIT
+l10n:
+  sourceCommit: ${MOCK_SOURCE_COMMIT}
 ---
 
 # New EN
@@ -205,12 +223,14 @@ slug: Learn
       url: "https://developer.mozilla.org/docs/Learn",
       packageRoot,
       dryRun: true,
+      gitLog: mockGitLog(),
     });
 
     expect(result.ok).toBe(true);
     if (!result.ok) throw new Error("expected ok");
     expect(result.copied).toBe(false);
     expect(result.dryRun).toBe(true);
+    expect(result.sourceCommit).toBe(MOCK_SOURCE_COMMIT);
 
     await expect(fs.access(jaPath)).rejects.toMatchObject({ code: "ENOENT" });
   });

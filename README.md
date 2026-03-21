@@ -27,7 +27,10 @@
 ```bash
 cd mdn-translation-ja-mcp
 npm install
+npm run build
 ```
+
+ソースは TypeScript（`src/`）で、`npm run build` で `dist/` に JavaScript が出力されます。MCP を起動する前にビルドしてください。
 
 ## Cursor（`mcp.json`）の例
 
@@ -38,13 +41,13 @@ npm install
   "mcpServers": {
     "mdn-translation-ja": {
       "command": "node",
-      "args": ["/absolute/path/to/mdn-translation-ja-mcp/src/index.js"]
+      "args": ["/absolute/path/to/mdn-translation-ja-mcp/dist/index.js"]
     }
   }
 }
 ```
 
-`args` には、本リポジトリを clone した場所の `src/index.js` への **絶対パス**を指定してください。
+`args` には、本リポジトリを clone した場所の **`dist/index.js`（ビルド後）** への **絶対パス**を指定してください。
 
 ## ライセンスと第三者表記
 
@@ -53,5 +56,6 @@ npm install
 
 ## 開発メモ
 
+- 品質チェック: `npm run lint` / `npm run typecheck` / `npm run format:check` / `npm test`
 - 旧 HTTP API（`/api/rules`、`/api/validate`、`/api/events`）は削除済みです。同等の機能は今後、MCP の tools / resources として追加する予定です。
 - 開発コンセプト（将来のコマンド案など）は [Wiki](https://github.com/gurezo/mdn-translation-ja-mcp/wiki) を参照してください。

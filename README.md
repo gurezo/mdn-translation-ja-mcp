@@ -14,7 +14,7 @@
 2. **リポジトリを揃える**: 同じ親ディレクトリに [mdn/content](https://github.com/mdn/content)、[mdn/translated-content](https://github.com/mdn/translated-content)、本リポジトリ（[gurezo/mdn-translation-ja-mcp](https://github.com/gurezo/mdn-translation-ja-mcp)）を **clone** する（推奨レイアウトは下記）。
 3. **ビルド**: `mdn-translation-ja-mcp` で `npm install` のあと **`npm run build`** を実行する（`dist/index.js` が必須）。
 4. **Cursor に MCP を登録**: プロジェクト用またはユーザー用の MCP 設定に、[examples/cursor-mcp.json](examples/cursor-mcp.json) を参考に `mcpServers` を追加する。`args` の **`dist/index.js` への絶対パス**を自分の環境に合わせて書き換える。
-5. **（任意）`env`**: 兄弟ディレクトリ構成で動かす場合は、`env` ブロックを**削除**してよい（下記「パスの解決順」）。別の場所に clone した場合は `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**設定する（片方だけは不可）。
+5. **（任意）環境変数**: 推奨の兄弟ディレクトリ構成なら [examples/cursor-mcp.json](examples/cursor-mcp.json) のとおり **`env` は不要**です。`content` / `translated-content` を別の場所に置く場合は、MCP 設定の `env` に `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**書く（片方だけは不可。下記「パスの解決順」）。
 
 Cursor の MCP 設定ファイルの場所や形式の詳細は、[Cursor のドキュメント](https://cursor.com/docs)（MCP の項）を参照してください。
 

@@ -24,6 +24,7 @@ describe("scanGlossaryMacrosInText", () => {
     expect(matches).toHaveLength(2);
     expect(matches[0]).toMatchObject({
       line: 1,
+      startOffsetInLine: 5,
       macroName: "glossary",
       firstArg: "compile",
       hasSecondArg: false,
@@ -31,6 +32,7 @@ describe("scanGlossaryMacrosInText", () => {
     });
     expect(matches[1]).toMatchObject({
       line: 3,
+      startOffsetInLine: 5,
       macroName: "Glossary",
       firstArg: "JIT",
       hasSecondArg: false,
@@ -68,7 +70,18 @@ describe("scanGlossaryMacrosInText", () => {
     const matches = scanGlossaryMacrosInText(md);
     expect(matches).toHaveLength(2);
     expect(matches[0]!.firstArg).toBe("a");
+    expect(matches[0]!.startOffsetInLine).toBe(0);
     expect(matches[1]!.secondArg).toBe("B");
+    expect(matches[1]!.startOffsetInLine).toBe(22);
+  });
+
+  it("gives distinct startOffsetInLine for identical macros on one line", () => {
+    const md = '{{glossary("x")}} {{glossary("x")}}';
+    const matches = scanGlossaryMacrosInText(md);
+    expect(matches).toHaveLength(2);
+    expect(matches[0]!.startOffsetInLine).toBe(0);
+    expect(matches[1]!.startOffsetInLine).toBe(18);
+    expect(matches[0]!.raw).toBe(matches[1]!.raw);
   });
 
   it("parses escaped quotes inside strings", () => {

@@ -19,6 +19,7 @@ export type GlossaryReplacementCandidateStatus =
 
 export type GlossaryReplacementCandidate = {
   line: number;
+  startOffsetInLine: number;
   raw: string;
   macroName: "glossary" | "Glossary";
   firstArg: string;
@@ -60,6 +61,7 @@ function matchToCandidate(
   if (m.hasSecondArg) {
     return {
       line: m.line,
+      startOffsetInLine: m.startOffsetInLine,
       raw: m.raw,
       macroName: m.macroName,
       firstArg: m.firstArg,
@@ -71,6 +73,7 @@ function matchToCandidate(
   if (secondArg !== undefined) {
     return {
       line: m.line,
+      startOffsetInLine: m.startOffsetInLine,
       raw: m.raw,
       macroName: m.macroName,
       firstArg: m.firstArg,
@@ -82,6 +85,7 @@ function matchToCandidate(
 
   return {
     line: m.line,
+    startOffsetInLine: m.startOffsetInLine,
     raw: m.raw,
     macroName: m.macroName,
     firstArg: m.firstArg,

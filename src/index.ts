@@ -7,6 +7,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 
 import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
+import { runMdnTransCommitGet } from "./mdn-trans-commit-get.js";
 import { runMdnTransStart } from "./mdn-trans-start.js";
 import { TRANSLATION_RULES } from "./translation-rules.js";
 import { resolveMdnWorkspacePaths } from "./workspace.js";
@@ -101,6 +102,31 @@ server.registerTool(
       url: url.toString(),
       dryRun,
       force,
+    });
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  },
+);
+
+server.registerTool(
+  "mdn_trans_commit_get",
+  {
+    title: "Get English source commit hash (sourceCommit)",
+    description:
+      "MDN のページ URL に対応する英語原文（content/files/en-us/.../index.md）について、mdn/content リポジトリ上の git log で最新コミットハッシュを取得する。翻訳ファイル front-matter の l10n.sourceCommit に使う値。content が Git リポジトリでない・ファイル未追跡などのときはエラーを返す。",
+    inputSchema: z.object({
+      url: z.url("有効な URL を指定してください。"),
+    }),
+  },
+  async ({ url }) => {
+    const result = await runMdnTransCommitGet({
+      url: url.toString(),
     });
     return {
       content: [

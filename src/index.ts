@@ -7,6 +7,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 
 import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
+import { runMdnTransStart } from "./mdn-trans-start.js";
 import { TRANSLATION_RULES } from "./translation-rules.js";
 import { resolveMdnWorkspacePaths } from "./workspace.js";
 
@@ -66,6 +67,41 @@ server.registerTool(
   },
   async ({ url }) => {
     const result = await resolveMdnPageFromUrl(url.toString());
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  },
+);
+
+server.registerTool(
+  "mdn_trans_start",
+  {
+    title: "Start Japanese translation (copy en-US index.md to ja)",
+    description:
+      "MDN のページ URL から英語原文（content/files/en-us/.../index.md）を読み、translated-content/files/ja/.../index.md にコピーして翻訳を開始する。既に日本語ファイルがある場合は force: true が無い限りエラー。dry_run: true では実行せず予定のみ返す。",
+    inputSchema: z.object({
+      url: z.url("有効な URL を指定してください。"),
+      dry_run: z
+        .boolean()
+        .optional()
+        .describe("true のときファイル操作を行わず、実行予定のみ返す。"),
+      force: z
+        .boolean()
+        .optional()
+        .describe("true のとき、既存の日本語 index.md を上書きする。"),
+    }),
+  },
+  async ({ url, dry_run: dryRun, force }) => {
+    const result = await runMdnTransStart({
+      url: url.toString(),
+      dryRun,
+      force,
+    });
     return {
       content: [
         {

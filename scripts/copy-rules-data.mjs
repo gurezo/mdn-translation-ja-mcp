@@ -10,7 +10,16 @@ const root = path.join(__dirname, "..");
 const srcDir = path.join(root, "rules");
 const destDir = path.join(root, "dist", "rules");
 
-const files = ["translation-rules.json", "translation-rules.schema.json"];
+const files = [
+  "translation-rules.json",
+  "translation-rules.schema.json",
+  "mozilla-glossary-excerpt.json",
+  "mozilla-glossary-excerpt.schema.json",
+  "style-rules.json",
+  "style-rules.schema.json",
+  "prohibited-expressions.json",
+  "prohibited-expressions.schema.json",
+];
 
 fs.mkdirSync(destDir, { recursive: true });
 for (const name of files) {

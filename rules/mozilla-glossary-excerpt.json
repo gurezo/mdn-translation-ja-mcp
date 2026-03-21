@@ -1,0 +1,20 @@
+{
+  "$schema": "./mozilla-glossary-excerpt.schema.json",
+  "sourceUrl": "https://github.com/mozilla-japan/translation/wiki/Mozilla-L10N-Glossary",
+  "retrievedAt": "2026-03-21",
+  "description": "レビュー時の参照用抜粋。{{glossary}} の第2引数は src/data/glossary-terms.json を使用。",
+  "terms": [
+    {
+      "slug": "compile",
+      "en": "compile",
+      "ja": "コンパイル",
+      "note": "動詞・名詞ともに「コンパイル」で統一する例"
+    },
+    {
+      "slug": "jit",
+      "en": "Just-In-Time Compilation (JIT)",
+      "ja": "実行時コンパイル (JIT)",
+      "note": "用語集ページの表記に合わせる"
+    }
+  ]
+}

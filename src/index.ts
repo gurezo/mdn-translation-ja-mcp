@@ -6,6 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
+import { runMdnGlossaryMacroScan } from "./glossary-macro-scan.js";
 import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
 import { runMdnTransCommitGet } from "./mdn-trans-commit-get.js";
 import { runMdnTransSourceCommitSet } from "./mdn-trans-source-commit-set.js";
@@ -158,6 +159,31 @@ server.registerTool(
     const result = await runMdnTransSourceCommitSet({
       url: url.toString(),
       dryRun,
+    });
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  },
+);
+
+server.registerTool(
+  "mdn_glossary_macro_scan",
+  {
+    title: "Scan {{glossary}} macros in Japanese index.md",
+    description:
+      "MDN のページ URL に対応する日本語 index.md を読み、{{glossary(\"…\")}} / {{Glossary(\"…\")}} を行番号付きで列挙する。第2引数の有無も返す。日本語ファイルが無い場合はエラー。",
+    inputSchema: z.object({
+      url: z.url("有効な URL を指定してください。"),
+    }),
+  },
+  async ({ url }) => {
+    const result = await runMdnGlossaryMacroScan({
+      url: url.toString(),
     });
     return {
       content: [

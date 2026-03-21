@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/gurezo/mdn-translation-ja-mcp/rules/translation-rules.schema.json",
+  "title": "MDN Japanese translation review rules",
+  "description": "レビュー時に参照するガイドライン・文体表などへのリンクをカテゴリ別にまとめたデータ。",
+  "type": "object",
+  "required": ["editorial", "l10n", "glossary", "style"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "任意。エディタ用に JSON Schema の場所を指す。"
+    },
+    "version": {
+      "type": "string",
+      "description": "データのバージョン（任意）。"
+    },
+    "editorial": {
+      "$ref": "#/$defs/ruleCategory",
+      "description": "表記ガイドライン"
+    },
+    "l10n": {
+      "$ref": "#/$defs/ruleCategory",
+      "description": "L10N ガイドライン"
+    },
+    "glossary": {
+      "$ref": "#/$defs/ruleCategory",
+      "description": "Mozilla 用語集"
+    },
+    "style": {
+      "$ref": "#/$defs/ruleCategory",
+      "description": "日本語の文体など（例: スプレッドシート）"
+    }
+  },
+  "$defs": {
+    "ruleCategory": {
+      "type": "object",
+      "required": ["url"],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "参照先の URL"
+        },
+        "title": {
+          "type": "string",
+          "description": "人間向けの短いタイトル（任意）"
+        },
+        "description": {
+          "type": "string",
+          "description": "補足説明（任意）"
+        }
+      }
+    }
+  }
+}

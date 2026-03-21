@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "mdn-translation-ja": {
+      "command": "node",
+      "args": ["/absolute/path/to/mdn-translation-ja-mcp/dist/index.js"]
+    }
+  }
+}

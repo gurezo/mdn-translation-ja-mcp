@@ -4,11 +4,18 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import {
+  getEnUsSourceCommitHash,
+  type GitLogExec,
+} from "./mdn-content-source-commit.js";
+import type { MdnTransCommitGetErrorCode } from "./mdn-content-source-commit.js";
 import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
 import type { MinimizeTranslationFrontMatterErrorCode } from "./translation-front-matter.js";
 import { minimizeTranslationIndexMd } from "./translation-front-matter.js";
+import { resolveMdnWorkspacePaths } from "./workspace.js";
 
 export type MdnTransStartErrorCode =
+  | MdnTransCommitGetErrorCode
   | "SOURCE_MISSING"
   | "SOURCE_NOT_FILE"
   | "TRANSLATION_EXISTS"
@@ -25,10 +32,12 @@ export type MdnTransStartResult =
       copied: boolean;
       /** dry-run またはコピー時に作成した親ディレクトリ（既存のみの場合は空） */
       createdDirectories: string[];
+      /** 書き込んだ front-matter の l10n.sourceCommit（dry-run でも取得できれば含む） */
+      sourceCommit?: string;
     }
   | {
       ok: false;
-      code: MdnTransStartErrorCode;
+      code: MdnTransStartErrorCode | string;
       message: string;
       details?: unknown;
     };
@@ -57,6 +66,8 @@ export async function runMdnTransStart(options: {
   dryRun?: boolean;
   force?: boolean;
   packageRoot?: string;
+  /** 単体テスト用。未指定時は `promisify(execFile)` で `git` を実行する。 */
+  gitLog?: GitLogExec;
 }): Promise<MdnTransStartResult> {
   const dryRun = options.dryRun === true;
   const force = options.force === true;
@@ -69,8 +80,24 @@ export async function runMdnTransStart(options: {
     return resolved as MdnTransStartResult;
   }
 
+  const ws = await resolveMdnWorkspacePaths(
+    options.packageRoot !== undefined
+      ? { packageRoot: options.packageRoot }
+      : undefined,
+  );
+
+  if (!ws.ok) {
+    return {
+      ok: false,
+      code: ws.code,
+      message: ws.message,
+      details: ws.details,
+    };
+  }
+
   const { normalizedSlug, enUsIndexPath, jaIndexPath, translationExists } =
     resolved;
+  const { contentRoot } = ws.paths;
 
   const enKind = await pathIsRegularFile(enUsIndexPath);
   if (enKind.kind === "missing") {
@@ -97,8 +124,25 @@ export async function runMdnTransStart(options: {
     };
   }
 
+  const hashResult = await getEnUsSourceCommitHash({
+    contentRoot,
+    enUsIndexPath,
+    gitLog: options.gitLog,
+  });
+
+  if (!hashResult.ok) {
+    return {
+      ok: false,
+      code: hashResult.code,
+      message: hashResult.message,
+      details: hashResult.details,
+    };
+  }
+
+  const sourceCommit = hashResult.sourceCommit;
+
   const rawEn = await fs.readFile(enUsIndexPath, "utf8");
-  const minimized = minimizeTranslationIndexMd(rawEn);
+  const minimized = minimizeTranslationIndexMd(rawEn, { sourceCommit });
   if (!minimized.ok) {
     return {
       ok: false,
@@ -134,6 +178,7 @@ export async function runMdnTransStart(options: {
       jaIndexPath,
       copied: false,
       createdDirectories,
+      sourceCommit,
     };
   }
 
@@ -153,5 +198,6 @@ export async function runMdnTransStart(options: {
     jaIndexPath,
     copied: true,
     createdDirectories,
+    sourceCommit,
   };
 }

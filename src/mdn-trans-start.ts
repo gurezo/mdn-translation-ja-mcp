@@ -66,7 +66,7 @@ export async function runMdnTransStart(options: {
   });
 
   if (!resolved.ok) {
-    return resolved;
+    return resolved as MdnTransStartResult;
   }
 
   const { normalizedSlug, enUsIndexPath, jaIndexPath, translationExists } =

@@ -1,0 +1,14 @@
+{
+  "$schema": "./style-rules.schema.json",
+  "sourceUrl": "https://docs.google.com/spreadsheets/d/1y-hC-xMXawCgcYZwJDnvuSlAOTgMRLLyqXurpYkJbYE/edit#gid=0",
+  "retrievedAt": "2026-03-21",
+  "description": "mozilla-japan 翻訳作業で参照する文体表に基づく最小ルール（初期セット）。",
+  "rules": [
+    {
+      "id": "STYLE_DESU_MASU_AND_DEARU_MIX",
+      "severity": "info",
+      "message": "です・ます調とだ・である調の両方が本文に見られます。文体を統一できているか確認してください。",
+      "implementationNote": "review-translation.ts の checkStyle と同趣旨。本文はコードフェンス外のみ対象。"
+    }
+  ]
+}

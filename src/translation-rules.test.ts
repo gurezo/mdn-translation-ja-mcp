@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { loadLocalReviewRules } from "./local-review-rules.js";
 import {
   loadTranslationRules,
   translationRulesDataSchema,
@@ -18,5 +19,15 @@ describe("loadTranslationRules", () => {
     const rules = loadTranslationRules();
     const parsed = translationRulesDataSchema.parse(rules);
     expect(parsed.style.title).toBe("日本語の文体");
+  });
+
+  it("composes with localReviewRules like translation_rules MCP tool", () => {
+    const guidelineLinks = loadTranslationRules();
+    const localReviewRules = loadLocalReviewRules();
+    const composed = { ...guidelineLinks, localReviewRules };
+    expect(composed.editorial.url).toContain("mozilla-japan");
+    expect(
+      composed.localReviewRules.prohibitedExpressions.items.length,
+    ).toBeGreaterThan(0);
   });
 });

@@ -1,0 +1,22 @@
+{
+  "$schema": "./prohibited-expressions.schema.json",
+  "sourceUrl": "https://github.com/mozilla-japan/translation/wiki/Editorial-Guideline",
+  "retrievedAt": "2026-03-21",
+  "description": "表記ガイドライン等を前提にした禁止・注意表現の初期リスト（必要に応じて拡張）。",
+  "items": [
+    {
+      "id": "PLACEHOLDER_TRANSLATION_PENDING",
+      "matchType": "literal",
+      "pattern": "（要翻訳）",
+      "severity": "warning",
+      "message": "未翻訳のプレースホルダが残っている可能性があります。"
+    },
+    {
+      "id": "PLACEHOLDER_TBD",
+      "matchType": "literal",
+      "pattern": "（翻訳予定）",
+      "severity": "warning",
+      "message": "未確定のプレースホルダが残っている可能性があります。"
+    }
+  ]
+}

@@ -5,13 +5,25 @@ import fs from "node:fs/promises";
 
 import matter from "gray-matter";
 
-import { loadGlossaryJson, lookupSecondArg, type GlossaryData } from "./glossary-loader.js";
+import {
+  loadGlossaryJson,
+  lookupSecondArg,
+  type GlossaryData,
+} from "./glossary-loader.js";
 import { scanGlossaryMacrosInText } from "./glossary-macro-scan.js";
+import {
+  loadLocalReviewRules,
+  type LocalReviewRulesBundle,
+  type ProhibitedExpressionItem,
+} from "./local-review-rules.js";
 import {
   resolveMdnPageFromUrl,
   type ResolveMdnPageFromUrlResult,
 } from "./mdn-url-resolve.js";
-import { loadTranslationRules, type TranslationRules } from "./translation-rules.js";
+import {
+  loadTranslationRules,
+  type TranslationRules,
+} from "./translation-rules.js";
 
 export type ReviewFindingSeverity = "error" | "warning" | "info";
 
@@ -19,7 +31,8 @@ export type ReviewFindingCategory =
   | "front_matter"
   | "untranslated"
   | "glossary"
-  | "style";
+  | "style"
+  | "prohibited";
 
 export type ReviewFinding = {
   severity: ReviewFindingSeverity;
@@ -36,6 +49,11 @@ export type ReviewTranslationRulesMeta = {
   l10nUrl: string;
   glossaryUrl: string;
   styleUrl: string;
+  localReviewSources: {
+    mozillaGlossaryExcerpt: { sourceUrl: string; retrievedAt: string };
+    styleRules: { sourceUrl: string; retrievedAt: string };
+    prohibitedExpressions: { sourceUrl: string; retrievedAt: string };
+  };
 };
 
 export type ReviewTranslationSuccess = {
@@ -62,16 +80,41 @@ export type ReviewTranslationError =
       message: string;
       details?: unknown;
     }
-  | import("./glossary-loader.js").LoadGlossaryJsonResult & { ok: false };
+  | {
+      ok: false;
+      code: "LOCAL_REVIEW_RULES_LOAD_ERROR";
+      message: string;
+      details?: unknown;
+    }
+  | (import("./glossary-loader.js").LoadGlossaryJsonResult & { ok: false });
 
-export type ReviewTranslationResult = ReviewTranslationSuccess | ReviewTranslationError;
+export type ReviewTranslationResult =
+  | ReviewTranslationSuccess
+  | ReviewTranslationError;
 
-function rulesMetaFromTranslationRules(r: TranslationRules): ReviewTranslationRulesMeta {
+function rulesMetaFromTranslationAndLocal(
+  r: TranslationRules,
+  local: LocalReviewRulesBundle,
+): ReviewTranslationRulesMeta {
   return {
     editorialUrl: r.editorial.url,
     l10nUrl: r.l10n.url,
     glossaryUrl: r.glossary.url,
     styleUrl: r.style.url,
+    localReviewSources: {
+      mozillaGlossaryExcerpt: {
+        sourceUrl: local.mozillaGlossaryExcerpt.sourceUrl,
+        retrievedAt: local.mozillaGlossaryExcerpt.retrievedAt,
+      },
+      styleRules: {
+        sourceUrl: local.styleRules.sourceUrl,
+        retrievedAt: local.styleRules.retrievedAt,
+      },
+      prohibitedExpressions: {
+        sourceUrl: local.prohibitedExpressions.sourceUrl,
+        retrievedAt: local.prohibitedExpressions.retrievedAt,
+      },
+    },
   };
 }
 
@@ -216,10 +259,7 @@ function checkFrontMatter(raw: string): ReviewFinding[] {
   return out;
 }
 
-function checkGlossary(
-  text: string,
-  glossary: GlossaryData,
-): ReviewFinding[] {
+function checkGlossary(text: string, glossary: GlossaryData): ReviewFinding[] {
   const matches = scanGlossaryMacrosInText(text);
   const out: ReviewFinding[] = [];
 
@@ -256,7 +296,10 @@ function checkGlossary(
   return out;
 }
 
-function checkUntranslated(bodyContent: string, bodyStartLine: number): ReviewFinding[] {
+function checkUntranslated(
+  bodyContent: string,
+  bodyStartLine: number,
+): ReviewFinding[] {
   const lines = bodyContent.split(/\r?\n/);
   let inFence = false;
   const out: ReviewFinding[] = [];
@@ -280,7 +323,9 @@ function checkUntranslated(bodyContent: string, bodyStartLine: number): ReviewFi
     if (ENGLISH_RUN.test(stripped)) {
       const match = stripped.match(ENGLISH_RUN);
       const col =
-        match && stripped.indexOf(match[0]) >= 0 ? stripped.indexOf(match[0]) + 1 : undefined;
+        match && stripped.indexOf(match[0]) >= 0
+          ? stripped.indexOf(match[0]) + 1
+          : undefined;
       out.push({
         severity: "warning",
         category: "untranslated",
@@ -301,7 +346,8 @@ function checkStyle(bodyContent: string): ReviewFinding[] {
   const visibleLines = visibleBodyLinesOutsideFences(bodyContent);
   const text = visibleLines.join("\n");
 
-  const hasDesuMasu = /です[。]?|ます[。]?|ません|でした|でしょう|ください/.test(text);
+  const hasDesuMasu =
+    /です[。]?|ます[。]?|ません|でした|でしょう|ください/.test(text);
   const hasDearu =
     /である|ではない|ではありません|であった|だった/.test(text) ||
     /(?:^|[\s\u3000])だ[。]?/m.test(text);
@@ -321,8 +367,61 @@ function checkStyle(bodyContent: string): ReviewFinding[] {
   return [];
 }
 
+function checkProhibitedExpressions(
+  bodyContent: string,
+  bodyStartLine: number,
+  items: ProhibitedExpressionItem[],
+): ReviewFinding[] {
+  const lines = visibleBodyLinesOutsideFences(bodyContent);
+  const out: ReviewFinding[] = [];
+  const regexById = new Map<string, RegExp>();
+  for (const item of items) {
+    if (item.matchType === "regex") {
+      regexById.set(item.id, new RegExp(item.pattern, "u"));
+    }
+  }
+
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i]!;
+    const lineNo = bodyStartLine + i;
+    for (const item of items) {
+      let matched = false;
+      if (item.matchType === "literal") {
+        matched = line.includes(item.pattern);
+      } else {
+        const re = regexById.get(item.id);
+        if (re) {
+          matched = re.test(line);
+        }
+      }
+      if (!matched) {
+        continue;
+      }
+      const col =
+        item.matchType === "literal"
+          ? line.indexOf(item.pattern) >= 0
+            ? line.indexOf(item.pattern) + 1
+            : undefined
+          : undefined;
+      out.push({
+        severity: item.severity,
+        category: "prohibited",
+        code: `PROHIBITED_${item.id}`,
+        message: item.message,
+        line: lineNo,
+        column: col,
+        snippet: line.trim().slice(0, 200),
+      });
+    }
+  }
+
+  return out;
+}
+
 export type ReviewTranslationMarkdownOptions = {
   glossaryData: GlossaryData;
+  /** 省略時は禁止表現チェックをスキップ（ユニットテスト用） */
+  prohibitedItems?: ProhibitedExpressionItem[];
 };
 
 /**
@@ -342,6 +441,18 @@ export function reviewTranslationMarkdown(
   findings.push(...checkUntranslated(bodyContent, bodyStart));
   findings.push(...checkGlossary(raw, options.glossaryData));
   findings.push(...checkStyle(bodyContent));
+  if (
+    options.prohibitedItems !== undefined &&
+    options.prohibitedItems.length > 0
+  ) {
+    findings.push(
+      ...checkProhibitedExpressions(
+        bodyContent,
+        bodyStart,
+        options.prohibitedItems,
+      ),
+    );
+  }
 
   return findings;
 }
@@ -351,6 +462,7 @@ export async function runReviewTranslation(options: {
   glossaryPath?: string;
   packageRoot?: string;
   translationRulesJsonPath?: string;
+  localReviewRulesDir?: string;
 }): Promise<ReviewTranslationResult> {
   let rules: TranslationRules;
   try {
@@ -360,6 +472,18 @@ export async function runReviewTranslation(options: {
       ok: false,
       code: "RULES_LOAD_ERROR",
       message: `翻訳ルール JSON の読み込みに失敗しました: ${String(e)}`,
+      details: e,
+    };
+  }
+
+  let local: LocalReviewRulesBundle;
+  try {
+    local = loadLocalReviewRules(options.localReviewRulesDir);
+  } catch (e: unknown) {
+    return {
+      ok: false,
+      code: "LOCAL_REVIEW_RULES_LOAD_ERROR",
+      message: `ローカルレビュー用 JSON の読み込みに失敗しました: ${String(e)}`,
       details: e,
     };
   }
@@ -392,6 +516,7 @@ export async function runReviewTranslation(options: {
   const raw = await fs.readFile(resolved.jaIndexPath, "utf8");
   const findings = reviewTranslationMarkdown(raw, {
     glossaryData: glossary.data,
+    prohibitedItems: local.prohibitedExpressions.items,
   });
 
   return {
@@ -400,7 +525,7 @@ export async function runReviewTranslation(options: {
     normalizedSlug: resolved.normalizedSlug,
     jaIndexPath: resolved.jaIndexPath,
     glossaryPath: glossary.path,
-    rules: rulesMetaFromTranslationRules(rules),
+    rules: rulesMetaFromTranslationAndLocal(rules, local),
     findings,
   };
 }

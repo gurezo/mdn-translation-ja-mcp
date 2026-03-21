@@ -13,6 +13,7 @@ import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
 import { runMdnTransCommitGet } from "./mdn-trans-commit-get.js";
 import { runMdnTransSourceCommitSet } from "./mdn-trans-source-commit-set.js";
 import { runMdnTransStart } from "./mdn-trans-start.js";
+import { loadLocalReviewRules } from "./local-review-rules.js";
 import { runReviewTranslation } from "./review-translation.js";
 import { loadTranslationRules } from "./translation-rules.js";
 import { resolveMdnWorkspacePaths } from "./workspace.js";
@@ -27,11 +28,16 @@ server.registerTool(
   {
     title: "Translation guideline links",
     description:
-      "日本語 MDN 翻訳向けの表記・L10N・用語集・文体（rules/translation-rules.json）を読み込み、検証済み JSON を返す。",
+      "日本語 MDN 翻訳向けの表記・L10N・用語集・文体（rules/translation-rules.json）と、ローカルレビュー用 JSON（Mozilla 用語抜粋・文体ルール・禁止表現）を読み込み、検証済み JSON を返す。",
     inputSchema: z.object({}),
   },
   async () => {
-    const result = loadTranslationRules();
+    const guidelineLinks = loadTranslationRules();
+    const localReviewRules = loadLocalReviewRules();
+    const result = {
+      ...guidelineLinks,
+      localReviewRules,
+    };
     return {
       content: [
         {
@@ -276,7 +282,7 @@ server.registerTool(
   {
     title: "Rule-based translation review (v1)",
     description:
-      "日本語 index.md をルールベースでレビューし、front-matter・未翻訳の疑い・{{glossary}}・文体（簡易）に関する findings（JSON）を返す。rules/translation-rules.json と用語集 JSON（glossary_path または MDN_GLOSSARY_JSON_PATH）を参照。",
+      "日本語 index.md をルールベースでレビューし、front-matter・未翻訳の疑い・{{glossary}}・文体（簡易）・禁止表現（rules/prohibited-expressions.json）に関する findings（JSON）を返す。rules/translation-rules.json・ローカルレビュー用 JSON・用語集 JSON（glossary_path または MDN_GLOSSARY_JSON_PATH）を参照。",
     inputSchema: z.object({
       url: z.url("有効な URL を指定してください。"),
       glossary_path: z

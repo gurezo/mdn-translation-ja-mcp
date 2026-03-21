@@ -6,6 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
+import { runMdnGlossaryApply } from "./glossary-apply.js";
 import { runMdnGlossaryReplacementCandidates } from "./glossary-replacement-candidates.js";
 import { runMdnGlossaryMacroScan } from "./glossary-macro-scan.js";
 import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
@@ -216,6 +217,43 @@ server.registerTool(
   async ({ url, glossary_path: glossaryPath }) => {
     const result = await runMdnGlossaryReplacementCandidates({
       url: url.toString(),
+      glossaryPath,
+    });
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  },
+);
+
+server.registerTool(
+  "mdn_glossary_apply",
+  {
+    title: "Apply {{glossary}} second-arg from glossary JSON (safe)",
+    description:
+      "日本語 index.md 内の {{glossary(\"…\")}} のうち第2引数が無く、用語集 JSON にスラグがあるものだけを第2引数付きに置換する。既に第2引数があるマクロ・用語集に無いスラグは変更しない。dry_run: true のときはファイルに書かず置換予定のみ返す。書き込み前に候補を再計算し一致しない場合は FILE_CHANGED で失敗する（Issue #11 / Wiki の mdn-trans-replace-glossary 相当）。",
+    inputSchema: z.object({
+      url: z.url("有効な URL を指定してください。"),
+      dry_run: z
+        .boolean()
+        .optional()
+        .describe("true のときファイルに書き込まず、適用予定の一覧のみ返す。"),
+      glossary_path: z
+        .string()
+        .optional()
+        .describe(
+          "用語集 JSON の絶対パス（省略時は MDN_GLOSSARY_JSON_PATH または同梱の data/glossary-terms.json）。",
+        ),
+    }),
+  },
+  async ({ url, dry_run: dryRun, glossary_path: glossaryPath }) => {
+    const result = await runMdnGlossaryApply({
+      url: url.toString(),
+      dryRun,
       glossaryPath,
     });
     return {

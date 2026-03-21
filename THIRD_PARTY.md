@@ -17,4 +17,4 @@ Guideline links used by this project (for example in MCP tools) may point to Moz
 
 ## MCP protocol
 
-This server implements the [Model Context Protocol](https://modelcontextprotocol.io/). Runtime npm packages (including any MCP SDK) are listed in `package.json`.
+This server implements the [Model Context Protocol](https://modelcontextprotocol.io/) using the [`@modelcontextprotocol/sdk`](https://www.npmjs.com/package/@modelcontextprotocol/sdk) package; the exact version is pinned in `package-lock.json` and declared in `package.json`.

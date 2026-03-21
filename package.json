@@ -2,7 +2,16 @@
   "name": "mdn-translation-ja-mcp",
   "version": "1.0.0",
   "description": "MDN Web Docs Japanese Translation MCP Server",
-  "scripts": {},
-  "dependencies": {},
-  "devDependencies": {}
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "zod": "^4.3.6"
+  }
 }

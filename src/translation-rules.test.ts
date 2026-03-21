@@ -1,11 +1,22 @@
 import { describe, expect, it } from "vitest";
 
-import { TRANSLATION_RULES } from "./translation-rules.js";
+import {
+  loadTranslationRules,
+  translationRulesDataSchema,
+} from "./translation-rules.js";
 
-describe("TRANSLATION_RULES", () => {
-  it("exposes Mozilla Japan guideline URLs", () => {
-    expect(TRANSLATION_RULES.editorial).toContain("mozilla-japan");
-    expect(TRANSLATION_RULES.l10n).toContain("L10N-Guideline");
-    expect(TRANSLATION_RULES.glossary).toContain("Mozilla-L10N-Glossary");
+describe("loadTranslationRules", () => {
+  it("loads and validates default rules JSON", () => {
+    const rules = loadTranslationRules();
+    expect(rules.editorial.url).toContain("mozilla-japan");
+    expect(rules.l10n.url).toContain("L10N-Guideline");
+    expect(rules.glossary.url).toContain("Mozilla-L10N-Glossary");
+    expect(rules.style.url).toContain("spreadsheets");
+  });
+
+  it("matches translationRulesDataSchema", () => {
+    const rules = loadTranslationRules();
+    const parsed = translationRulesDataSchema.parse(rules);
+    expect(parsed.style.title).toBe("日本語の文体");
   });
 });

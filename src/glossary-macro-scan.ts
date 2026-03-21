@@ -11,6 +11,8 @@ import {
 export type GlossaryMacroMatch = {
   /** 1 始まりの行番号 */
   line: number;
+  /** 行内での `{{` 開始位置（0-based、UTF-16 コードユニット） */
+  startOffsetInLine: number;
   /** マクロ文字列全体（`{{` から `}}` まで） */
   raw: string;
   macroName: "glossary" | "Glossary";
@@ -98,6 +100,7 @@ function tryParseMacroAtLine(
     return {
       match: {
         line: lineNumber,
+        startOffsetInLine: macroStart,
         raw,
         macroName,
         firstArg: first.value,
@@ -125,6 +128,7 @@ function tryParseMacroAtLine(
   return {
     match: {
       line: lineNumber,
+      startOffsetInLine: macroStart,
       raw,
       macroName,
       firstArg: first.value,

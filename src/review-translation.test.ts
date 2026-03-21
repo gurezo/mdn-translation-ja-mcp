@@ -56,7 +56,9 @@ slug: S
     const findings = reviewTranslationMarkdown(raw, {
       glossaryData: { terms: {} },
     });
-    expect(findings.some((f) => f.code === "FM_MISSING_SOURCE_COMMIT")).toBe(true);
+    expect(findings.some((f) => f.code === "FM_MISSING_SOURCE_COMMIT")).toBe(
+      true,
+    );
   });
 
   it("warns when page-type remains in front-matter", () => {
@@ -81,7 +83,9 @@ l10n:
     const findings = reviewTranslationMarkdown(raw, {
       glossaryData: { terms: { ...minimalGlossary.terms } },
     });
-    expect(findings.some((f) => f.code === "GLOSSARY_SECOND_ARG_RECOMMENDED")).toBe(true);
+    expect(
+      findings.some((f) => f.code === "GLOSSARY_SECOND_ARG_RECOMMENDED"),
+    ).toBe(true);
   });
 
   it("flags glossary macro without second arg when slug is missing from glossary", () => {
@@ -89,7 +93,9 @@ l10n:
     const findings = reviewTranslationMarkdown(raw, {
       glossaryData: { terms: { ...minimalGlossary.terms } },
     });
-    expect(findings.some((f) => f.code === "GLOSSARY_SLUG_NOT_IN_JSON")).toBe(true);
+    expect(findings.some((f) => f.code === "GLOSSARY_SLUG_NOT_IN_JSON")).toBe(
+      true,
+    );
   });
 
   it("does not flag glossary macro when second arg is set", () => {
@@ -107,7 +113,9 @@ l10n:
     const findings = reviewTranslationMarkdown(raw, {
       glossaryData: { terms: {} },
     });
-    expect(findings.some((f) => f.code === "UNTRANSLATED_ENGLISH_RUN")).toBe(true);
+    expect(findings.some((f) => f.code === "UNTRANSLATED_ENGLISH_RUN")).toBe(
+      true,
+    );
   });
 
   it("skips English runs inside fenced code blocks", () => {
@@ -119,7 +127,9 @@ const foo = bar baz qux
     const findings = reviewTranslationMarkdown(raw, {
       glossaryData: { terms: {} },
     });
-    expect(findings.some((f) => f.code === "UNTRANSLATED_ENGLISH_RUN")).toBe(false);
+    expect(findings.some((f) => f.code === "UNTRANSLATED_ENGLISH_RUN")).toBe(
+      false,
+    );
   });
 
   it("reports style mix when desu-masu and dearu both appear", () => {
@@ -127,7 +137,56 @@ const foo = bar baz qux
     const findings = reviewTranslationMarkdown(raw, {
       glossaryData: { terms: {} },
     });
-    expect(findings.some((f) => f.code === "STYLE_DESU_MASU_AND_DEARU_MIX")).toBe(true);
+    expect(
+      findings.some((f) => f.code === "STYLE_DESU_MASU_AND_DEARU_MIX"),
+    ).toBe(true);
+  });
+
+  it("flags prohibited literal when configured", () => {
+    const raw = doc(`この節は（要翻訳）として残しています。`);
+    const findings = reviewTranslationMarkdown(raw, {
+      glossaryData: { terms: {} },
+      prohibitedItems: [
+        {
+          id: "PLACEHOLDER_TRANSLATION_PENDING",
+          matchType: "literal",
+          pattern: "（要翻訳）",
+          severity: "warning",
+          message: "未翻訳のプレースホルダが残っている可能性があります。",
+        },
+      ],
+    });
+    expect(
+      findings.some(
+        (f) => f.code === "PROHIBITED_PLACEHOLDER_TRANSLATION_PENDING",
+      ),
+    ).toBe(true);
+    expect(findings.some((f) => f.category === "prohibited")).toBe(true);
+  });
+
+  it("skips prohibited check when prohibitedItems is omitted", () => {
+    const raw = doc(`この節は（要翻訳）として残しています。`);
+    const findings = reviewTranslationMarkdown(raw, {
+      glossaryData: { terms: {} },
+    });
+    expect(findings.some((f) => f.category === "prohibited")).toBe(false);
+  });
+
+  it("matches prohibited regex per line", () => {
+    const raw = doc(`行にFOO_BAR禁止という文字列を含む。`);
+    const findings = reviewTranslationMarkdown(raw, {
+      glossaryData: { terms: {} },
+      prohibitedItems: [
+        {
+          id: "TEST_REGEX",
+          matchType: "regex",
+          pattern: "FOO_BAR禁止",
+          severity: "info",
+          message: "テスト用",
+        },
+      ],
+    });
+    expect(findings.some((f) => f.code === "PROHIBITED_TEST_REGEX")).toBe(true);
   });
 });
 

@@ -1,0 +1,10 @@
+{
+  "terms": {
+    "compile": {
+      "secondArg": "Compile (コンパイル)"
+    },
+    "jit": {
+      "secondArg": "JIT (実行時コンパイル)"
+    }
+  }
+}

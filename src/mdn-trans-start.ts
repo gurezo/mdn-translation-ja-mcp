@@ -5,12 +5,14 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
+import type { MinimizeTranslationFrontMatterErrorCode } from "./translation-front-matter.js";
+import { minimizeTranslationIndexMd } from "./translation-front-matter.js";
 
 export type MdnTransStartErrorCode =
   | "SOURCE_MISSING"
   | "SOURCE_NOT_FILE"
   | "TRANSLATION_EXISTS"
-  | string;
+  | MinimizeTranslationFrontMatterErrorCode;
 
 export type MdnTransStartResult =
   | {
@@ -95,6 +97,17 @@ export async function runMdnTransStart(options: {
     };
   }
 
+  const rawEn = await fs.readFile(enUsIndexPath, "utf8");
+  const minimized = minimizeTranslationIndexMd(rawEn);
+  if (!minimized.ok) {
+    return {
+      ok: false,
+      code: minimized.code,
+      message: minimized.message,
+      details: { enUsIndexPath },
+    };
+  }
+
   const jaDir = path.dirname(jaIndexPath);
   const createdDirectories: string[] = [];
 
@@ -130,7 +143,7 @@ export async function runMdnTransStart(options: {
     createdDirectories.push(jaDir);
   }
 
-  await fs.copyFile(enUsIndexPath, jaIndexPath);
+  await fs.writeFile(jaIndexPath, minimized.markdown, "utf8");
 
   return {
     ok: true,

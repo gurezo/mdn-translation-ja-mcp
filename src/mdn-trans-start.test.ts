@@ -46,7 +46,15 @@ describe("runMdnTransStart", () => {
     });
     await fs.writeFile(
       path.join(contentRoot, ...enRel),
-      "# English\nbody\n",
+      `---
+title: Fetch API
+slug: Web/API/Fetch_API
+page-type: guide
+---
+
+# English
+body
+`,
       "utf8",
     );
 
@@ -71,7 +79,14 @@ describe("runMdnTransStart", () => {
     expect(result.dryRun).toBe(false);
     expect(result.jaIndexPath).toBe(jaPath);
     const jaContent = await fs.readFile(jaPath, "utf8");
-    expect(jaContent).toBe("# English\nbody\n");
+    expect(jaContent).toBe(`---
+title: Fetch API
+slug: Web/API/Fetch_API
+---
+
+# English
+body
+`);
   });
 
   it("returns TRANSLATION_EXISTS when ja file exists and force is false", async () => {
@@ -80,7 +95,17 @@ describe("runMdnTransStart", () => {
     await fs.mkdir(path.dirname(path.join(contentRoot, ...enRel)), {
       recursive: true,
     });
-    await fs.writeFile(path.join(contentRoot, ...enRel), "# EN\n", "utf8");
+    await fs.writeFile(
+      path.join(contentRoot, ...enRel),
+      `---
+title: JIT
+slug: Glossary/JIT
+---
+
+# New EN
+`,
+      "utf8",
+    );
 
     const jaRel = ["files", "ja", "glossary", "jit", "index.md"];
     await fs.mkdir(path.dirname(path.join(translatedRoot, ...jaRel)), {
@@ -110,7 +135,17 @@ describe("runMdnTransStart", () => {
     await fs.mkdir(path.dirname(path.join(contentRoot, ...enRel)), {
       recursive: true,
     });
-    await fs.writeFile(path.join(contentRoot, ...enRel), "# New EN\n", "utf8");
+    await fs.writeFile(
+      path.join(contentRoot, ...enRel),
+      `---
+title: JIT
+slug: Glossary/JIT
+---
+
+# New EN
+`,
+      "utf8",
+    );
 
     const jaRel = ["files", "ja", "glossary", "jit", "index.md"];
     await fs.mkdir(path.dirname(path.join(translatedRoot, ...jaRel)), {
@@ -131,7 +166,13 @@ describe("runMdnTransStart", () => {
       path.join(translatedRoot, ...jaRel),
       "utf8",
     );
-    expect(jaContent).toBe("# New EN\n");
+    expect(jaContent).toBe(`---
+title: JIT
+slug: Glossary/JIT
+---
+
+# New EN
+`);
   });
 
   it("does not create files when dry_run is true", async () => {
@@ -140,7 +181,17 @@ describe("runMdnTransStart", () => {
     await fs.mkdir(path.dirname(path.join(contentRoot, ...enRel)), {
       recursive: true,
     });
-    await fs.writeFile(path.join(contentRoot, ...enRel), "# L\n", "utf8");
+    await fs.writeFile(
+      path.join(contentRoot, ...enRel),
+      `---
+title: Learn
+slug: Learn
+---
+
+# L
+`,
+      "utf8",
+    );
 
     const jaPath = path.join(
       translatedRoot,

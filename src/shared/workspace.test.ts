@@ -16,8 +16,12 @@ async function makeSiblingLayout(): Promise<{
   const parent = await fs.mkdtemp(path.join(os.tmpdir(), "mdn-ws-"));
   const packageRoot = path.join(parent, "mdn-translation-ja-mcp");
   await fs.mkdir(packageRoot, { recursive: true });
-  await fs.mkdir(path.join(parent, "content"), { recursive: true });
-  await fs.mkdir(path.join(parent, "translated-content"), { recursive: true });
+  await fs.mkdir(path.join(parent, "content", "files", "en-us"), {
+    recursive: true,
+  });
+  await fs.mkdir(path.join(parent, "translated-content", "files", "ja"), {
+    recursive: true,
+  });
   return { parent, packageRoot };
 }
 
@@ -91,8 +95,8 @@ describe("resolveMdnWorkspacePaths", () => {
     const parent = await fs.mkdtemp(path.join(os.tmpdir(), "mdn-ws-"));
     const c = path.join(parent, "c");
     const t = path.join(parent, "t");
-    await fs.mkdir(c, { recursive: true });
-    await fs.mkdir(t, { recursive: true });
+    await fs.mkdir(path.join(c, "files", "en-us"), { recursive: true });
+    await fs.mkdir(path.join(t, "files", "ja"), { recursive: true });
 
     vi.stubEnv(ENV_MDN_CONTENT_ROOT, c);
     vi.stubEnv(ENV_MDN_TRANSLATED_CONTENT_ROOT, t);
@@ -124,5 +128,65 @@ describe("resolveMdnWorkspacePaths", () => {
     expect(result.ok).toBe(false);
     if (result.ok) throw new Error("expected error");
     expect(result.code).toBe("ENV_PARTIAL");
+  });
+
+  it("returns INVALID_MDN_LAYOUT when files/en-us is missing under content root", async () => {
+    const parent = await fs.mkdtemp(path.join(os.tmpdir(), "mdn-ws-"));
+    const packageRoot = path.join(parent, "mdn-translation-ja-mcp");
+    await fs.mkdir(packageRoot, { recursive: true });
+    await fs.mkdir(path.join(parent, "content"), { recursive: true });
+    await fs.mkdir(path.join(parent, "translated-content", "files", "ja"), {
+      recursive: true,
+    });
+
+    const result = await resolveMdnWorkspacePaths({ packageRoot });
+    expect(result.ok).toBe(false);
+    if (result.ok) throw new Error("expected error");
+    expect(result.code).toBe("INVALID_MDN_LAYOUT");
+    if (result.code !== "INVALID_MDN_LAYOUT") throw new Error("unexpected code");
+    expect(result.details.layoutInvalid).toContain("content-files-en-us");
+    expect(result.details.expectedContentFilesEnUs).toBe(
+      path.join(parent, "content", "files", "en-us"),
+    );
+  });
+
+  it("returns INVALID_MDN_LAYOUT when files/ja is missing under translated-content root", async () => {
+    const parent = await fs.mkdtemp(path.join(os.tmpdir(), "mdn-ws-"));
+    const packageRoot = path.join(parent, "mdn-translation-ja-mcp");
+    await fs.mkdir(packageRoot, { recursive: true });
+    await fs.mkdir(path.join(parent, "content", "files", "en-us"), {
+      recursive: true,
+    });
+    await fs.mkdir(path.join(parent, "translated-content"), { recursive: true });
+
+    const result = await resolveMdnWorkspacePaths({ packageRoot });
+    expect(result.ok).toBe(false);
+    if (result.ok) throw new Error("expected error");
+    expect(result.code).toBe("INVALID_MDN_LAYOUT");
+    if (result.code !== "INVALID_MDN_LAYOUT") throw new Error("unexpected code");
+    expect(result.details.layoutInvalid).toContain("translated-files-ja");
+  });
+
+  it("returns INVALID_MDN_LAYOUT when both layout paths are missing", async () => {
+    const { packageRoot } = await makeSiblingLayout();
+    const parent = path.dirname(packageRoot);
+    await fs.rm(path.join(parent, "content", "files", "en-us"), {
+      recursive: true,
+    });
+    await fs.rm(path.join(parent, "translated-content", "files", "ja"), {
+      recursive: true,
+    });
+
+    const result = await resolveMdnWorkspacePaths({ packageRoot });
+    expect(result.ok).toBe(false);
+    if (result.ok) throw new Error("expected error");
+    expect(result.code).toBe("INVALID_MDN_LAYOUT");
+    if (result.code !== "INVALID_MDN_LAYOUT") throw new Error("unexpected code");
+    expect(result.details.layoutInvalid).toEqual(
+      expect.arrayContaining([
+        "content-files-en-us",
+        "translated-files-ja",
+      ]),
+    );
   });
 });

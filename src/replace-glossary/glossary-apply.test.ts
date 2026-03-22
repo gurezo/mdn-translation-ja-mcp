@@ -35,6 +35,9 @@ describe("runMdnGlossaryApply", () => {
     await fs.mkdir(packageRoot, { recursive: true });
     await fs.mkdir(contentRoot, { recursive: true });
     await fs.mkdir(translatedRoot, { recursive: true });
+    await fs.mkdir(path.join(contentRoot, "files", "en-us"), {
+      recursive: true,
+    });
 
     const jaRel = ["files", "ja", "glossary", "jit"];
     const jaDir = path.join(translatedRoot, ...jaRel);

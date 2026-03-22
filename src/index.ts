@@ -75,7 +75,7 @@ server.registerTool(
   {
     title: "Resolve MDN page paths from URL",
     description:
-      "MDN のページ URL から locale・正規化 slug、ローカルの英語原文（files/en-us/.../index.md）と日本語（files/ja/.../index.md）の絶対パス、および日本語翻訳ファイルの有無を返す。",
+      "MDN のページ URL から locale・正規化 slug、ローカルの英語原文（files/en-us/.../index.md）と日本語（files/ja/.../index.md）の絶対パス、および英語原文・日本語翻訳ファイルそれぞれの有無（sourceExists / translationExists）を返す。",
     inputSchema: z.object({
       url: z.url("有効な URL を指定してください。"),
     }),

@@ -189,6 +189,7 @@ describe("resolveMdnPageFromUrl", () => {
     if (!result.ok) throw new Error("expected ok");
     expect(result.locale).toBe("ja");
     expect(result.normalizedSlug).toBe("web/api/fetch_api");
+    expect(result.sourceExists).toBe(true);
     expect(result.translationExists).toBe(true);
     expect(result.enUsIndexPath).toBe(path.join(contentRoot, ...rel));
     expect(result.jaIndexPath).toBe(path.join(translatedRoot, ...jaRel));
@@ -226,6 +227,8 @@ describe("resolveMdnPageFromUrl", () => {
     if (!en.ok || !ja.ok) throw new Error("expected ok");
     expect(en.enUsIndexPath).toBe(ja.enUsIndexPath);
     expect(en.jaIndexPath).toBe(ja.jaIndexPath);
+    expect(en.sourceExists).toBe(true);
+    expect(ja.sourceExists).toBe(true);
     expect(en.translationExists).toBe(true);
     expect(ja.translationExists).toBe(true);
   });
@@ -244,7 +247,26 @@ describe("resolveMdnPageFromUrl", () => {
     );
     expect(result.ok).toBe(true);
     if (!result.ok) throw new Error("expected ok");
+    expect(result.sourceExists).toBe(true);
     expect(result.translationExists).toBe(false);
+  });
+
+  it("sets sourceExists false when en-us index.md is missing", async () => {
+    const { packageRoot, translatedRoot } = await makeWorkspace();
+    const jaRel = ["files", "ja", "learn", "index.md"];
+    await fs.mkdir(path.dirname(path.join(translatedRoot, ...jaRel)), {
+      recursive: true,
+    });
+    await fs.writeFile(path.join(translatedRoot, ...jaRel), "# ja\n", "utf8");
+
+    const result = await resolveMdnPageFromUrl(
+      "https://developer.mozilla.org/docs/Learn",
+      { packageRoot },
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) throw new Error("expected ok");
+    expect(result.sourceExists).toBe(false);
+    expect(result.translationExists).toBe(true);
   });
 
   it("returns workspace error when content is missing", async () => {

@@ -63,7 +63,9 @@ app.delete("/mcp", (_req: Request, res: Response) => {
   );
 });
 
-const PORT = Number(process.env.PORT) || 3000;
+/** 既定値。mdn/content 側のローカル翻訳環境（例: 5042 / 5043 / 8083）と衝突しにくいポートにする。 */
+const DEFAULT_PORT = 3050;
+const PORT = Number(process.env.PORT) || DEFAULT_PORT;
 app.listen(PORT, () => {
   console.log(`MCP Streamable HTTP listening on http://127.0.0.1:${PORT}/mcp`);
 });

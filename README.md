@@ -13,8 +13,8 @@
 1. **前提**: [Node.js](https://nodejs.org/) 18 以上（LTS 推奨）、[Cursor](https://cursor.com/)（MCP の **Streamable HTTP** または **stdio** に対応した版）。
 2. **リポジトリを揃える**: 同じ親ディレクトリに [mdn/content](https://github.com/mdn/content)、[mdn/translated-content](https://github.com/mdn/translated-content)、本リポジトリ（[gurezo/mdn-translation-ja-mcp](https://github.com/gurezo/mdn-translation-ja-mcp)）を **clone** する（推奨レイアウトは下記）。**コピー用の `git clone` 例**は「推奨ディレクトリ構成」の直後を参照してください。
 3. **ビルド**: `mdn-translation-ja-mcp` で `npm install` のあと **`npm run build`** を実行する（`dist/index.js` / `dist/http.js` が生成されます）。
-4. **MCP サーバーをローカル起動（Streamable HTTP）**: ターミナルでリポジトリルートから **`npm run start:http`** を実行し、起動したままにする（既定は `http://127.0.0.1:3000/mcp`。ポートは環境変数 `PORT` で変更可）。
-5. **Cursor に MCP を登録**: MCP 設定に [examples/cursor-mcp-http.json](examples/cursor-mcp-http.json) を参考に `mcpServers` を追加する。`url` のホスト・ポートは手順 4 の表示に合わせる（例では `3000`）。
+4. **MCP サーバーをローカル起動（Streamable HTTP）**: ターミナルでリポジトリルートから **`npm run start:http`** を実行し、起動したままにする（既定は `http://127.0.0.1:3050/mcp`。`mdn/content` 配下のローカル翻訳環境で使われるポート（例: 5042 / 5043 / 8083）と重ならないよう **3050** を既定にしています。変更は環境変数 `PORT` で可能）。
+5. **Cursor に MCP を登録**: MCP 設定に [examples/cursor-mcp-http.json](examples/cursor-mcp-http.json) を参考に `mcpServers` を追加する。`url` のホスト・ポートは手順 4 の表示に合わせる（例では `3050`）。
    - **設定ファイルの置き場所** — Cursor のエディションやバージョンにより異なる場合があります。次は一般的な例です。**最新のパス・形式は [Cursor のドキュメント](https://cursor.com/docs)（MCP）を確認**してください。
      - **ユーザー全体（よくある例）**: `~/.cursor/mcp.json`（macOS / Linux のホーム直下の例）
      - **プロジェクト単位**: ワークスペースの `.cursor/mcp.json` など
@@ -65,13 +65,13 @@ git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
   "mcpServers": {
     "mdn-translation-ja": {
       "type": "http",
-      "url": "http://127.0.0.1:3000/mcp"
+      "url": "http://127.0.0.1:3050/mcp"
     }
   }
 }
 ```
 
-`url` のポートは `PORT` 環境変数（未設定時は `3000`）に合わせてください。
+`url` のポートは `PORT` 環境変数（未設定時は `3050`）に合わせてください。
 
 ### stdio（代替）
 

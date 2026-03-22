@@ -1,12 +1,12 @@
 # mdn-translation-ja-mcp
 
-MDN 日本語翻訳作業を支援するための **ローカル MCP サーバー（HTTP）**です。Cursor から利用し、翻訳の開始・同期・レビューを自動化します。**MCP 仕様の Streamable HTTP**（`type: "http"` + `url` …`/mcp`）を推奨します。別途 **stdio**（`command` / `args` で `node dist/index.js` を起動）も利用できます。MDN の本文はリポジトリに含めず、手元で clone した [mdn/content](https://github.com/mdn/content) および [mdn/translated-content](https://github.com/mdn/translated-content) を参照する想定です。
-
 ## ✨ 概要
 
 このツールは、MDN 翻訳作業を効率化するための **ローカル開発ツール**です。
 
 👉 翻訳作業そのものを支援・自動化することを目的としています
+Cursor から利用し、翻訳の開始・同期・レビューを支援します。
+MDN の本文はリポジトリに含めず、手元で clone した [mdn/content](https://github.com/mdn/content) および [mdn/translated-content](https://github.com/mdn/translated-content) を参照する想定です。
 
 ## 🎯 目的
 

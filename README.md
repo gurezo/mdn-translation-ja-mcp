@@ -118,3 +118,124 @@ Cursor がプロセス起動型のみの場合など、サンプルは [examples
   }
 }
 ```
+
+## 🛠️ 提供 Tools（実装済み）
+
+以下は `tools/list` に基づく実際の Tool 一覧です。
+
+### 🔧 基盤系
+
+#### translation_rules
+
+翻訳ルール（ガイドライン）を取得します。
+
+#### mdn_workspace_paths
+
+ローカルの workspace パス情報を取得します。
+
+#### mdn_resolve_page_paths
+
+MDN URL から対応するファイルパスを解決します。
+
+### 🚀 翻訳開始・同期
+
+#### mdn_trans_start
+
+翻訳を開始します。
+
+- URL → slug 解決
+- 原文コピー
+- 翻訳ファイル生成
+- front-matter 初期化
+
+#### mdn_trans_commit_get
+
+原文の最新 commit hash を取得します。
+
+#### mdn_trans_source_commit_set
+
+翻訳ファイルに `l10n.sourceCommit` を設定します。
+
+### 🔤 glossary 関連
+
+#### mdn_glossary_macro_scan
+
+glossary マクロを検出します。
+
+#### mdn_glossary_replacement_candidates
+
+glossary の置換候補を生成します。
+
+#### mdn_glossary_apply
+
+glossary マクロを安全に置換します。
+
+### 🔍 レビュー
+
+#### review_translation
+
+翻訳ファイルをレビューします。
+
+主なチェック：
+
+- front-matter
+- 未翻訳箇所
+- glossary 不整合
+- 文体・表記ルール
+
+## 📁 ディレクトリ構成（想定）
+
+```text
+src/
+  server.ts
+
+  tools/
+  core/
+  rules/
+
+tests/
+docs/
+```
+
+## 🧠 設計方針
+
+### ローカルファースト
+
+- 外部API非依存
+- 高速・再現性あり
+
+### MCPベース
+
+- Cursor から直接操作
+- HTTP MCP (`/mcp`) を利用
+
+### ルールベースレビュー
+
+- JSONルールで検出
+- AIは補助用途（将来）
+
+## ❌ やらないこと
+
+- 自動翻訳
+- 外部サービス化
+- 外部API依存
+
+## 🔐 ライセンス
+
+MIT
+
+## ⚠️ 注意
+
+- MDN コンテンツは含まれません
+- `content` / `translated-content` は別途 clone が必要です
+- MDN のライセンスに従って利用してください
+
+## 🚧 今後の予定
+
+- diff ベースレビュー
+- glossary 自動補完強化
+- Agent による修正提案
+
+## 🧠 一言
+
+👉 MDN翻訳を「作業」から「コマンド」に変えるツール

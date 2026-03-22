@@ -117,23 +117,16 @@ npm start
 
 一例として、翻訳開始 → 原文コミット同期 → glossary → レビューの順で使えます。
 
-1. **翻訳開始** — 対象の MDN URL を伝え、**`mdn_trans_start`** で `ja` の `index.md` を用意します。  
-   必要なら **`mdn_resolve_page_paths`** でパス確認。
+1. **翻訳開始** — 対象の MDN URL を伝え、**`mdn_trans_start`** で `ja` の `index.md` を用意します。
 2. **英語原文との同期** — **`mdn_trans_commit_get`** で `sourceCommit` を取得し、  
    必要なら **`mdn_trans_source_commit_set`** で front-matter を更新する。
 3. **用語 `{{glossary}}`** —  
    **`mdn_glossary_macro_scan`** → **`mdn_glossary_replacement_candidates`** → **`mdn_glossary_apply`**  
    （試すときは `dry_run` も可）。
-4. **レビュー** — **`translation_rules`** で参照リンクを確認しつつ、  
-   **`review_translation`** でルールベースの指摘を得る。
-
-補助として **`mdn_workspace_paths`**（ワークスペースの絶対パス解決）も利用できます。
+4. **レビュー** — **`review_translation`** でルールベースの指摘を得る。
 
 | MCP ツール名 | 主な用途 |
 | --- | --- |
-| `translation_rules` | 表記・L10N・用語集・文体などの参照リンクと<br>ローカルルール JSON |
-| `mdn_workspace_paths` | `content` / `translated-content` 相当パスの解決 |
-| `mdn_resolve_page_paths` | URL からローカル英日 `index.md` のパス・存在フラグ |
 | `mdn_trans_start` | URL を指定して翻訳作業を開始<br>（content → `translated-content/files/ja`） |
 | `mdn_trans_commit_get` | `content` 側のコミットハッシュ取得・<br>`sourceCommit` のたたき台 |
 | `mdn_trans_source_commit_set` | 本文は変えず `l10n.sourceCommit` のみ更新 |
@@ -185,21 +178,18 @@ npm start
 ## 💬 Cursor での利用例（エージェント）
 
 MCP を有効にしたうえで、**チャットで対象ページの MDN URL を伝え**、主に次の表のツールをエージェントに実行させます。  
-フローや下の例では、必要に応じてパス確認・ルール参照などの補助ツールも使います。  
 例（概念）：
 
-- 「`https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API` を翻訳開始して」→ `mdn_trans_start`  
-  （必要なら `mdn_resolve_page_paths` でパス確認）。
+- 「`https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API` を翻訳開始して」→ `mdn_trans_start`。
 - 「この URL の英語原文の最新コミットは？」→ `mdn_trans_commit_get`。
 - 「`ja` の `index.md` の `sourceCommit` だけ英語に合わせて更新して」→  
   `mdn_trans_source_commit_set`。
 - 「`{{glossary}}` の第2引数を用語集に合わせて」→  
   `mdn_glossary_replacement_candidates` で確認のうえ `mdn_glossary_apply`（`dry_run` で試すことも可）。
-- 「翻訳ルールに沿ってレビューして」→  
-  `translation_rules` で参照リンクを確認しつつ `review_translation`。
+- 「翻訳ルールに沿ってレビューして」→ `review_translation`。
 
 人手レビューでは、[表記ガイドライン](https://github.com/mozilla-japan/translation/wiki/Editorial-Guideline) などへのリンクは  
-`translation_rules` の結果にも含まれます。
+`review_translation` の結果にも含まれることがあります。
 
 ## 🛠️ トラブルシュート
 

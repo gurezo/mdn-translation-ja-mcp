@@ -129,6 +129,33 @@ slug: Glossary/JIT
     expect(result.markdown).toContain("# 本文");
   });
 
+  it("drops page-type and sidebar and matches minimized key order", () => {
+    const raw = `---
+title: 実行時コンパイル (JIT)
+short-title: JIT
+slug: Glossary/Just_In_Time_Compilation
+page-type: glossary-definition
+sidebar: glossarysidebar
+---
+
+# 本文
+`;
+    const hash = "2547f622337d6cbf8c3794776b17ed377d6aad57";
+    const result = setL10nSourceCommitInTranslationMarkdown(raw, hash);
+    expect(result.ok).toBe(true);
+    if (!result.ok) throw new Error("expected ok");
+    expect(result.markdown).toBe(`---
+title: 実行時コンパイル (JIT)
+short-title: JIT
+slug: Glossary/Just_In_Time_Compilation
+l10n:
+  sourceCommit: ${hash}
+---
+
+# 本文
+`);
+  });
+
   it("merges into existing l10n object", () => {
     const raw = `---
 title: Foo

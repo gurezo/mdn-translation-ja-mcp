@@ -11,8 +11,11 @@ const srcDir = path.join(root, "rules");
 const destDir = path.join(root, "dist", "rules");
 
 const files = [
-  "translation-rules.json",
-  "translation-rules.schema.json",
+  "rule-category.schema.json",
+  "editorial.rules.json",
+  "l10n.rules.json",
+  "glossary.rules.json",
+  "style.rules.json",
   "mozilla-glossary-excerpt.json",
   "mozilla-glossary-excerpt.schema.json",
   "style-rules.json",
@@ -21,7 +24,15 @@ const files = [
   "prohibited-expressions.schema.json",
 ];
 
+const obsoleteInDest = ["translation-rules.json", "translation-rules.schema.json"];
+
 fs.mkdirSync(destDir, { recursive: true });
+for (const name of obsoleteInDest) {
+  const p = path.join(destDir, name);
+  if (fs.existsSync(p)) {
+    fs.unlinkSync(p);
+  }
+}
 for (const name of files) {
   fs.copyFileSync(path.join(srcDir, name), path.join(destDir, name));
 }

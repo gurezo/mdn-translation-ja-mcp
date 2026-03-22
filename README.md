@@ -103,8 +103,7 @@ Streamable HTTP では **`type` と `url` を指定**してください。
 
 ## 🔗 MCP ツール名の対応
 
-[開発コンセプト（Wiki）](https://github.com/gurezo/mdn-translation-ja-mcp/wiki/mdn%E2%80%90translation%E2%80%90ja%E2%80%90mcp-%E9%96%8B%E7%99%BA%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88) の `/mdn-trans-*`（ハイフン表記のコマンド案）と、
-MCP ツール名（`/mdn_trans_*` など）の対応は次のとおりです。
+[開発コンセプト（Wiki）](https://github.com/gurezo/mdn-translation-ja-mcp/wiki/mdn%E2%80%90translation%E2%80%90ja%E2%80%90mcp-%E9%96%8B%E7%99%BA%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88) では翻訳フローとスラッシュコマンドの考え方を説明しています。本サーバーが提供する MCP ツール（呼び出し表記）と主な用途は次のとおりです。
 
 ### 翻訳フロー（最短）
 
@@ -115,16 +114,16 @@ MCP ツール名（`/mdn_trans_*` など）の対応は次のとおりです。
 3. **用語 `{{glossary}}`** — **`/mdn_glossary_macro_scan`** → **`/mdn_glossary_replacement_candidates`** → **`/mdn_glossary_apply`**（試すときは `dry_run` も可）。
 4. **レビュー** — **`/translation_rules`** で参照リンクを確認しつつ **`/review_translation`** でルールベースの指摘を得る。
 
-| Wiki（スラッシュコマンド案） | MCP ツール（呼び出し表記） | 主な用途 |
-| ----------------------------- | ------------------------- | -------- |
-| `/mdn-trans-start` | `/mdn_trans_start` | URL を指定して翻訳作業を開始（content → `translated-content/files/ja`） |
-| `/mdn-trans-commit-get` | `/mdn_trans_commit_get` | `content` 側のコミットハッシュ取得・`sourceCommit` 反映のたたき台 |
-| （同上フロー） | `/mdn_trans_source_commit_set` | 本文は変えず `l10n.sourceCommit` のみ更新 |
-| — | `/mdn_resolve_page_paths` | 英語・日本語 `index.md` のパスと有無（`sourceExists` / `translationExists`） |
-| — | `/mdn_workspace_paths` | `content` / `translated-content` の絶対パス |
-| `/mdn-trans-replace-glossary` | `/mdn_glossary_macro_scan` ほか | `{{glossary}}` の走査・候補・置換 |
-| `/mdn-trans-review` | `/review_translation` | 翻訳レビュー（findings JSON） |
-| — | `/translation_rules` | 表記・L10N リンク等の JSON |
+| MCP ツール（呼び出し表記） | 主な用途 |
+| ------------------------- | -------- |
+| `/mdn_trans_start` | URL を指定して翻訳作業を開始（content → `translated-content/files/ja`） |
+| `/mdn_trans_commit_get` | `content` 側のコミットハッシュ取得・`sourceCommit` 反映のたたき台 |
+| `/mdn_trans_source_commit_set` | 本文は変えず `l10n.sourceCommit` のみ更新 |
+| `/mdn_resolve_page_paths` | 英語・日本語 `index.md` のパスと有無（`sourceExists` / `translationExists`） |
+| `/mdn_workspace_paths` | `content` / `translated-content` の絶対パス |
+| `/mdn_glossary_macro_scan` ほか | `{{glossary}}` の走査・候補・置換 |
+| `/review_translation` | 翻訳レビュー（findings JSON） |
+| `/translation_rules` | 表記・L10N リンク等の JSON |
 
 
 ## 🗂️ パスの解決順

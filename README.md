@@ -11,12 +11,13 @@
 次の手順だけで Cursor から利用できる状態にします。
 
 1. **前提**: [Node.js](https://nodejs.org/) 18 以上（LTS 推奨）、[Cursor](https://cursor.com/)（MCP / stdio 対応）。
-2. **リポジトリを揃える**: 同じ親ディレクトリに [mdn/content](https://github.com/mdn/content)、[mdn/translated-content](https://github.com/mdn/translated-content)、本リポジトリ（[gurezo/mdn-translation-ja-mcp](https://github.com/gurezo/mdn-translation-ja-mcp)）を **clone** する（推奨レイアウトは下記）。
+2. **リポジトリを揃える**: 同じ親ディレクトリに [mdn/content](https://github.com/mdn/content)、[mdn/translated-content](https://github.com/mdn/translated-content)、本リポジトリ（[gurezo/mdn-translation-ja-mcp](https://github.com/gurezo/mdn-translation-ja-mcp)）を **clone** する（推奨レイアウトは下記）。**コピー用の `git clone` 例**は「推奨ディレクトリ構成」の直後を参照してください。
 3. **ビルド**: `mdn-translation-ja-mcp` で `npm install` のあと **`npm run build`** を実行する（`dist/index.js` が必須）。
-4. **Cursor に MCP を登録**: プロジェクト用またはユーザー用の MCP 設定に、[examples/cursor-mcp.json](examples/cursor-mcp.json) を参考に `mcpServers` を追加する。`args` の **`dist/index.js` への絶対パス**を自分の環境に合わせて書き換える。
-5. **（任意）環境変数**: 推奨の兄弟ディレクトリ構成なら [examples/cursor-mcp.json](examples/cursor-mcp.json) のとおり **`env` は不要**です。`content` / `translated-content` を別の場所に置く場合は、MCP 設定の `env` に `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**書く（片方だけは不可。下記「パスの解決順」）。
-
-Cursor の MCP 設定ファイルの場所や形式の詳細は、[Cursor のドキュメント](https://cursor.com/docs)（MCP の項）を参照してください。
+4. **Cursor に MCP を登録**: MCP 設定に [examples/cursor-mcp.json](examples/cursor-mcp.json) を参考に `mcpServers` を追加する。`args` の **`dist/index.js` への絶対パス**を自分の環境に合わせて書き換える。
+   - **設定ファイルの置き場所** — Cursor のエディションやバージョンにより異なる場合があります。次は一般的な例です。**最新のパス・形式は [Cursor のドキュメント](https://cursor.com/docs)（MCP）を確認**してください。
+     - **ユーザー全体（よくある例）**: `~/.cursor/mcp.json`（macOS / Linux のホーム直下の例）
+     - **プロジェクト単位**: ワークスペースの `.cursor/mcp.json` など
+5. **（任意）環境変数**: 推奨の兄弟ディレクトリ構成なら [examples/cursor-mcp.json](examples/cursor-mcp.json) のとおり **`env` は不要**です。`content` / `translated-content` を別の場所に置く場合は、MCP 設定の `env` に `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**書く（片方だけは不可。下記「パスの解決順」）。**記述例**は [examples/cursor-mcp-with-env.json](examples/cursor-mcp-with-env.json) を参照してください。
 
 ## 推奨ディレクトリ構成（Wiki との整合）
 
@@ -27,6 +28,15 @@ Cursor の MCP 設定ファイルの場所や形式の詳細は、[Cursor のド
 ├── content/                 # mdn/content の clone
 ├── translated-content/      # mdn/translated-content の clone
 └── mdn-translation-ja-mcp/  # 本リポジトリ
+```
+
+親ディレクトリで次のように **clone** できます（ディレクトリ名は任意です）。
+
+```bash
+mkdir -p mdn-work && cd mdn-work
+git clone https://github.com/mdn/content.git
+git clone https://github.com/mdn/translated-content.git
+git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 ```
 
 ### パスの解決順（MCP ツール `mdn_workspace_paths`）
@@ -48,7 +58,7 @@ Cursor の MCP 設定ファイルの場所や形式の詳細は、[Cursor のド
 サンプル全体は [examples/cursor-mcp.json](examples/cursor-mcp.json) にあります。最小の考え方は次のとおりです。
 
 - **`command` / `args`**: `node` と、本リポジトリの **`dist/index.js`（ビルド後）への絶対パス**。
-- **`env`**: 推奨の兄弟構成のときは省略可能。別パスに置く場合は `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**セットで**指定。
+- **`env`**: 推奨の兄弟構成のときは省略可能。別パスに置く場合は `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**セットで**指定（記述例は [examples/cursor-mcp-with-env.json](examples/cursor-mcp-with-env.json)）。
 
 ```json
 {
@@ -64,6 +74,15 @@ Cursor の MCP 設定ファイルの場所や形式の詳細は、[Cursor のド
 ## Wiki のコマンド案と MCP ツール名の対応
 
 [開発コンセプト（Wiki）](https://github.com/gurezo/mdn-translation-ja-mcp/wiki) にある `/mdn-trans-*` は **スラッシュコマンド案**です。現行の実装は **MCP ツール**として次の名前で登録されています（Cursor のエージェントがツールとして呼び出します）。
+
+### 翻訳フロー（最短）
+
+Wiki の流れ（翻訳開始 → コミット取得 → 用語 → レビュー）に沿った一例です。
+
+1. **翻訳開始** — 対象の MDN URL を伝え、**`mdn_trans_start`** で `ja` の `index.md` を用意する（必要なら **`mdn_resolve_page_paths`** でパス確認）。
+2. **英語原文との同期** — **`mdn_trans_commit_get`** で `sourceCommit` を取得し、必要なら **`mdn_trans_source_commit_set`** で front-matter を更新する。
+3. **用語 `{{glossary}}`** — **`mdn_glossary_macro_scan`** → **`mdn_glossary_replacement_candidates`** → **`mdn_glossary_apply`**（試すときは `dry_run` も可）。
+4. **レビュー** — **`translation_rules`** で参照リンクを確認しつつ **`review_translation`** でルールベースの指摘を得る。
 
 | Wiki でのイメージ                            | MCP ツール名                          | 主な用途                                    |
 | -------------------------------------------- | ------------------------------------- | ------------------------------------------- |

@@ -115,6 +115,17 @@ export function buildContentPaths(
   return { enUsIndexPath, jaIndexPath };
 }
 
+async function pathIsExistingRegularFile(absolutePath: string): Promise<boolean> {
+  try {
+    const st = await fs.stat(absolutePath);
+    return st.isFile();
+  } catch (e: unknown) {
+    const err = e as NodeJS.ErrnoException;
+    if (err.code === "ENOENT") return false;
+    throw e;
+  }
+}
+
 export type ResolveMdnPageFromUrlErrorCode =
   | ParseMdnDocsUrlErrorCode
   | ResolveWorkspaceErrorCode;
@@ -126,6 +137,8 @@ export type ResolveMdnPageFromUrlResult =
       normalizedSlug: string;
       enUsIndexPath: string;
       jaIndexPath: string;
+      /** `content/files/en-us/.../index.md` がローカルに存在し通常ファイルである */
+      sourceExists: boolean;
       translationExists: boolean;
     }
   | {
@@ -167,14 +180,10 @@ export async function resolveMdnPageFromUrl(
     normalizedSlug,
   );
 
-  let translationExists = false;
-  try {
-    const st = await fs.stat(jaIndexPath);
-    translationExists = st.isFile();
-  } catch (e: unknown) {
-    const err = e as NodeJS.ErrnoException;
-    if (err.code !== "ENOENT") throw e;
-  }
+  const [sourceExists, translationExists] = await Promise.all([
+    pathIsExistingRegularFile(enUsIndexPath),
+    pathIsExistingRegularFile(jaIndexPath),
+  ]);
 
   return {
     ok: true,
@@ -182,6 +191,7 @@ export async function resolveMdnPageFromUrl(
     normalizedSlug,
     enUsIndexPath,
     jaIndexPath,
+    sourceExists,
     translationExists,
   };
 }

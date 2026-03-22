@@ -45,6 +45,32 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 /**
+ * パース済み front-matter から、翻訳向けに許可したキーだけを取り出す。
+ * キー順は title → short-title（任意）→ slug → l10n（任意）。
+ */
+function normalizedTranslationFrontMatter(
+  data: Record<string, unknown>,
+  l10n?: Record<string, unknown>,
+): Record<string, unknown> {
+  const normalized: Record<string, unknown> = {
+    title: data.title,
+  };
+
+  const shortTitle = data["short-title"];
+  if (nonEmptyString(shortTitle)) {
+    normalized["short-title"] = shortTitle;
+  }
+
+  normalized.slug = data.slug;
+
+  if (l10n !== undefined) {
+    normalized.l10n = l10n;
+  }
+
+  return normalized;
+}
+
+/**
  * 英語 index.md 相当の Markdown を、翻訳向け front-matter に整形する。
  * `page-type`・`sidebar` 等は削除し、キー順は title → short-title（任意）→ slug → l10n（任意）に固定する。
  *
@@ -83,20 +109,11 @@ export function minimizeTranslationIndexMd(
     };
   }
 
-  const normalized: Record<string, unknown> = {
-    title: data.title,
-  };
-
-  const shortTitle = data["short-title"];
-  if (nonEmptyString(shortTitle)) {
-    normalized["short-title"] = shortTitle;
-  }
-
-  normalized.slug = data.slug;
-
-  if (options?.sourceCommit !== undefined) {
-    normalized.l10n = { sourceCommit: options.sourceCommit };
-  }
+  const l10n =
+    options?.sourceCommit !== undefined
+      ? { sourceCommit: options.sourceCommit }
+      : undefined;
+  const normalized = normalizedTranslationFrontMatter(data, l10n);
 
   const yamlBlock = stringify(normalized, { lineWidth: 0 }).trimEnd();
   const markdown = `---\n${yamlBlock}\n---\n${parsed.content}`;
@@ -105,7 +122,8 @@ export function minimizeTranslationIndexMd(
 }
 
 /**
- * 既存の翻訳 index.md 全文に対し、front-matter の `l10n.sourceCommit` のみ追加または更新する。本文はそのまま保持する。
+ * 既存の翻訳 index.md 全文に対し、front-matter の `l10n.sourceCommit` を追加または更新する。
+ * `page-type`・`sidebar` など許可外のキーは落とし、`minimizeTranslationIndexMd` と同じキー順に再構築する。本文はそのまま保持する。
  */
 export function setL10nSourceCommitInTranslationMarkdown(
   raw: string,
@@ -154,8 +172,8 @@ export function setL10nSourceCommitInTranslationMarkdown(
     };
   }
 
-  const nextData: Record<string, unknown> = { ...data, l10n };
-  const yamlBlock = stringify(nextData, { lineWidth: 0 }).trimEnd();
+  const normalized = normalizedTranslationFrontMatter(data, l10n);
+  const yamlBlock = stringify(normalized, { lineWidth: 0 }).trimEnd();
   const markdown = `---\n${yamlBlock}\n---\n${parsed.content}`;
 
   return { ok: true, markdown };

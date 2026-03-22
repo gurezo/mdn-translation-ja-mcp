@@ -240,7 +240,7 @@ function checkFrontMatter(raw: string): ReviewFinding[] {
       category: "front_matter",
       code: "FM_LEGACY_PAGE_TYPE",
       message:
-        "front-matter に page-type が残っています。翻訳向けには通常削除します（mdn-trans-start 後の形を参照）。",
+        "front-matter に page-type が残っています。翻訳向けには通常削除します（start 後の形を参照）。",
       line: 1,
     });
   }

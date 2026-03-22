@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { runMdnTransCommitGet } from "./mdn-trans-commit-get.js";
+import { runMdnTransCommitGet } from "./commit-get.js";
 import {
   ENV_MDN_CONTENT_ROOT,
   ENV_MDN_TRANSLATED_CONTENT_ROOT,
@@ -27,7 +27,7 @@ describe("runMdnTransCommitGet", () => {
     contentRoot: string;
   }> {
     const parent = await fs.mkdtemp(
-      path.join(os.tmpdir(), "mdn-trans-commit-get-"),
+      path.join(os.tmpdir(), "mdn-commit-get-"),
     );
     const packageRoot = path.join(parent, "mdn-translation-ja-mcp");
     const contentRoot = path.join(parent, "content");

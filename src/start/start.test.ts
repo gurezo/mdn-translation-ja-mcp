@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { runMdnTransStart } from "./mdn-trans-start.js";
+import { runMdnTransStart } from "./start.js";
 
 const MOCK_SOURCE_COMMIT = "2547f622337d6cbf8c3794776b17ed377d6aad57";
 
@@ -37,7 +37,7 @@ describe("runMdnTransStart", () => {
     contentRoot: string;
     translatedRoot: string;
   }> {
-    const parent = await fs.mkdtemp(path.join(os.tmpdir(), "mdn-trans-start-"));
+    const parent = await fs.mkdtemp(path.join(os.tmpdir(), "mdn-start-"));
     const packageRoot = path.join(parent, "mdn-translation-ja-mcp");
     const contentRoot = path.join(parent, "content");
     const translatedRoot = path.join(parent, "translated-content");

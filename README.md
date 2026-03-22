@@ -34,6 +34,8 @@ Cursor の MCP 設定ファイルの場所や形式の詳細は、[Cursor のド
 1. **環境変数（任意）** — `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**指定すると、その絶対パスをそのまま使います。片方だけの指定はできません（誤設定防止のためエラーになります）。
 2. **兄弟ディレクトリ** — どちらの環境変数も未設定のとき、本リポジトリのルート（ビルド後は `dist/` の親）の**ひとつ上のディレクトリ**を親とみなし、そこにある `content` と `translated-content` を参照します。`cwd` には依存しません。
 
+**リポジトリ実体** — 解決した `content` 相当のルートには `files/en-us` が、`translated-content` 相当のルートには `files/ja` がそれぞれディレクトリとして存在する必要があります（公式リポジトリを clone した状態）。名前だけの空フォルダではエラーになります。
+
 ### 用語集 JSON（ツール `mdn_glossary_replacement_candidates` / `mdn_glossary_apply`）
 
 `{{glossary("term")}}` の第2引数（表示名）の置換候補は、[src/shared/data/glossary-terms.json](src/shared/data/glossary-terms.json) をビルド時に `dist/shared/data/` にコピーしたものを既定で参照します。

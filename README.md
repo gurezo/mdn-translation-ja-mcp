@@ -119,7 +119,7 @@ Streamable HTTP では **`type` と `url` を指定**してください。
 | `/mdn_trans_start` | URL を指定して翻訳作業を開始（content → `translated-content/files/ja`） |
 | `/mdn_trans_commit_get` | `content` 側のコミットハッシュ取得・`sourceCommit` 反映のたたき台 |
 | `/mdn_trans_source_commit_set` | 本文は変えず `l10n.sourceCommit` のみ更新 |
-| `/mdn_glossary_macro_scan` ほか | `{{glossary}}` の走査・候補・置換 |
+| `/mdn_glossary_macro_scan` → `/mdn_glossary_replacement_candidates` → `/mdn_glossary_apply` | `{{glossary}}` の走査・候補・置換 |
 | `/review_translation` | 翻訳レビュー（findings JSON） |
 
 

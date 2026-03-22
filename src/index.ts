@@ -158,7 +158,7 @@ server.registerTool(
   {
     title: "Set l10n.sourceCommit on existing Japanese index.md",
     description:
-      "既存の files/ja/.../index.md の front-matter に、対応する英語原文の最新コミットハッシュを l10n.sourceCommit として追加または更新する。本文は変更しない。dry_run: true のときはファイルに書き込まず、取得した sourceCommit のみ返す。",
+      "既存の files/ja/.../index.md の front-matter に、対応する英語原文の最新コミットハッシュを l10n.sourceCommit として追加または更新する。page-type・sidebar など翻訳向けに不要なキーは削除し、title / short-title（任意）/ slug / l10n の並びに正規化する。本文は変更しない。dry_run: true のときはファイルに書き込まず、取得した sourceCommit のみ返す。",
     inputSchema: z.object({
       url: z.url("有効な URL を指定してください。"),
       dry_run: z

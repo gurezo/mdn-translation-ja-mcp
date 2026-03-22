@@ -1,7 +1,31 @@
 {
   "terms": {
+    "api": {
+      "secondArg": "API"
+    },
+    "browser": {
+      "secondArg": "ブラウザ"
+    },
     "compile": {
       "secondArg": "Compile (コンパイル)"
+    },
+    "css": {
+      "secondArg": "CSS"
+    },
+    "dom": {
+      "secondArg": "DOM"
+    },
+    "html": {
+      "secondArg": "HTML"
+    },
+    "http": {
+      "secondArg": "HTTP"
+    },
+    "https": {
+      "secondArg": "HTTPS"
+    },
+    "javascript": {
+      "secondArg": "JavaScript"
     },
     "jit": {
       "secondArg": "JIT (実行時コンパイル)"

@@ -1,7 +1,7 @@
 {
   "$schema": "./mozilla-glossary-excerpt.schema.json",
   "sourceUrl": "https://github.com/mozilla-japan/translation/wiki/Mozilla-L10N-Glossary",
-  "retrievedAt": "2026-03-21",
+  "retrievedAt": "2026-03-22",
   "description": "レビュー時の参照用抜粋。{{glossary}} の第2引数は src/shared/data/glossary-terms.json を使用。",
   "terms": [
     {
@@ -15,6 +15,54 @@
       "en": "Just-In-Time Compilation (JIT)",
       "ja": "実行時コンパイル (JIT)",
       "note": "用語集ページの表記に合わせる"
+    },
+    {
+      "slug": "api",
+      "en": "API",
+      "ja": "API",
+      "note": "頭字語は表記ガイドラインに従い全角・半角を統一する"
+    },
+    {
+      "slug": "browser",
+      "en": "browser",
+      "ja": "ブラウザ",
+      "note": "ユーザーエージェント文脈で頻出"
+    },
+    {
+      "slug": "css",
+      "en": "CSS",
+      "ja": "CSS",
+      "note": "言語名としてそのまま表記する例が多い"
+    },
+    {
+      "slug": "dom",
+      "en": "DOM",
+      "ja": "DOM",
+      "note": "Document Object Model の略称としてそのまま用いる例"
+    },
+    {
+      "slug": "html",
+      "en": "HTML",
+      "ja": "HTML",
+      "note": "マークアップ言語名としてそのまま表記する例が多い"
+    },
+    {
+      "slug": "http",
+      "en": "HTTP",
+      "ja": "HTTP",
+      "note": "プロトコル名としてそのまま用いる例"
+    },
+    {
+      "slug": "https",
+      "en": "HTTPS",
+      "ja": "HTTPS",
+      "note": "HTTP over TLS の略称としてそのまま用いる例"
+    },
+    {
+      "slug": "javascript",
+      "en": "JavaScript",
+      "ja": "JavaScript",
+      "note": "言語名の表記は用語集・表記ガイドラインに従う"
     }
   ]
 }

@@ -6,16 +6,16 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
-import { runMdnGlossaryApply } from "./mdn-trans-replace-glossary/glossary-apply.js";
-import { runMdnGlossaryReplacementCandidates } from "./mdn-trans-replace-glossary/glossary-replacement-candidates.js";
+import { runMdnGlossaryApply } from "./replace-glossary/glossary-apply.js";
+import { runMdnGlossaryReplacementCandidates } from "./replace-glossary/glossary-replacement-candidates.js";
 import { runMdnGlossaryMacroScan } from "./shared/glossary-macro-scan.js";
 import { resolveMdnPageFromUrl } from "./shared/mdn-url-resolve.js";
-import { runMdnTransCommitGet } from "./mdn-trans-commit-get/mdn-trans-commit-get.js";
-import { runMdnTransSourceCommitSet } from "./mdn-trans-commit-get/mdn-trans-source-commit-set.js";
-import { runMdnTransStart } from "./mdn-trans-start/mdn-trans-start.js";
-import { loadLocalReviewRules } from "./mdn-trans-review/local-review-rules.js";
-import { runReviewTranslation } from "./mdn-trans-review/review-translation.js";
-import { loadTranslationRules } from "./mdn-trans-review/translation-rules.js";
+import { runMdnTransCommitGet } from "./commit-get/mdn-trans-commit-get.js";
+import { runMdnTransSourceCommitSet } from "./commit-get/mdn-trans-source-commit-set.js";
+import { runMdnTransStart } from "./start/mdn-trans-start.js";
+import { loadLocalReviewRules } from "./review/local-review-rules.js";
+import { runReviewTranslation } from "./review/review-translation.js";
+import { loadTranslationRules } from "./review/translation-rules.js";
 import { resolveMdnWorkspacePaths } from "./shared/workspace.js";
 
 const server = new McpServer({

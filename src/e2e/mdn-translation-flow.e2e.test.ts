@@ -4,9 +4,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { runMdnTransCommitGet } from "../mdn-trans-commit-get/mdn-trans-commit-get.js";
-import { runMdnTransStart } from "../mdn-trans-start/mdn-trans-start.js";
-import { runReviewTranslation } from "../mdn-trans-review/review-translation.js";
+import { runMdnTransCommitGet } from "../commit-get/mdn-trans-commit-get.js";
+import { runMdnTransStart } from "../start/mdn-trans-start.js";
+import { runReviewTranslation } from "../review/review-translation.js";
 
 const MOCK_SOURCE_COMMIT = "2547f622337d6cbf8c3794776b17ed377d6aad57";
 

@@ -1,7 +1,7 @@
 {
   "$schema": "./prohibited-expressions.schema.json",
   "sourceUrl": "https://github.com/mozilla-japan/translation/wiki/Editorial-Guideline",
-  "retrievedAt": "2026-03-21",
+  "retrievedAt": "2026-03-22",
   "description": "表記ガイドライン等を前提にした禁止・注意表現の初期リスト（必要に応じて拡張）。",
   "items": [
     {
@@ -17,6 +17,34 @@
       "pattern": "（翻訳予定）",
       "severity": "warning",
       "message": "未確定のプレースホルダが残っている可能性があります。"
+    },
+    {
+      "id": "PLACEHOLDER_UNTRANSLATED_MARK",
+      "matchType": "literal",
+      "pattern": "（未翻訳）",
+      "severity": "warning",
+      "message": "未翻訳のマーカーが残っている可能性があります。"
+    },
+    {
+      "id": "DRAFT_MARKER_TODO",
+      "matchType": "literal",
+      "pattern": "TODO:",
+      "severity": "info",
+      "message": "ドラフト用の TODO マーカーが残っていないか確認してください。"
+    },
+    {
+      "id": "DRAFT_MARKER_FIXME",
+      "matchType": "literal",
+      "pattern": "FIXME:",
+      "severity": "info",
+      "message": "ドラフト用の FIXME マーカーが残っていないか確認してください。"
+    },
+    {
+      "id": "DRAFT_MARKER_WIP_BRACKET",
+      "matchType": "literal",
+      "pattern": "[WIP]",
+      "severity": "info",
+      "message": "作業中マーカー [WIP] が残っていないか確認してください。"
     }
   ]
 }

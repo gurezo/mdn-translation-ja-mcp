@@ -10,6 +10,7 @@ import {
 } from "../shared/workspace.js";
 
 const MOCK_SOURCE_COMMIT = "2547f622337d6cbf8c3794776b17ed377d6aad57";
+const OLD_SOURCE_COMMIT = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
 function mockGitLog() {
   return async () => ({
@@ -102,6 +103,57 @@ slug: Glossary/JIT
     const out = await fs.readFile(jaPath, "utf8");
     expect(out).toContain(`sourceCommit: ${MOCK_SOURCE_COMMIT}`);
     expect(out).toContain("# 日本語");
+  });
+
+  it("overwrites stale l10n.sourceCommit in existing ja index.md", async () => {
+    const { packageRoot, contentRoot, translatedRoot } = await makeWorkspace();
+    const slugPath = ["glossary", "jit"];
+    const enRel = ["files", "en-us", ...slugPath, "index.md"];
+    const jaRel = ["files", "ja", ...slugPath, "index.md"];
+    await fs.mkdir(path.dirname(path.join(contentRoot, ...enRel)), {
+      recursive: true,
+    });
+    await fs.mkdir(path.dirname(path.join(translatedRoot, ...jaRel)), {
+      recursive: true,
+    });
+    await fs.writeFile(
+      path.join(contentRoot, ...enRel),
+      `---
+title: JIT
+slug: Glossary/JIT
+---
+
+# EN
+`,
+      "utf8",
+    );
+    const jaPath = path.join(translatedRoot, ...jaRel);
+    await fs.writeFile(
+      jaPath,
+      `---
+title: 実行時
+slug: Glossary/JIT
+l10n:
+  sourceCommit: ${OLD_SOURCE_COMMIT}
+---
+
+# 日本語
+`,
+      "utf8",
+    );
+
+    const result = await runMdnTransSourceCommitSet({
+      url: "https://developer.mozilla.org/docs/Glossary/JIT",
+      packageRoot,
+      gitLog: mockGitLog(),
+    });
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) throw new Error("expected ok");
+    expect(result.sourceCommit).toBe(MOCK_SOURCE_COMMIT);
+    const out = await fs.readFile(jaPath, "utf8");
+    expect(out).toContain(`sourceCommit: ${MOCK_SOURCE_COMMIT}`);
+    expect(out).not.toContain(OLD_SOURCE_COMMIT);
   });
 
   it("returns TRANSLATION_MISSING when ja index.md does not exist", async () => {

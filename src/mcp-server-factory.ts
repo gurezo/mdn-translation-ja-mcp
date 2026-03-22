@@ -250,7 +250,9 @@ export function createMdnTranslationMcpServer(): McpServer {
         dry_run: z
           .boolean()
           .optional()
-          .describe("true のときファイルに書き込まず、適用予定の一覧のみ返す。"),
+          .describe(
+            "true のときファイルに書き込まず、適用予定の一覧のみ返す。",
+          ),
         glossary_path: z
           .string()
           .optional()

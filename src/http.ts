@@ -65,9 +65,7 @@ app.delete("/mcp", (_req: Request, res: Response) => {
 
 const PORT = Number(process.env.PORT) || 3000;
 app.listen(PORT, () => {
-  console.log(
-    `MCP Streamable HTTP listening on http://127.0.0.1:${PORT}/mcp`,
-  );
+  console.log(`MCP Streamable HTTP listening on http://127.0.0.1:${PORT}/mcp`);
 });
 
 process.on("SIGINT", () => {

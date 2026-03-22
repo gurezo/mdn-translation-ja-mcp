@@ -9,8 +9,8 @@ import {
   loadGlossaryJson,
   lookupSecondArg,
   type GlossaryData,
-} from "./glossary-loader.js";
-import { scanGlossaryMacrosInText } from "./glossary-macro-scan.js";
+} from "../shared/glossary-loader.js";
+import { scanGlossaryMacrosInText } from "../shared/glossary-macro-scan.js";
 import {
   loadLocalReviewRules,
   type LocalReviewRulesBundle,
@@ -19,7 +19,7 @@ import {
 import {
   resolveMdnPageFromUrl,
   type ResolveMdnPageFromUrlResult,
-} from "./mdn-url-resolve.js";
+} from "../shared/mdn-url-resolve.js";
 import {
   loadTranslationRules,
   type TranslationRules,
@@ -86,7 +86,7 @@ export type ReviewTranslationError =
       message: string;
       details?: unknown;
     }
-  | (import("./glossary-loader.js").LoadGlossaryJsonResult & { ok: false });
+  | (import("../shared/glossary-loader.js").LoadGlossaryJsonResult & { ok: false });
 
 export type ReviewTranslationResult =
   | ReviewTranslationSuccess
@@ -240,7 +240,7 @@ function checkFrontMatter(raw: string): ReviewFinding[] {
       category: "front_matter",
       code: "FM_LEGACY_PAGE_TYPE",
       message:
-        "front-matter に page-type が残っています。翻訳向けには通常削除します（mdn-trans-start 後の形を参照）。",
+        "front-matter に page-type が残っています。翻訳向けには通常削除します（start 後の形を参照）。",
       line: 1,
     });
   }

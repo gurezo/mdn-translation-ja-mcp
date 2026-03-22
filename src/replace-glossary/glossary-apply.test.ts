@@ -4,11 +4,11 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { runMdnGlossaryApply } from "./glossary-apply.js";
-import { ENV_MDN_GLOSSARY_JSON } from "./glossary-loader.js";
+import { ENV_MDN_GLOSSARY_JSON } from "../shared/glossary-loader.js";
 import {
   ENV_MDN_CONTENT_ROOT,
   ENV_MDN_TRANSLATED_CONTENT_ROOT,
-} from "./workspace.js";
+} from "../shared/workspace.js";
 
 describe("runMdnGlossaryApply", () => {
   beforeEach(() => {

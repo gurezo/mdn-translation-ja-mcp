@@ -7,12 +7,12 @@ import path from "node:path";
 import {
   getEnUsSourceCommitHash,
   type GitLogExec,
-} from "./mdn-content-source-commit.js";
-import type { MdnTransCommitGetErrorCode } from "./mdn-content-source-commit.js";
-import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
-import type { MinimizeTranslationFrontMatterErrorCode } from "./translation-front-matter.js";
-import { minimizeTranslationIndexMd } from "./translation-front-matter.js";
-import { resolveMdnWorkspacePaths } from "./workspace.js";
+} from "../shared/mdn-content-source-commit.js";
+import type { MdnTransCommitGetErrorCode } from "../shared/mdn-content-source-commit.js";
+import { resolveMdnPageFromUrl } from "../shared/mdn-url-resolve.js";
+import type { MinimizeTranslationFrontMatterErrorCode } from "../shared/translation-front-matter.js";
+import { minimizeTranslationIndexMd } from "../shared/translation-front-matter.js";
+import { resolveMdnWorkspacePaths } from "../shared/workspace.js";
 
 export type MdnTransStartErrorCode =
   | MdnTransCommitGetErrorCode

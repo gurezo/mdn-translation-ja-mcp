@@ -4,9 +4,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { runMdnTransCommitGet } from "./mdn-trans-commit-get.js";
-import { runMdnTransStart } from "./mdn-trans-start.js";
-import { runReviewTranslation } from "./review-translation.js";
+import { runMdnTransCommitGet } from "../commit-get/commit-get.js";
+import { runMdnTransStart } from "../start/start.js";
+import { runReviewTranslation } from "../review/review-translation.js";
 
 const MOCK_SOURCE_COMMIT = "2547f622337d6cbf8c3794776b17ed377d6aad57";
 
@@ -21,7 +21,7 @@ function mockGitLog() {
 }
 
 function repoRootFromThisTestFile(): string {
-  return path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  return path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 }
 
 describe("E2E: fixture workspace start → commit-get → review", () => {
@@ -87,6 +87,7 @@ describe("E2E: fixture workspace start → commit-get → review", () => {
     const glossaryJson = path.join(
       repoRoot,
       "src",
+      "shared",
       "data",
       "glossary-terms.json",
     );

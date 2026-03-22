@@ -1,13 +1,13 @@
 /**
  * 用語集 JSON に基づき {{glossary}} の第2引数（表示名）置換候補を列挙する。
  */
-import type { GlossaryMacroMatch, MdnGlossaryMacroScanResult } from "./glossary-macro-scan.js";
-import { runMdnGlossaryMacroScan } from "./glossary-macro-scan.js";
+import type { GlossaryMacroMatch, MdnGlossaryMacroScanResult } from "../shared/glossary-macro-scan.js";
+import { runMdnGlossaryMacroScan } from "../shared/glossary-macro-scan.js";
 import {
   loadGlossaryJson,
   lookupSecondArg,
   type LoadGlossaryJsonResult,
-} from "./glossary-loader.js";
+} from "../shared/glossary-loader.js";
 
 const MISSING_MESSAGE =
   "用語集 JSON に該当するスラグがありません。Mozilla L10N 用語集（Wiki）を手動で確認してください。";

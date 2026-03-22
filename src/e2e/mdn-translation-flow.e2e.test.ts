@@ -13,6 +13,9 @@ const MOCK_SOURCE_COMMIT = "2547f622337d6cbf8c3794776b17ed377d6aad57";
 const E2E_DOC_URL =
   "https://developer.mozilla.org/en-US/docs/Glossary/E2E_Fixture";
 
+/** `normalizeSlugSegments` により URL 由来の slug は小文字化される */
+const EXPECTED_NORMALIZED_SLUG = "glossary/e2e_fixture";
+
 function mockGitLog() {
   return async () => ({
     stdout: `${MOCK_SOURCE_COMMIT}\n`,
@@ -50,16 +53,12 @@ describe("E2E: fixture workspace start → commit-get → review", () => {
     const translatedRoot = path.join(tmpParent, "translated-content");
     await fs.mkdir(packageRoot, { recursive: true });
 
-    await fs.cp(
-      path.join(fixtureRoot, "content"),
-      contentRoot,
-      { recursive: true },
-    );
-    await fs.cp(
-      path.join(fixtureRoot, "translated-content"),
-      translatedRoot,
-      { recursive: true },
-    );
+    await fs.cp(path.join(fixtureRoot, "content"), contentRoot, {
+      recursive: true,
+    });
+    await fs.cp(path.join(fixtureRoot, "translated-content"), translatedRoot, {
+      recursive: true,
+    });
 
     const gitLog = mockGitLog();
 
@@ -71,7 +70,12 @@ describe("E2E: fixture workspace start → commit-get → review", () => {
     expect(start.ok).toBe(true);
     if (!start.ok) throw new Error("expected start ok");
     expect(start.copied).toBe(true);
+    expect(start.normalizedSlug).toBe(EXPECTED_NORMALIZED_SLUG);
     expect(start.sourceCommit).toBe(MOCK_SOURCE_COMMIT);
+
+    const jaAfterStart = await fs.readFile(start.jaIndexPath, "utf8");
+    expect(jaAfterStart).toContain(MOCK_SOURCE_COMMIT);
+    expect(jaAfterStart).toContain("l10n:");
 
     const commitGet = await runMdnTransCommitGet({
       url: E2E_DOC_URL,
@@ -81,6 +85,11 @@ describe("E2E: fixture workspace start → commit-get → review", () => {
     expect(commitGet.ok).toBe(true);
     if (!commitGet.ok) throw new Error("expected commit-get ok");
     expect(commitGet.sourceCommit).toBe(MOCK_SOURCE_COMMIT);
+    expect(commitGet.normalizedSlug).toBe(EXPECTED_NORMALIZED_SLUG);
+    expect(commitGet.contentRoot).toBe(contentRoot);
+    expect(commitGet.enUsIndexPath).toContain(
+      path.join("files", "en-us", "glossary", "e2e_fixture", "index.md"),
+    );
 
     const rulesDir = path.join(repoRoot, "rules");
     const glossaryJson = path.join(
@@ -100,7 +109,13 @@ describe("E2E: fixture workspace start → commit-get → review", () => {
     });
     expect(review.ok).toBe(true);
     if (!review.ok) throw new Error("expected review ok");
+    expect(review.version).toBe("1");
+    expect(review.normalizedSlug).toBe(EXPECTED_NORMALIZED_SLUG);
+    expect(review.glossaryPath).toBe(glossaryJson);
     expect(Array.isArray(review.findings)).toBe(true);
     expect(review.jaIndexPath).toBe(start.jaIndexPath);
+    expect(
+      review.findings.some((f) => f.code === "GLOSSARY_SECOND_ARG_RECOMMENDED"),
+    ).toBe(true);
   });
 });

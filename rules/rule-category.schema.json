@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/gurezo/mdn-translation-ja-mcp/rules/rule-category.schema.json",
+  "title": "MDN Japanese translation guideline link (single category)",
+  "description": "レビュー時に参照するガイドライン・文体表などへのリンクを1カテゴリ分まとめたデータ。",
+  "type": "object",
+  "required": ["url"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "任意。エディタ用に JSON Schema の場所を指す。"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "参照先の URL"
+    },
+    "title": {
+      "type": "string",
+      "description": "人間向けの短いタイトル（任意）"
+    },
+    "description": {
+      "type": "string",
+      "description": "補足説明（任意）"
+    }
+  }
+}

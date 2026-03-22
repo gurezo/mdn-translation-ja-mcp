@@ -461,12 +461,13 @@ export async function runReviewTranslation(options: {
   url: string;
   glossaryPath?: string;
   packageRoot?: string;
-  translationRulesJsonPath?: string;
+  /** `editorial.rules.json` など4ファイルを含む `rules/` 相当のディレクトリ */
+  translationRulesDir?: string;
   localReviewRulesDir?: string;
 }): Promise<ReviewTranslationResult> {
   let rules: TranslationRules;
   try {
-    rules = loadTranslationRules(options.translationRulesJsonPath);
+    rules = loadTranslationRules(options.translationRulesDir);
   } catch (e: unknown) {
     return {
       ok: false,

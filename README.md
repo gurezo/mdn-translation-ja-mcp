@@ -90,60 +90,6 @@ http://127.0.0.1:3050/mcp
 }
 ```
 
-## 🛠️ 提供 Tools（実装済み）
-
-以下は `tools/list` に基づく実際の Tool 一覧です。
-
-### 🔧 基盤系
-
-#### `/translation_rules`
-
-翻訳ルール（ガイドライン）を取得します。
-
-#### `/mdn_workspace_paths`
-
-ローカルの workspace パス情報を取得します。
-
-#### `/mdn_resolve_page_paths`
-
-MDN URL から対応するファイルパスを解決します。
-
-### 🚀 翻訳開始・同期
-
-[開発コンセプト（Wiki）](https://github.com/gurezo/mdn-translation-ja-mcp/wiki/mdn%E2%80%90translation%E2%80%90ja%E2%80%90mcp-%E9%96%8B%E7%99%BA%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88) のスラッシュコマンド案（`/mdn-trans-*`）に相当する処理を、次の MCP ツールで行います。
-
-#### `/mdn_trans_start`
-
-MDN の URL から対象ページを特定し、`mdn/content` 側の原文をもとに `translated-content/files/ja` 配下へ翻訳用の `index.md` を用意します。
-
-#### `/mdn_trans_commit_get`
-
-`content` リポジトリ内の該当ファイルについて、Git 上の最新コミットハッシュを取得します（`l10n.sourceCommit` の更新に使います）。
-
-#### `/mdn_trans_source_commit_set`
-
-日本語 `index.md` の front-matter に `l10n.sourceCommit` を書き込みます（本文は変更しません）。
-
-### 🔤 glossary 関連
-
-#### `/mdn_glossary_macro_scan`
-
-`{{glossary(...)}}` マクロを列挙します。
-
-#### `/mdn_glossary_replacement_candidates`
-
-用語集 JSON に基づき、第2引数（表示名）の置換候補を返します。
-
-#### `/mdn_glossary_apply`
-
-候補に沿ってマクロを置換します（`dry_run` 可）。
-
-### 🔍 レビュー
-
-#### `/review_translation`
-
-ルールベースで翻訳ファイルをチェックし、指摘を JSON で返します（front-matter・未翻訳・glossary・表記など）。人手レビュー時の参照リンクは **`/translation_rules`** の結果にも含まれます。
-
 ## 📁 ディレクトリ構成（想定）
 
 ```text
@@ -181,7 +127,7 @@ docs/
 - 外部サービス化
 - 外部API依存
 
-## Wiki のコマンド案と MCP ツール名の対応
+## MCP ツール名の対応
 
 [開発コンセプト（Wiki）](https://github.com/gurezo/mdn-translation-ja-mcp/wiki/mdn%E2%80%90translation%E2%80%90ja%E2%80%90mcp-%E9%96%8B%E7%99%BA%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88) の `/mdn-trans-*`（ハイフン表記のコマンド案）と、MCP ツール名（`/mdn_trans_*` など）の対応は次のとおりです。
 

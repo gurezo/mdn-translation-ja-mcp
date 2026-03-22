@@ -1,0 +1,6 @@
+{
+  "$schema": "./rule-category.schema.json",
+  "url": "https://docs.google.com/spreadsheets/d/1y-hC-xMXawCgcYZwJDnvuSlAOTgMRLLyqXurpYkJbYE/edit#gid=0",
+  "title": "日本語の文体",
+  "description": "mozilla-japan 翻訳作業で参照する文体表（旧 spreadsheet キー相当）"
+}

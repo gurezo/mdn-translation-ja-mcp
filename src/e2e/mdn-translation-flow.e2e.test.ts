@@ -82,7 +82,6 @@ describe("E2E: fixture workspace start → commit-get → review", () => {
     if (!commitGet.ok) throw new Error("expected commit-get ok");
     expect(commitGet.sourceCommit).toBe(MOCK_SOURCE_COMMIT);
 
-    const rulesJson = path.join(repoRoot, "rules", "translation-rules.json");
     const rulesDir = path.join(repoRoot, "rules");
     const glossaryJson = path.join(
       repoRoot,
@@ -95,7 +94,7 @@ describe("E2E: fixture workspace start → commit-get → review", () => {
     const review = await runReviewTranslation({
       url: E2E_DOC_URL,
       packageRoot,
-      translationRulesJsonPath: rulesJson,
+      translationRulesDir: rulesDir,
       localReviewRulesDir: rulesDir,
       glossaryPath: glossaryJson,
     });

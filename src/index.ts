@@ -28,7 +28,7 @@ server.registerTool(
   {
     title: "Translation guideline links",
     description:
-      "日本語 MDN 翻訳向けの表記・L10N・用語集・文体（rules/translation-rules.json）と、ローカルレビュー用 JSON（Mozilla 用語抜粋・文体ルール・禁止表現）を読み込み、検証済み JSON を返す。",
+      "日本語 MDN 翻訳向けの表記・L10N・用語集・文体（rules/editorial.rules.json 等4ファイル）と、ローカルレビュー用 JSON（Mozilla 用語抜粋・文体ルール・禁止表現）を読み込み、検証済み JSON を返す。",
     inputSchema: z.object({}),
   },
   async () => {
@@ -282,7 +282,7 @@ server.registerTool(
   {
     title: "Rule-based translation review (v1)",
     description:
-      "日本語 index.md をルールベースでレビューし、front-matter・未翻訳の疑い・{{glossary}}・文体（簡易）・禁止表現（rules/prohibited-expressions.json）に関する findings（JSON）を返す。rules/translation-rules.json・ローカルレビュー用 JSON・用語集 JSON（glossary_path または MDN_GLOSSARY_JSON_PATH）を参照。",
+      "日本語 index.md をルールベースでレビューし、front-matter・未翻訳の疑い・{{glossary}}・文体（簡易）・禁止表現（rules/prohibited-expressions.json）に関する findings（JSON）を返す。rules/*.rules.json（ガイドラインリンク）・ローカルレビュー用 JSON・用語集 JSON（glossary_path または MDN_GLOSSARY_JSON_PATH）を参照。style.rules.json は文体ガイドラインの URL 用。文体パターン検査は rules/style-rules.json。",
     inputSchema: z.object({
       url: z.url("有効な URL を指定してください。"),
       glossary_path: z

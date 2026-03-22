@@ -129,7 +129,9 @@ MCP ツール名（`/mdn_trans_*` など）の対応は次のとおりです。
 | — | `/translation_rules` | 表記・L10N リンク等の JSON |
 
 
-## 🗂️ パスの解決順（MCP ツール `/mdn_workspace_paths`）
+## 🗂️ パスの解決順
+
+対象 MCP ツール: `/mdn_workspace_paths`
 
 1. **環境変数（任意）** — `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**指定すると、その絶対パスをそのまま使います。  
    片方だけの指定はできません（誤設定防止のためエラーになります）。
@@ -139,7 +141,9 @@ MCP ツール名（`/mdn_trans_*` など）の対応は次のとおりです。
 **リポジトリ実体** — 解決した `content` 相当のルートには `files/en-us` が、`translated-content` 相当のルートには `files/ja` がそれぞれディレクトリとして存在する必要があります（公式リポジトリを clone した状態）。  
 名前だけの空フォルダではエラーになります。
 
-## 📚 用語集 JSON（ツール `/mdn_glossary_replacement_candidates` / `/mdn_glossary_apply`）
+## 📚 用語集 JSON
+
+関連 MCP ツール: `/mdn_glossary_replacement_candidates` / `/mdn_glossary_apply`
 
 `{{glossary("term")}}` の第2引数（表示名）の置換候補は、
 [src/shared/data/glossary-terms.json](src/shared/data/glossary-terms.json) をビルド時に `dist/shared/data/` にコピーしたものを既定で参照します。

@@ -44,6 +44,37 @@ describe("runMdnTransCommitGet", () => {
     return { packageRoot, contentRoot };
   }
 
+  it("returns GIT_COMMAND_FAILED when git throws without not-a-repository message", async () => {
+    const { packageRoot, contentRoot } = await makeWorkspace();
+    const enRel = ["files", "en-us", "web", "api", "streams_api", "index.md"];
+    await fs.mkdir(path.dirname(path.join(contentRoot, ...enRel)), {
+      recursive: true,
+    });
+    await fs.writeFile(
+      path.join(contentRoot, ...enRel),
+      `---
+title: Streams API
+slug: Web/API/Streams_API
+---
+
+# English
+`,
+      "utf8",
+    );
+
+    const result = await runMdnTransCommitGet({
+      url: "https://developer.mozilla.org/en-US/docs/Web/API/Streams_API",
+      packageRoot,
+      gitLog: async () => {
+        throw new Error("git: arbitrary failure");
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    if (result.ok) throw new Error("expected error");
+    expect(result.code).toBe("GIT_COMMAND_FAILED");
+  });
+
   it("returns NOT_A_GIT_REPOSITORY when git stderr indicates not a repo", async () => {
     const { packageRoot, contentRoot } = await makeWorkspace();
     const enRel = ["files", "en-us", "web", "api", "fetch_api", "index.md"];

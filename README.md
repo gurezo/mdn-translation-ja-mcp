@@ -36,7 +36,7 @@ Cursor の MCP 設定ファイルの場所や形式の詳細は、[Cursor のド
 
 ### 用語集 JSON（ツール `mdn_glossary_replacement_candidates` / `mdn_glossary_apply`）
 
-`{{glossary("term")}}` の第2引数（表示名）の置換候補は、[src/data/glossary-terms.json](src/data/glossary-terms.json) をビルド時に `dist/data/` にコピーしたものを既定で参照します。
+`{{glossary("term")}}` の第2引数（表示名）の置換候補は、[src/shared/data/glossary-terms.json](src/shared/data/glossary-terms.json) をビルド時に `dist/shared/data/` にコピーしたものを既定で参照します。
 
 - **上書き** — 環境変数 `MDN_GLOSSARY_JSON_PATH` に別ファイルの絶対パスを指定するか、MCP ツール引数 `glossary_path` でパスを渡すと、その JSON を使います。
 - **未登録のスラグ** — 用語集にキーが無いマクロは `status: "missing"` として返します（推測で第2引数は埋めません）。

@@ -17,7 +17,12 @@ export type MdnWorkspacePaths = {
 export type ResolveWorkspaceErrorCode =
   | "ENV_PARTIAL"
   | "SIBLING_MISSING"
-  | "NOT_DIRECTORY";
+  | "NOT_DIRECTORY"
+  | "INVALID_MDN_LAYOUT";
+
+export type MdnLayoutInvalidPart =
+  | "content-files-en-us"
+  | "translated-files-ja";
 
 export type ResolveWorkspaceResult =
   | { ok: true; paths: MdnWorkspacePaths }
@@ -31,6 +36,12 @@ export type ResolveWorkspaceResult =
         workspaceParent: string;
         missing: ("content" | "translated-content")[];
         notDirectory: ("content" | "translated-content")[];
+        /** mdn/content に相当するリポジトリ内の英語本文ルート（files/en-us） */
+        expectedContentFilesEnUs?: string;
+        /** mdn/translated-content に相当するリポジトリ内の日本語本文ルート（files/ja） */
+        expectedTranslatedFilesJa?: string;
+        /** INVALID_MDN_LAYOUT 時: どちらが不正か */
+        layoutInvalid?: MdnLayoutInvalidPart[];
       };
     };
 
@@ -150,6 +161,43 @@ export async function resolveMdnWorkspacePaths(options?: {
         workspaceParent,
         missing,
         notDirectory,
+      },
+    };
+  }
+
+  const expectedContentFilesEnUs = path.join(contentRoot, "files", "en-us");
+  const expectedTranslatedFilesJa = path.join(
+    translatedContentRoot,
+    "files",
+    "ja",
+  );
+
+  const [kindEnUs, kindJa] = await Promise.all([
+    pathKind(expectedContentFilesEnUs),
+    pathKind(expectedTranslatedFilesJa),
+  ]);
+
+  const layoutInvalid: MdnLayoutInvalidPart[] = [];
+  if (kindEnUs !== "directory") layoutInvalid.push("content-files-en-us");
+  if (kindJa !== "directory") layoutInvalid.push("translated-files-ja");
+
+  if (layoutInvalid.length > 0) {
+    return {
+      ok: false,
+      code: "INVALID_MDN_LAYOUT",
+      message:
+        "指定されたパスは mdn/content および mdn/translated-content のリポジトリ構成ではありません。" +
+        " 各ルート直下に files/en-us と files/ja ディレクトリがあること（公式リポジトリを clone した状態）を確認してください。" +
+        " 空のフォルダだけ作成した場合もこのエラーになります。",
+      details: {
+        contentRoot,
+        translatedContentRoot,
+        workspaceParent,
+        missing,
+        notDirectory,
+        expectedContentFilesEnUs,
+        expectedTranslatedFilesJa,
+        layoutInvalid,
       },
     };
   }

@@ -1,18 +1,18 @@
 /**
  * content リポジトリ上の英語 index.md に対する最新コミットハッシュ（sourceCommit）を取得する。
  */
-import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
+import { resolveMdnPageFromUrl } from "../shared/mdn-url-resolve.js";
 import {
   getEnUsSourceCommitHash,
   type GitLogExec,
   type MdnTransCommitGetErrorCode,
-} from "./mdn-content-source-commit.js";
-import { resolveMdnWorkspacePaths } from "./workspace.js";
+} from "../shared/mdn-content-source-commit.js";
+import { resolveMdnWorkspacePaths } from "../shared/workspace.js";
 
 export type {
   GitLogExec,
   MdnTransCommitGetErrorCode,
-} from "./mdn-content-source-commit.js";
+} from "../shared/mdn-content-source-commit.js";
 
 export type MdnTransCommitGetResult =
   | {

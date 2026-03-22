@@ -1,6 +1,6 @@
 /**
  * 用語集 JSON（マクロ第2引数の候補）を読み込む。
- * デフォルトは本モジュールと同階層の `data/glossary-terms.json`（ビルド後は dist/data）。
+ * デフォルトは本モジュールと同階層の `data/glossary-terms.json`（ビルド後は dist/shared/data）。
  */
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -40,7 +40,7 @@ function moduleDirname(): string {
 }
 
 /**
- * 同梱用語集のパス（`src/glossary-loader.ts` → `src/data/…`、`dist/glossary-loader.js` → `dist/data/…`）。
+ * 同梱用語集のパス（`src/shared/glossary-loader.ts` → `src/shared/data/…`、`dist/shared/glossary-loader.js` → `dist/shared/data/…`）。
  */
 export function defaultBundledGlossaryPath(options?: {
   /** テスト用: 本パッケージルートを模倣する絶対パス（未指定時は import.meta.url から算出） */

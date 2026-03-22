@@ -83,7 +83,11 @@ function resolveRulesDir(): string {
     return fromEnv;
   }
   const here = dirname(fileURLToPath(import.meta.url));
-  const candidates = [join(here, "rules"), join(here, "..", "rules")];
+  const candidates = [
+    join(here, "rules"),
+    join(here, "..", "rules"),
+    join(here, "..", "..", "rules"),
+  ];
   for (const p of candidates) {
     if (existsSync(p)) {
       return p;

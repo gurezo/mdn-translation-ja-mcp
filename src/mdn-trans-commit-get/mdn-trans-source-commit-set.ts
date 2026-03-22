@@ -6,14 +6,14 @@ import fs from "node:fs/promises";
 import {
   getEnUsSourceCommitHash,
   type GitLogExec,
-} from "./mdn-content-source-commit.js";
-import type { MdnTransCommitGetErrorCode } from "./mdn-content-source-commit.js";
-import { resolveMdnPageFromUrl } from "./mdn-url-resolve.js";
+} from "../shared/mdn-content-source-commit.js";
+import type { MdnTransCommitGetErrorCode } from "../shared/mdn-content-source-commit.js";
+import { resolveMdnPageFromUrl } from "../shared/mdn-url-resolve.js";
 import {
   setL10nSourceCommitInTranslationMarkdown,
   type SetL10nSourceCommitErrorCode,
-} from "./translation-front-matter.js";
-import { resolveMdnWorkspacePaths } from "./workspace.js";
+} from "../shared/translation-front-matter.js";
+import { resolveMdnWorkspacePaths } from "../shared/workspace.js";
 
 export type MdnTransSourceCommitSetErrorCode =
   | MdnTransCommitGetErrorCode

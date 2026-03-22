@@ -9,8 +9,8 @@ import {
   loadGlossaryJson,
   lookupSecondArg,
   type GlossaryData,
-} from "./glossary-loader.js";
-import { scanGlossaryMacrosInText } from "./glossary-macro-scan.js";
+} from "../shared/glossary-loader.js";
+import { scanGlossaryMacrosInText } from "../shared/glossary-macro-scan.js";
 import {
   loadLocalReviewRules,
   type LocalReviewRulesBundle,
@@ -19,7 +19,7 @@ import {
 import {
   resolveMdnPageFromUrl,
   type ResolveMdnPageFromUrlResult,
-} from "./mdn-url-resolve.js";
+} from "../shared/mdn-url-resolve.js";
 import {
   loadTranslationRules,
   type TranslationRules,
@@ -86,7 +86,7 @@ export type ReviewTranslationError =
       message: string;
       details?: unknown;
     }
-  | (import("./glossary-loader.js").LoadGlossaryJsonResult & { ok: false });
+  | (import("../shared/glossary-loader.js").LoadGlossaryJsonResult & { ok: false });
 
 export type ReviewTranslationResult =
   | ReviewTranslationSuccess

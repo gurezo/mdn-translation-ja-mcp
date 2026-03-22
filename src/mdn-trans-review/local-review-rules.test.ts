@@ -14,6 +14,7 @@ import {
 const repoRulesDir = join(
   dirname(fileURLToPath(import.meta.url)),
   "..",
+  "..",
   "rules",
 );
 

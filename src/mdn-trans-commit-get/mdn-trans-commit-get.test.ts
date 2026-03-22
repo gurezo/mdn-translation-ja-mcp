@@ -7,7 +7,7 @@ import { runMdnTransCommitGet } from "./mdn-trans-commit-get.js";
 import {
   ENV_MDN_CONTENT_ROOT,
   ENV_MDN_TRANSLATED_CONTENT_ROOT,
-} from "./workspace.js";
+} from "../shared/workspace.js";
 
 describe("runMdnTransCommitGet", () => {
   beforeEach(() => {

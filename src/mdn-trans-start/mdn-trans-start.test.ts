@@ -16,7 +16,7 @@ function mockGitLog() {
 import {
   ENV_MDN_CONTENT_ROOT,
   ENV_MDN_TRANSLATED_CONTENT_ROOT,
-} from "./workspace.js";
+} from "../shared/workspace.js";
 
 describe("runMdnTransStart", () => {
   beforeEach(() => {

@@ -34,6 +34,7 @@ function resolveTranslationRulesPath(explicit?: string): string {
   const candidates = [
     join(here, "rules", DEFAULT_FILENAME),
     join(here, "..", "rules", DEFAULT_FILENAME),
+    join(here, "..", "..", "rules", DEFAULT_FILENAME),
   ];
   for (const p of candidates) {
     if (existsSync(p)) {

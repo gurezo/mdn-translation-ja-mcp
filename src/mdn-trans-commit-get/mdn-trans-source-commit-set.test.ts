@@ -7,7 +7,7 @@ import { runMdnTransSourceCommitSet } from "./mdn-trans-source-commit-set.js";
 import {
   ENV_MDN_CONTENT_ROOT,
   ENV_MDN_TRANSLATED_CONTENT_ROOT,
-} from "./workspace.js";
+} from "../shared/workspace.js";
 
 const MOCK_SOURCE_COMMIT = "2547f622337d6cbf8c3794776b17ed377d6aad57";
 

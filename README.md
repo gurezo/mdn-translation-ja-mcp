@@ -103,7 +103,7 @@ Streamable HTTP では **`type` と `url` を指定**してください。
 
 ## 🔗 MCP ツール名の対応
 
-[開発コンセプト（Wiki）](https://github.com/gurezo/mdn-translation-ja-mcp/wiki/mdn%E2%80%90translation%E2%80%90ja%E2%80%90mcp-%E9%96%8B%E7%99%BA%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88) では翻訳フローとスラッシュコマンドの考え方を説明しています。本サーバーが提供する MCP ツール（呼び出し表記）と主な用途は次のとおりです。
+本サーバーが提供する MCP ツール（呼び出し表記）と主な用途は次のとおりです。
 
 ### 翻訳フロー（最短）
 
@@ -119,11 +119,8 @@ Streamable HTTP では **`type` と `url` を指定**してください。
 | `/mdn_trans_start` | URL を指定して翻訳作業を開始（content → `translated-content/files/ja`） |
 | `/mdn_trans_commit_get` | `content` 側のコミットハッシュ取得・`sourceCommit` 反映のたたき台 |
 | `/mdn_trans_source_commit_set` | 本文は変えず `l10n.sourceCommit` のみ更新 |
-| `/mdn_resolve_page_paths` | 英語・日本語 `index.md` のパスと有無（`sourceExists` / `translationExists`） |
-| `/mdn_workspace_paths` | `content` / `translated-content` の絶対パス |
 | `/mdn_glossary_macro_scan` ほか | `{{glossary}}` の走査・候補・置換 |
 | `/review_translation` | 翻訳レビュー（findings JSON） |
-| `/translation_rules` | 表記・L10N リンク等の JSON |
 
 
 ## 🗂️ パスの解決順
@@ -165,7 +162,7 @@ Streamable HTTP では **`type` と `url` を指定**してください。
 
 ## 💬 Cursor での利用例（エージェント）
 
-MCP を有効にしたうえで、**チャットで対象ページの MDN URL を伝え**、上表のツールをエージェントに実行させます。  
+MCP を有効にしたうえで、**チャットで対象ページの MDN URL を伝え**、主に次の表のツールをエージェントに実行させます（フローや下の例では、必要に応じてパス確認・ルール参照などの補助ツールも使います）。  
 例（概念）：
 
 - 「`https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API` を翻訳開始して」→ `/mdn_trans_start`（必要なら `/mdn_resolve_page_paths` でパス確認）。

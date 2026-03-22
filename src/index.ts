@@ -28,7 +28,7 @@ server.registerTool(
   {
     title: "Translation guideline links",
     description:
-      "日本語 MDN 翻訳向けの表記・L10N・用語集・文体（rules/editorial.rules.json 等4ファイル）と、ローカルレビュー用 JSON（Mozilla 用語抜粋・文体ルール・禁止表現）を読み込み、検証済み JSON を返す。",
+      "日本語 MDN 翻訳向けの表記・L10N・用語集・文体（rules/editorial.rules.json 等4ファイル）と、ローカルレビュー用 JSON（Mozilla 用語抜粋・文体ルール・禁止表現）を読み込み、検証済み JSON を返す。ローカル側の出典は各ファイルの sourceUrl / retrievedAt を参照。",
     inputSchema: z.object({}),
   },
   async () => {

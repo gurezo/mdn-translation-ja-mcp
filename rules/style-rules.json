@@ -1,7 +1,7 @@
 {
   "$schema": "./style-rules.schema.json",
   "sourceUrl": "https://docs.google.com/spreadsheets/d/1y-hC-xMXawCgcYZwJDnvuSlAOTgMRLLyqXurpYkJbYE/edit#gid=0",
-  "retrievedAt": "2026-03-21",
+  "retrievedAt": "2026-03-22",
   "description": "mozilla-japan 翻訳作業で参照する文体表に基づく最小ルール（初期セット）。",
   "rules": [
     {
@@ -9,6 +9,24 @@
       "severity": "info",
       "message": "です・ます調とだ・である調の両方が本文に見られます。文体を統一できているか確認してください。",
       "implementationNote": "review-translation.ts の checkStyle と同趣旨。本文はコードフェンス外のみ対象。"
+    },
+    {
+      "id": "STYLE_KATAKANA_AND_GLOSSARY_CONSISTENCY",
+      "severity": "info",
+      "message": "固有名詞・技術用語のカタカナ表記と {{glossary}} 第2引数は、Mozilla 用語集・表記ガイドラインに揃えられているか確認してください。",
+      "implementationNote": "自動検査は未実装。translation_rules および用語集 JSON を参照して手動確認。"
+    },
+    {
+      "id": "STYLE_LIST_AND_PROCEDURE_VOICE",
+      "severity": "info",
+      "message": "箇条書き・手順の列挙で、体言止めとです・ます調が混在していないか確認してください。",
+      "implementationNote": "文体スプレッドシートに準拠。自動検査は未実装。"
+    },
+    {
+      "id": "STYLE_L10N_METADATA",
+      "severity": "info",
+      "message": "front-matter の l10n.sourceCommit 等、L10N ガイドラインで求められるメタデータが適切か確認してください。",
+      "implementationNote": "FM_MISSING_SOURCE_COMMIT 等の front-matter 検査と併せて参照。"
     }
   ]
 }

@@ -164,6 +164,27 @@ const foo = bar baz qux
     expect(findings.some((f) => f.category === "prohibited")).toBe(true);
   });
 
+  it("flags prohibited literal for untranslated marker", () => {
+    const raw = doc(`この節は（未翻訳）のままです。`);
+    const findings = reviewTranslationMarkdown(raw, {
+      glossaryData: { terms: {} },
+      prohibitedItems: [
+        {
+          id: "PLACEHOLDER_UNTRANSLATED_MARK",
+          matchType: "literal",
+          pattern: "（未翻訳）",
+          severity: "warning",
+          message: "未翻訳のマーカーが残っている可能性があります。",
+        },
+      ],
+    });
+    expect(
+      findings.some(
+        (f) => f.code === "PROHIBITED_PLACEHOLDER_UNTRANSLATED_MARK",
+      ),
+    ).toBe(true);
+  });
+
   it("skips prohibited check when prohibitedItems is omitted", () => {
     const raw = doc(`この節は（要翻訳）として残しています。`);
     const findings = reviewTranslationMarkdown(raw, {

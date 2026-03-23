@@ -1,0 +1,239 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>mdn-translation-ja-mcp</title><meta name="description" content="Documentation for mdn-translation-ja-mcp"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">mdn-translation-ja-mcp</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>mdn-translation-ja-mcp</h1></div><div class="tsd-panel tsd-typography"><h2 id="✨-概要" class="tsd-anchor-link">✨ 概要<a href="#✨-概要" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>このツールは、MDN 翻訳作業を支援・自動化することを目的としています。<br>
+Cursor から利用し、翻訳の開始・同期・レビューを支援します。</p>
+<p>MDN の本文はリポジトリに含めず、手元で clone した
+<a href="https://github.com/mdn/content">mdn/content</a> および
+<a href="https://github.com/mdn/translated-content">mdn/translated-content</a> を参照する想定です。</p>
+<h2 id="🎯-目的" class="tsd-anchor-link">🎯 目的<a href="#🎯-目的" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li>翻訳開始（原文コピー）の自動化。</li>
+<li>原文との同期（sourceCommit）の管理。</li>
+<li>glossary マクロの補助。</li>
+<li>ガイドラインに基づくレビュー。</li>
+</ul>
+<h2 id="🧱-アーキテクチャ" class="tsd-anchor-link">🧱 アーキテクチャ<a href="#🧱-アーキテクチャ" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="text">Cursor
+  ↓
+MCP Server（stdio または Streamable HTTP）
+  ↓
+ローカルFS + Git + rules(JSON)
+</code><button type="button">Copy</button></pre>
+
+<h2 id="📦-前提環境" class="tsd-anchor-link">📦 前提環境<a href="#📦-前提環境" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>以下の構成が必要です：</p>
+<pre><code class="text">.
+├── content
+├── translated-content
+└── mdn-translation-ja-mcp
+</code><button type="button">Copy</button></pre>
+
+<h3 id="必須リポジトリ" class="tsd-anchor-link">必須リポジトリ<a href="#必須リポジトリ" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><a href="https://github.com/mdn/content">https://github.com/mdn/content</a></li>
+<li><a href="https://github.com/mdn/translated-content">https://github.com/mdn/translated-content</a></li>
+</ul>
+<p>親ディレクトリで次のように <strong>clone</strong> できます（ディレクトリ名は任意です）。</p>
+<pre><code class="bash"><span class="hl-0">mkdir</span><span class="hl-1"> </span><span class="hl-2">-p</span><span class="hl-1"> </span><span class="hl-3">mdn-work</span><span class="hl-1"> &amp;&amp; </span><span class="hl-0">cd</span><span class="hl-1"> </span><span class="hl-3">mdn-work</span><br/><span class="hl-0">git</span><span class="hl-1"> </span><span class="hl-3">clone</span><span class="hl-1"> </span><span class="hl-3">https://github.com/mdn/content.git</span><br/><span class="hl-0">git</span><span class="hl-1"> </span><span class="hl-3">clone</span><span class="hl-1"> </span><span class="hl-3">https://github.com/mdn/translated-content.git</span><br/><span class="hl-0">git</span><span class="hl-1"> </span><span class="hl-3">clone</span><span class="hl-1"> </span><span class="hl-3">https://github.com/gurezo/mdn-translation-ja-mcp.git</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="導入手順（チェックリスト）" class="tsd-anchor-link">導入手順（チェックリスト）<a href="#導入手順（チェックリスト）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ol>
+<li>
+<p><strong>ランタイム</strong><br>
+<a href="https://nodejs.org/">Node.js</a> 22 以上（LTS 推奨）、<a href="https://cursor.com/">Cursor</a>（MCP の <strong>stdio</strong> または <strong>Streamable HTTP</strong> に対応した版）。<br>
+HTTP 必須ではありません。</p>
+</li>
+<li>
+<p><strong>リポジトリの配置</strong><br>
+上記のディレクトリツリーのとおり、<code>content</code>・<code>translated-content</code>・本リポジトリを<strong>同じ親ディレクトリ</strong>に並べることを推奨します。<br>
+別の場所に置く場合は、次項の環境変数で<strong>両方</strong>を指定してください。</p>
+</li>
+<li>
+<p><strong>ビルド</strong><br>
+<code>mdn-translation-ja-mcp</code> で <code>npm install</code> のあと <strong><code>npm run build</code></strong> を実行します。<br>
+<code>dist/index.js</code> / <code>dist/http.js</code> が生成されます。</p>
+</li>
+<li>
+<p><strong>（任意）環境変数</strong><br>
+推奨の兄弟ディレクトリ構成なら <strong><code>env</code> は不要</strong>です。<br>
+<code>content</code> / <code>translated-content</code> を別の場所に置く場合は、stdio 利用時は<br>
+<a href="media/cursor-mcp-with-env.json">examples/cursor-mcp-with-env.json</a> のとおり MCP 設定の <code>env</code> に<br>
+<code>MDN_CONTENT_ROOT</code> と <code>MDN_TRANSLATED_CONTENT_ROOT</code> を<strong>両方</strong>書きます（片方だけは不可。後述「パスの解決順」）。<br>
+<strong>Streamable HTTP で同じ変数を使う場合</strong>は、<code>npm run start:http</code> を実行するシェルで export するか、<br>
+プロセスマネージャ経由で渡してください。</p>
+</li>
+<li>
+<p><strong>Cursor との接続</strong><br>
+MCP の登録は Cursor の <code>mcp.json</code> で行います。<br>
+stdio の例は <a href="media/cursor-mcp.json">examples/cursor-mcp.json</a>、<br>
+Streamable HTTP の例は <a href="media/cursor-mcp-http.json">examples/cursor-mcp-http.json</a> を参照してください。<br>
+HTTP 利用時は先に <strong><code>npm run start:http</code></strong> でサーバーを起動してから接続します。<br>
+既定ポートは <strong>3050</strong>、パスは <strong><code>/mcp</code></strong>（<code>PORT</code> で変更可）。</p>
+</li>
+</ol>
+<h3 id="ビルド後の起動（ローカル-mcp）" class="tsd-anchor-link">ビルド後の起動（ローカル MCP）<a href="#ビルド後の起動（ローカル-mcp）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>いずれか一方を選びます。Cursor 側の設定（上記サンプル）と揃えてください。</p>
+<pre><code class="bash"><span class="hl-0">cd</span><span class="hl-1"> </span><span class="hl-3">mdn-translation-ja-mcp</span><span class="hl-1">   </span><span class="hl-4"># 既に clone 済みなら省略可</span><br/><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">install</span><span class="hl-1">    </span><span class="hl-4"># 未実行なら</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">build</span><br/><br/><span class="hl-4"># stdio（既定: npm start → dist/index.js）</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">start</span><br/><br/><span class="hl-4"># または Streamable HTTP（npm run start:http → dist/http.js）</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">start:http</span>
+</code><button type="button">Copy</button></pre>
+
+<p>初めて本リポジトリだけ取得する場合の例:</p>
+<pre><code class="bash"><span class="hl-0">git</span><span class="hl-1"> </span><span class="hl-3">clone</span><span class="hl-1"> </span><span class="hl-3">https://github.com/gurezo/mdn-translation-ja-mcp</span><br/><span class="hl-0">cd</span><span class="hl-1"> </span><span class="hl-3">mdn-translation-ja-mcp</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">install</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">build</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">start</span><br/><span class="hl-4"># または: npm run start:http</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="📚-api-ドキュメント（typedoc）" class="tsd-anchor-link">📚 API ドキュメント（TypeDoc）<a href="#📚-api-ドキュメント（typedoc）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Issue #79 対応として TypeScript API リファレンスを TypeDoc で生成できます。</p>
+<pre><code class="bash"><span class="hl-4"># 生成済みドキュメントの削除</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">docs:clean</span><br/><br/><span class="hl-4"># API ドキュメント生成（出力: docs/api）</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">docs:build</span><br/><br/><span class="hl-4"># GitHub Pages へ公開（gh-pages ブランチ）</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">docs:publish</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>docs:publish</code> は <code>docs:build</code> を内部で実行した後、<code>docs/api</code> を公開します。</p>
+<h2 id="🔗-mcp-ツール名の対応" class="tsd-anchor-link">🔗 MCP ツール名の対応<a href="#🔗-mcp-ツール名の対応" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>本サーバーが提供する MCP ツール名（Cursor のツール一覧に表示される名前）と主な用途です。<br>
+<strong>先頭に <code>/</code> は付きません</strong>（MCP の登録名は <code>mdn_trans_start</code> のようなスネークケースです）。</p>
+<h3 id="翻訳フロー（最短）" class="tsd-anchor-link">翻訳フロー（最短）<a href="#翻訳フロー（最短）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>一例として、翻訳開始 → 原文コミット同期 → glossary → レビューの順で使えます。</p>
+<ol>
+<li><strong>翻訳開始</strong> — 対象の MDN URL を伝え、<strong><code>mdn_trans_start</code></strong> で <code>ja</code> の <code>index.md</code> を用意します。</li>
+<li><strong>英語原文との同期</strong> — <strong><code>mdn_trans_commit_get</code></strong> で <code>sourceCommit</code> を取得し、<br>
+必要なら <strong><code>mdn_trans_source_commit_set</code></strong> で front-matter を更新する。</li>
+<li><strong>用語 <code>{{glossary}}</code></strong> —<br>
+<strong><code>mdn_glossary_macro_scan</code></strong> → <strong><code>mdn_glossary_replacement_candidates</code></strong> → <strong><code>mdn_glossary_apply</code></strong><br>
+（試すときは <code>dry_run</code> も可）。</li>
+<li><strong>レビュー</strong> — <strong><code>review_translation</code></strong> でルールベースの指摘を得る。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>MCP ツール名</th>
+<th>主な用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mdn_trans_start</code></td>
+<td>URL を指定して翻訳作業を開始<br>（content → <code>translated-content/files/ja</code>）</td>
+</tr>
+<tr>
+<td><code>mdn_trans_commit_get</code></td>
+<td><code>content</code> 側のコミットハッシュ取得・<br><code>sourceCommit</code> のたたき台</td>
+</tr>
+<tr>
+<td><code>mdn_trans_source_commit_set</code></td>
+<td>本文は変えず <code>l10n.sourceCommit</code> のみ更新</td>
+</tr>
+<tr>
+<td><code>mdn_glossary_macro_scan</code></td>
+<td><code>{{glossary}}</code> マクロの走査</td>
+</tr>
+<tr>
+<td><code>mdn_glossary_replacement_candidates</code></td>
+<td>置換候補の取得</td>
+</tr>
+<tr>
+<td><code>mdn_glossary_apply</code></td>
+<td>置換の適用（<code>dry_run</code> 可）</td>
+</tr>
+<tr>
+<td><code>review_translation</code></td>
+<td>翻訳レビュー（findings JSON）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="🗂️-パスの解決順" class="tsd-anchor-link">🗂️ パスの解決順<a href="#🗂️-パスの解決順" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>mdn_workspace_paths</code> および各ツールのワークスペース解決で共通です。<br>
+環境変数の要否は「導入手順（チェックリスト）」の（任意）環境変数と同じ前提です。</p>
+<ol>
+<li><strong>環境変数（任意）</strong> —<br>
+<code>MDN_CONTENT_ROOT</code> と <code>MDN_TRANSLATED_CONTENT_ROOT</code> を<strong>両方</strong>指定すると、その絶対パスをそのまま使います。<br>
+片方だけは不可（誤設定防止のためエラー）。</li>
+<li><strong>兄弟ディレクトリ</strong> — どちらの環境変数も未設定のとき、<br>
+本リポジトリのルート（ビルド後は <code>dist/</code> の親）の<strong>ひとつ上のディレクトリ</strong>を親とみなし、<br>
+そこにある <code>content</code> と <code>translated-content</code> を参照します。<code>cwd</code> には依存しません。</li>
+</ol>
+<p><strong>リポジトリ実体</strong> — 解決した <code>content</code> 相当のルートには <code>files/en-us</code> が、<br>
+<code>translated-content</code> 相当のルートには <code>files/ja</code> がそれぞれディレクトリとして存在する必要があります（公式リポジトリを clone した状態）。<br>
+名前だけの空フォルダではエラーになります。</p>
+<p>環境変数の MCP 設定例は<br>
+<a href="media/cursor-mcp-with-env.json">examples/cursor-mcp-with-env.json</a> を参照してください。</p>
+<h2 id="📋-mcp-ツールのエラー応答" class="tsd-anchor-link">📋 MCP ツールのエラー応答<a href="#📋-mcp-ツールのエラー応答" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>本サーバーは <strong>stdio</strong>（<code>npm start</code> → <code>dist/index.js</code>）または<br>
+<strong>Streamable HTTP</strong>（<code>npm run start:http</code> → <code>dist/http.js</code>）のいずれかで起動します。<br>
+各ツールは <strong>JSON テキスト</strong>を本文として返します。</p>
+<ul>
+<li><strong>MCP プロトコル上のツール結果</strong>は、ドメインのエラーであっても <strong>通常は成功として返されます</strong>。<br>
+（<code>content</code> に <code>type: &quot;text&quot;</code> の JSON 文字列が入る形）<br>
+<strong>エラーかどうかは本文 JSON の <code>ok</code> で判定</strong>してください。</li>
+<li><strong><code>ok: true</code></strong> — 処理が成功した、または <code>dry_run</code> などで予定のみ返した場合。</li>
+<li><strong><code>ok: false</code></strong> — 想定内の失敗（パス解決失敗、ファイル未存在、Git 取得失敗、用語集の読み込みエラーなど）。<br>
+<strong><code>code</code></strong>（<code>ENV_PARTIAL</code>、<code>SIBLING_MISSING</code>、<code>FILE_CHANGED</code> など、ツールごとに定義）と<br>
+<strong><code>message</code></strong>（人間向け説明）が付き、必要に応じて <strong><code>details</code></strong> に補足が入ります。</li>
+<li><strong>未捕捉の例外</strong>は MCP 実装に委ねられ、<br>
+クライアント側でツール呼び出しエラーとして扱われることがあります。</li>
+</ul>
+<p>エージェントやスクリプトでは、<strong>本文を <code>JSON.parse</code> したうえで <code>ok</code> を確認</strong>してください。<br>
+<code>content</code> / <code>translated-content</code> / 本リポジトリの配置が不適切だと、<br>
+<code>ok: false</code> になりやすいです。</p>
+<h2 id="💬-cursor-での利用例（エージェント）" class="tsd-anchor-link">💬 Cursor での利用例（エージェント）<a href="#💬-cursor-での利用例（エージェント）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>MCP を有効にしたうえで、<strong>チャットで対象ページの MDN URL を伝え</strong>、主に次の表のツールをエージェントに実行させます。<br>
+例（概念）：</p>
+<ul>
+<li>「<code>https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API</code> を翻訳開始して」→ <code>mdn_trans_start</code>。</li>
+<li>「この URL の英語原文の最新コミットは？」→ <code>mdn_trans_commit_get</code>。</li>
+<li>「<code>ja</code> の <code>index.md</code> の <code>sourceCommit</code> だけ英語に合わせて更新して」→<br>
+<code>mdn_trans_source_commit_set</code>。</li>
+<li>「<code>{{glossary}}</code> の第2引数を用語集に合わせて」→<br>
+<code>mdn_glossary_replacement_candidates</code> で確認のうえ <code>mdn_glossary_apply</code>（<code>dry_run</code> で試すことも可）。</li>
+<li>「翻訳ルールに沿ってレビューして」→ <code>review_translation</code>。</li>
+</ul>
+<p>人手レビューでは、<a href="https://github.com/mozilla-japan/translation/wiki/Editorial-Guideline">表記ガイドライン</a> などへのリンクは<br>
+<code>review_translation</code> の結果にも含まれることがあります。</p>
+<h2 id="🛠️-トラブルシュート" class="tsd-anchor-link">🛠️ トラブルシュート<a href="#🛠️-トラブルシュート" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>症状</th>
+<th>確認すること</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP で Cursor が MCP に接続できない</td>
+<td><strong><code>npm run start:http</code> が起動しているか</strong><br>Cursor の MCP 設定の <code>url</code>（ホスト・ポート・パス <code>/mcp</code>）が<br>一致しているか。</td>
+</tr>
+<tr>
+<td>MCP が起動しない / <code>Cannot find module</code></td>
+<td><code>npm run build</code> 済みか。<br>stdio のときは <code>args</code> のパスが <strong><code>dist/index.js</code> の絶対パス</strong>か。</td>
+</tr>
+<tr>
+<td><code>dist/index.js</code> が無い</td>
+<td>リポジトリルートで <code>npm install</code> と <code>npm run build</code>。</td>
+</tr>
+<tr>
+<td><code>mdn_workspace_paths</code> が失敗する（<code>ENV_PARTIAL</code>）</td>
+<td><code>MDN_CONTENT_ROOT</code> と <code>MDN_TRANSLATED_CONTENT_ROOT</code> は<br><strong>両方</strong>セットするか、<strong>両方</strong>未設定にする。</td>
+</tr>
+<tr>
+<td><code>SIBLING_MISSING</code> などパスが見つからない</td>
+<td>親ディレクトリに <code>content</code> と <code>translated-content</code> があるか。<br>または上記環境変数で正しい絶対パスを指定。</td>
+</tr>
+<tr>
+<td><code>mdn_trans_commit_get</code> が git 関連で失敗する</td>
+<td><code>content</code> が <strong>git clone</strong> された<br><a href="https://github.com/mdn/content">mdn/content</a> か、対象ファイルが追跡されているか。</td>
+</tr>
+<tr>
+<td>Node のバージョンエラー</td>
+<td><code>package.json</code> の <code>engines</code> は <code>node &gt;= 22</code>。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="🔐-ライセンスと第三者表記" class="tsd-anchor-link">🔐 ライセンスと第三者表記<a href="#🔐-ライセンスと第三者表記" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li>本リポジトリのソースコード: <a href="media/LICENSE">MIT License</a>。</li>
+<li>MDN 本文・翻訳データ・外部サイトの扱い: <a href="media/THIRD_PARTY.md">THIRD_PARTY.md</a>。</li>
+</ul>
+<h2 id="⚠️-注意" class="tsd-anchor-link">⚠️ 注意<a href="#⚠️-注意" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li>MDN コンテンツは含まれません。</li>
+<li><code>content</code> / <code>translated-content</code> は別途 clone が必要です。</li>
+<li>MDN のライセンスに従って利用してください。</li>
+</ul>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#✨-概要"><span>✨ 概要</span></a><a href="#🎯-目的"><span>🎯 目的</span></a><a href="#🧱-アーキテクチャ"><span>🧱 アーキテクチャ</span></a><a href="#📦-前提環境"><span>📦 前提環境</span></a><ul><li><a href="#必須リポジトリ"><span>必須リポジトリ</span></a></li><li><a href="#導入手順（チェックリスト）"><span>導入手順（チェックリスト）</span></a></li><li><a href="#ビルド後の起動（ローカル-mcp）"><span>ビルド後の起動（ローカル <wbr/>MCP）</span></a></li></ul><a href="#📚-api-ドキュメント（typedoc）"><span>📚 <wbr/>API ドキュメント（<wbr/>Type<wbr/>Doc）</span></a><a href="#🔗-mcp-ツール名の対応"><span>🔗 <wbr/>MCP ツール名の対応</span></a><ul><li><a href="#翻訳フロー（最短）"><span>翻訳フロー（最短）</span></a></li></ul><a href="#🗂️-パスの解決順"><span>🗂️ パスの解決順</span></a><a href="#📋-mcp-ツールのエラー応答"><span>📋 <wbr/>MCP ツールのエラー応答</span></a><a href="#💬-cursor-での利用例（エージェント）"><span>💬 <wbr/>Cursor での利用例（エージェント）</span></a><a href="#🛠️-トラブルシュート"><span>🛠️ トラブルシュート</span></a><a href="#🔐-ライセンスと第三者表記"><span>🔐 ライセンスと第三者表記</span></a><a href="#⚠️-注意"><span>⚠️ 注意</span></a></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">mdn-translation-ja-mcp</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>

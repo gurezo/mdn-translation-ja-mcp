@@ -14,6 +14,7 @@ const mozillaTermSchema = z.object({
   note: z.string().optional(),
 });
 
+/** Mozilla 用語集抜粋 JSON のスキーマ。 */
 export const mozillaGlossaryExcerptSchema = z.object({
   sourceUrl: z.url(),
   retrievedAt: dateOnlySchema,
@@ -21,6 +22,7 @@ export const mozillaGlossaryExcerptSchema = z.object({
   terms: z.array(mozillaTermSchema),
 });
 
+/** Mozilla 用語集抜粋 JSON の型。 */
 export type MozillaGlossaryExcerpt = z.infer<
   typeof mozillaGlossaryExcerptSchema
 >;
@@ -33,6 +35,7 @@ const styleRuleEntrySchema = z.object({
   implementationNote: z.string().optional(),
 });
 
+/** 文体ルール JSON のスキーマ。 */
 export const styleRulesFileSchema = z.object({
   sourceUrl: z.url(),
   retrievedAt: dateOnlySchema,
@@ -40,8 +43,10 @@ export const styleRulesFileSchema = z.object({
   rules: z.array(styleRuleEntrySchema),
 });
 
+/** 文体ルール JSON の型。 */
 export type StyleRulesFile = z.infer<typeof styleRulesFileSchema>;
 
+/** 禁止表現 1 件のスキーマ。 */
 export const prohibitedExpressionItemSchema = z.object({
   id: z.string(),
   matchType: z.enum(["literal", "regex"]),
@@ -50,10 +55,12 @@ export const prohibitedExpressionItemSchema = z.object({
   message: z.string(),
 });
 
+/** 禁止表現 1 件の型。 */
 export type ProhibitedExpressionItem = z.infer<
   typeof prohibitedExpressionItemSchema
 >;
 
+/** 禁止表現ファイル全体のスキーマ。 */
 export const prohibitedExpressionsFileSchema = z.object({
   sourceUrl: z.url(),
   retrievedAt: dateOnlySchema,
@@ -61,10 +68,12 @@ export const prohibitedExpressionsFileSchema = z.object({
   items: z.array(prohibitedExpressionItemSchema),
 });
 
+/** 禁止表現ファイル全体の型。 */
 export type ProhibitedExpressionsFile = z.infer<
   typeof prohibitedExpressionsFileSchema
 >;
 
+/** ローカルレビュー用に読み込む JSON 一式。 */
 export type LocalReviewRulesBundle = {
   mozillaGlossaryExcerpt: MozillaGlossaryExcerpt;
   styleRules: StyleRulesFile;

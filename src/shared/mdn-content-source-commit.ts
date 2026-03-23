@@ -21,6 +21,7 @@ export type MdnTransCommitGetErrorCode =
   | "SOURCE_UNTRACKED"
   | "PATH_OUTSIDE_CONTENT_ROOT";
 
+/** `getEnUsSourceCommitHash` の戻り値。 */
 export type GetEnUsSourceCommitHashResult =
   | { ok: true; sourceCommit: string }
   | {

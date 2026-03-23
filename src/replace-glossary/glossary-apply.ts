@@ -9,11 +9,13 @@ import {
   type MdnGlossaryReplacementCandidatesResult,
 } from "./glossary-replacement-candidates.js";
 
+/** `mdn_glossary_apply` の失敗コード。 */
 export type MdnGlossaryApplyErrorCode =
   | "FILE_CHANGED"
   | "APPLY_MISMATCH"
   | NonNullable<Extract<MdnGlossaryReplacementCandidatesResult, { ok: false }>["code"]>;
 
+/** 実際に適用した 1 件の差分。 */
 export type GlossaryApplyItem = {
   line: number;
   startOffsetInLine: number;
@@ -21,6 +23,7 @@ export type GlossaryApplyItem = {
   suggestedRaw: string;
 };
 
+/** `mdn_glossary_apply` の戻り値。 */
 export type MdnGlossaryApplyResult =
   | {
       ok: true;
@@ -116,6 +119,7 @@ function applyProposedToLines(
   return { ok: true, lines: out };
 }
 
+/** glossary 第2引数の候補を翻訳ファイルへ安全に適用する。 */
 export async function runMdnGlossaryApply(options: {
   url: string;
   dryRun?: boolean;

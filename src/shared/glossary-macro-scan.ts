@@ -8,6 +8,7 @@ import {
   type ResolveMdnPageFromUrlResult,
 } from "./mdn-url-resolve.js";
 
+/** 1 つの glossary マクロ検出結果。 */
 export type GlossaryMacroMatch = {
   /** 1 始まりの行番号 */
   line: number;
@@ -21,10 +22,12 @@ export type GlossaryMacroMatch = {
   secondArg?: string;
 };
 
+/** glossary マクロ走査時の失敗コード。 */
 export type MdnGlossaryMacroScanErrorCode =
   | NonNullable<Extract<ResolveMdnPageFromUrlResult, { ok: false }>["code"]>
   | "TRANSLATION_MISSING";
 
+/** glossary マクロ走査 API の戻り値。 */
 export type MdnGlossaryMacroScanResult =
   | {
       ok: true;
@@ -167,6 +170,7 @@ export function scanGlossaryMacrosInText(markdown: string): GlossaryMacroMatch[]
   return out;
 }
 
+/** URL に対応する翻訳ファイルから glossary マクロを走査する。 */
 export async function runMdnGlossaryMacroScan(options: {
   url: string;
   packageRoot?: string;

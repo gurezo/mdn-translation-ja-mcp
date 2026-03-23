@@ -15,12 +15,14 @@ import {
 } from "../shared/translation-front-matter.js";
 import { resolveMdnWorkspacePaths } from "../shared/workspace.js";
 
+/** `mdn_trans_source_commit_set` の失敗コード。 */
 export type MdnTransSourceCommitSetErrorCode =
   | MdnTransCommitGetErrorCode
   | SetL10nSourceCommitErrorCode
   | "TRANSLATION_MISSING"
   | "TRANSLATION_NOT_FILE";
 
+/** `mdn_trans_source_commit_set` の戻り値。 */
 export type MdnTransSourceCommitSetResult =
   | {
       ok: true;
@@ -57,6 +59,11 @@ async function pathIsRegularFile(
   }
 }
 
+/**
+ * 既存の日本語翻訳ファイルに `l10n.sourceCommit` を設定する。
+ *
+ * @param options 実行オプション
+ */
 export async function runMdnTransSourceCommitSet(options: {
   url: string;
   dryRun?: boolean;

@@ -6,24 +6,29 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+/** `content` / `translated-content` の解決済みルート。 */
 export const ENV_MDN_CONTENT_ROOT = "MDN_CONTENT_ROOT";
 export const ENV_MDN_TRANSLATED_CONTENT_ROOT = "MDN_TRANSLATED_CONTENT_ROOT";
 
+/** MDN 参照対象 2 リポジトリの絶対パス。 */
 export type MdnWorkspacePaths = {
   contentRoot: string;
   translatedContentRoot: string;
 };
 
+/** ワークスペース解決時の失敗コード。 */
 export type ResolveWorkspaceErrorCode =
   | "ENV_PARTIAL"
   | "SIBLING_MISSING"
   | "NOT_DIRECTORY"
   | "INVALID_MDN_LAYOUT";
 
+/** `INVALID_MDN_LAYOUT` の詳細区分。 */
 export type MdnLayoutInvalidPart =
   | "content-files-en-us"
   | "translated-files-ja";
 
+/** ワークスペース解決 API の戻り値。 */
 export type ResolveWorkspaceResult =
   | { ok: true; paths: MdnWorkspacePaths }
   | {

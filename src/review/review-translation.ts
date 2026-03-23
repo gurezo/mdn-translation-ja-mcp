@@ -25,8 +25,10 @@ import {
   type TranslationRules,
 } from "./translation-rules.js";
 
+/** 指摘の重大度。 */
 export type ReviewFindingSeverity = "error" | "warning" | "info";
 
+/** 指摘カテゴリ。 */
 export type ReviewFindingCategory =
   | "front_matter"
   | "untranslated"
@@ -34,6 +36,7 @@ export type ReviewFindingCategory =
   | "style"
   | "prohibited";
 
+/** 1 件のレビュー指摘。 */
 export type ReviewFinding = {
   severity: ReviewFindingSeverity;
   category: ReviewFindingCategory;
@@ -44,6 +47,7 @@ export type ReviewFinding = {
   snippet?: string;
 };
 
+/** 参照したガイドライン情報。 */
 export type ReviewTranslationRulesMeta = {
   editorialUrl: string;
   l10nUrl: string;
@@ -56,6 +60,7 @@ export type ReviewTranslationRulesMeta = {
   };
 };
 
+/** `review_translation` 成功時のレスポンス。 */
 export type ReviewTranslationSuccess = {
   ok: true;
   version: "1";
@@ -66,6 +71,7 @@ export type ReviewTranslationSuccess = {
   findings: ReviewFinding[];
 };
 
+/** `review_translation` 失敗時のレスポンス。 */
 export type ReviewTranslationError =
   | Extract<ResolveMdnPageFromUrlResult, { ok: false }>
   | {
@@ -88,6 +94,7 @@ export type ReviewTranslationError =
     }
   | (import("../shared/glossary-loader.js").LoadGlossaryJsonResult & { ok: false });
 
+/** `review_translation` の戻り値。 */
 export type ReviewTranslationResult =
   | ReviewTranslationSuccess
   | ReviewTranslationError;
@@ -427,6 +434,7 @@ export type ReviewTranslationMarkdownOptions = {
 /**
  * ファイル I/O なしで Markdown 全文をレビューする（テスト用）。
  */
+/** Markdown 文字列をレビューして指摘一覧を返す。 */
 export function reviewTranslationMarkdown(
   raw: string,
   options: ReviewTranslationMarkdownOptions,
@@ -457,6 +465,7 @@ export function reviewTranslationMarkdown(
   return findings;
 }
 
+/** URL に対応する翻訳ファイルを読み込み、ルールベースレビューを実行する。 */
 export async function runReviewTranslation(options: {
   url: string;
   glossaryPath?: string;

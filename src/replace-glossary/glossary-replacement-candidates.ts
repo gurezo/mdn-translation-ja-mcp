@@ -12,11 +12,13 @@ import {
 const MISSING_MESSAGE =
   "用語集 JSON に該当するスラグがありません。Mozilla L10N 用語集（Wiki）を手動で確認してください。";
 
+/** glossary 第2引数候補の分類。 */
 export type GlossaryReplacementCandidateStatus =
   | "proposed"
   | "missing"
   | "already_set";
 
+/** 1 件の glossary 置換候補。 */
 export type GlossaryReplacementCandidate = {
   line: number;
   startOffsetInLine: number;
@@ -29,6 +31,7 @@ export type GlossaryReplacementCandidate = {
   message?: string;
 };
 
+/** `mdn_glossary_replacement_candidates` の戻り値。 */
 export type MdnGlossaryReplacementCandidatesResult =
   | {
       ok: true;
@@ -44,6 +47,7 @@ function quoteForGlossaryMacro(s: string): string {
   return `"${s.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
 }
 
+/** 第2引数を含む `{{glossary(...)}}` 文字列を生成する。 */
 export function buildSuggestedGlossaryMacro(
   macroName: "glossary" | "Glossary",
   firstArg: string,
@@ -94,6 +98,7 @@ function matchToCandidate(
   };
 }
 
+/** URL に対応する翻訳ファイルの glossary 第2引数候補を生成する。 */
 export async function runMdnGlossaryReplacementCandidates(options: {
   url: string;
   glossaryPath?: string;

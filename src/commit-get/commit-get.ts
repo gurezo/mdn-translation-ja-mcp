@@ -14,6 +14,7 @@ export type {
   MdnTransCommitGetErrorCode,
 } from "../shared/mdn-content-source-commit.js";
 
+/** `mdn_trans_commit_get` の戻り値。 */
 export type MdnTransCommitGetResult =
   | {
       ok: true;

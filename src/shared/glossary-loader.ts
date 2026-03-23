@@ -7,6 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
 
+/** 環境変数経由で用語集 JSON パスを上書きするためのキー。 */
 export const ENV_MDN_GLOSSARY_JSON = "MDN_GLOSSARY_JSON_PATH";
 
 const GlossaryDataSchema = z.object({
@@ -18,13 +19,16 @@ const GlossaryDataSchema = z.object({
   ),
 });
 
+/** 用語集 JSON（`terms[firstArg].secondArg`）の型。 */
 export type GlossaryData = z.infer<typeof GlossaryDataSchema>;
 
+/** 用語集ロード時の失敗コード。 */
 export type LoadGlossaryJsonErrorCode =
   | "GLOSSARY_PATH_MISSING"
   | "GLOSSARY_READ_ERROR"
   | "GLOSSARY_INVALID";
 
+/** 用語集ロード API の戻り値。 */
 export type LoadGlossaryJsonResult =
   | { ok: true; path: string; data: GlossaryData }
   | {
@@ -66,6 +70,7 @@ function resolveGlossaryPath(options?: {
   return defaultBundledGlossaryPath({ moduleDir: options?.moduleDir });
 }
 
+/** 用語集 JSON をロードして検証する。 */
 export async function loadGlossaryJson(options?: {
   path?: string;
   moduleDir?: string;

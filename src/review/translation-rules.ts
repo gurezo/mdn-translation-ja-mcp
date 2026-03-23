@@ -18,6 +18,7 @@ export const translationRulesDataSchema = z.object({
   style: ruleCategorySchema,
 });
 
+/** 翻訳レビューで利用する 4 つのガイドライン定義。 */
 export type TranslationRules = z.infer<typeof translationRulesDataSchema>;
 
 const RULE_FILES = {

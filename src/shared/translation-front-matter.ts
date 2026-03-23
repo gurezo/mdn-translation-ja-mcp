@@ -4,11 +4,13 @@
 import matter from "gray-matter";
 import { stringify } from "yaml";
 
+/** front-matter 最小化時の失敗コード。 */
 export type MinimizeTranslationFrontMatterErrorCode =
   | "NO_FRONT_MATTER"
   | "MISSING_TITLE"
   | "MISSING_SLUG";
 
+/** front-matter 最小化 API の戻り値。 */
 export type MinimizeTranslationIndexMdResult =
   | { ok: true; markdown: string }
   | {
@@ -17,12 +19,14 @@ export type MinimizeTranslationIndexMdResult =
       message: string;
     };
 
+/** `l10n.sourceCommit` 設定時の失敗コード。 */
 export type SetL10nSourceCommitErrorCode =
   | "NO_FRONT_MATTER"
   | "MISSING_TITLE"
   | "MISSING_SLUG"
   | "INVALID_L10N";
 
+/** `l10n.sourceCommit` 設定 API の戻り値。 */
 export type SetL10nSourceCommitInTranslationMarkdownResult =
   | { ok: true; markdown: string }
   | {

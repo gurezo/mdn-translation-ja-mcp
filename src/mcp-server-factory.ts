@@ -1,5 +1,10 @@
 /**
- * MDN 日本語翻訳支援用 McpServer の生成（stdio / Streamable HTTP 双方で共有）。
+ * MDN 日本語翻訳支援用 `McpServer` を生成します。
+ *
+ * stdio エントリポイント (`src/index.ts`) と Streamable HTTP エントリポイント
+ * (`src/http.ts`) の両方から共通利用されるため、ツール定義はすべてこの関数に集約します。
+ *
+ * @returns 翻訳ワークフロー向けツールを登録済みの `McpServer`
  */
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";

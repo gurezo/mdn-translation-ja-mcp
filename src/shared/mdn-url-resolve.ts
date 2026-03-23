@@ -15,6 +15,7 @@ const ALLOWED_HOSTS = new Set([
   "www.developer.mozilla.org",
 ]);
 
+/** MDN URL パース時の失敗コード。 */
 export type ParseMdnDocsUrlErrorCode =
   | "INVALID_URL"
   | "INVALID_HOST"
@@ -22,6 +23,7 @@ export type ParseMdnDocsUrlErrorCode =
   | "EMPTY_SLUG"
   | "INVALID_PATH";
 
+/** MDN URL 解析結果。 */
 export type ParseMdnDocsUrlResult =
   | { ok: true; locale: string; slugSegments: string[] }
   | {
@@ -94,6 +96,7 @@ export function normalizeSlugSegments(slugSegments: string[]): string {
   return slugSegments.map((s) => s.toLowerCase()).join("/");
 }
 
+/** 正規化済み slug から `content` / `translated-content` 側の index.md パスを生成する。 */
 export function buildContentPaths(
   workspace: MdnWorkspacePaths,
   normalizedSlugPath: string,
@@ -126,10 +129,12 @@ async function pathIsExistingRegularFile(absolutePath: string): Promise<boolean>
   }
 }
 
+/** URL からページ解決する API の失敗コード。 */
 export type ResolveMdnPageFromUrlErrorCode =
   | ParseMdnDocsUrlErrorCode
   | ResolveWorkspaceErrorCode;
 
+/** URL からローカル翻訳対象を解決した結果。 */
 export type ResolveMdnPageFromUrlResult =
   | {
       ok: true;
@@ -148,6 +153,12 @@ export type ResolveMdnPageFromUrlResult =
       details?: unknown;
     };
 
+/**
+ * MDN のページ URL をローカルファイルパスへ解決する。
+ *
+ * @param urlString MDN ドキュメント URL
+ * @param options テスト向けオプション
+ */
 export async function resolveMdnPageFromUrl(
   urlString: string,
   options?: {

@@ -14,6 +14,7 @@ import type { MinimizeTranslationFrontMatterErrorCode } from "../shared/translat
 import { minimizeTranslationIndexMd } from "../shared/translation-front-matter.js";
 import { resolveMdnWorkspacePaths } from "../shared/workspace.js";
 
+/** `mdn_trans_start` の失敗コード。 */
 export type MdnTransStartErrorCode =
   | MdnTransCommitGetErrorCode
   | "SOURCE_MISSING"
@@ -21,6 +22,7 @@ export type MdnTransStartErrorCode =
   | "TRANSLATION_EXISTS"
   | MinimizeTranslationFrontMatterErrorCode;
 
+/** `mdn_trans_start` の戻り値。 */
 export type MdnTransStartResult =
   | {
       ok: true;
@@ -61,6 +63,11 @@ async function pathIsRegularFile(
   }
 }
 
+/**
+ * MDN URL から翻訳開始用の `files/ja/.../index.md` を作成する。
+ *
+ * @param options 実行オプション
+ */
 export async function runMdnTransStart(options: {
   url: string;
   dryRun?: boolean;

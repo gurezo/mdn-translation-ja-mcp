@@ -106,6 +106,23 @@ npm start
 # または: npm run start:http
 ```
 
+## 📚 API ドキュメント（TypeDoc）
+
+Issue #79 対応として TypeScript API リファレンスを TypeDoc で生成できます。
+
+```bash
+# 生成済みドキュメントの削除
+npm run docs:clean
+
+# API ドキュメント生成（出力: docs/api）
+npm run docs:build
+
+# GitHub Pages へ公開（gh-pages ブランチ）
+npm run docs:publish
+```
+
+`docs:publish` は `docs:build` を内部で実行した後、`docs/api` を公開します。
+
 ## 🔗 MCP ツール名の対応
 
 本サーバーが提供する MCP ツール名（Cursor のツール一覧に表示される名前）と主な用途です。  

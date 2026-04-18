@@ -14,6 +14,18 @@ function toolText(body: string) {
   };
 }
 
+/** mdn_trans_review 専用: 読み取り専用であることをクライアントとエージェントの両方に伝える */
+function toolReviewResult(body: string) {
+  return {
+    content: [{ type: "text" as const, text: body }],
+    structuredContent: {
+      tool: "mdn_trans_review",
+      readsFileOnly: true,
+      mustNotModifyReviewedFile: true,
+    },
+  };
+}
+
 export function createMcpServer(): McpServer {
   const server = new McpServer(
     {
@@ -96,21 +108,25 @@ export function createMcpServer(): McpServer {
   server.registerTool(
     "mdn_trans_review",
     {
-      title: "翻訳の簡易レビュー",
+      title: "翻訳の簡易レビュー（読み取りのみ）",
       description:
-        "禁止・注意表現リスト等に基づき、翻訳ファイルを機械的にチェックします（エージェントがガイドラインに沿った精査も行ってください）。",
+        "禁止・注意表現リスト等に基づき、翻訳ファイルを読み取って機械的にチェックします。サーバーは対象ファイルへ一切書き込みません（readOnlyHint）。エージェントはこのツール呼び出しの前後を問わず、レビュー結果を理由に当該ファイルを編集・整形・追記してはならない。ユーザーが「修正して」等と明示した場合のみ編集してよい。",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
       inputSchema: {
         jaFile: z
           .string()
           .describe(
-            "translated-content 内のパス（絶対パス、または files/ja/ からの相対）",
+            "読み取り対象。translated-content 内のパス（絶対パス、または files/ja/ からの相対）。このファイルは変更しない。",
           ),
       },
     },
     async ({ jaFile }) => {
       const roots = resolveWorkspaceRoots();
       const r = mdnTransReview(roots, { jaFile });
-      return toolText(r.message);
+      return toolReviewResult(r.message);
     },
   );
 

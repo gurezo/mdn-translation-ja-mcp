@@ -235,7 +235,7 @@ jaFile: files/ja/glossary/symbol/index.md
 | `dist/index.js` が無い                          | リポジトリルートで `npm install` と `npm run build`。                                                                        |
 | ワークスペースが解決できない                    | `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` は<br>**両方**セットするか、**両方**未設定にする。                       |
 | `content` / `translated-content` が見つからない | 親ディレクトリに `content` と `translated-content` があるか。<br>または上記環境変数で正しい絶対パスを指定。                  |
-| `mdn_trans_commit_get` が git 関連で失敗する    | `content` が **git clone** された<br>[mdn/content](https://github.com/mdn/content) か、対象ファイルが追跡されているか。      |
+| `mdn_trans_commit_get` が git 関連で失敗する    | `content` が **fork した [mdn/content](https://github.com/mdn/content) を clone** したリポジトリか、対象ファイルが追跡されているか。      |
 | Node のバージョンエラー                         | `package.json` の `engines` は `node >= 22`。                                                                                |
 
 ## 🔐 ライセンスと第三者表記

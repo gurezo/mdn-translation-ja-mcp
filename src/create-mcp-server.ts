@@ -31,7 +31,7 @@ export function createMcpServer(): McpServer {
     {
       title: "翻訳開始（原文コピーのみ）",
       description:
-        "Wiki 定義: content の files/en-us/docs/.../index.md を、同じ階層で files/ja/docs/.../index.md にコピーするのみ。翻訳・_redirects・他ファイル編集は行わない。",
+        "Wiki 定義: content の files/en-us/<category>/<slug...>/index.md を、同じ階層の translated-content 側 files/ja/<category>/<slug...>/index.md にコピーするのみ（URL 側の /docs/ セグメントはファイルパスには現れない）。翻訳・_redirects・他ファイル編集は行わない。",
       inputSchema: {
         url: z
           .string()

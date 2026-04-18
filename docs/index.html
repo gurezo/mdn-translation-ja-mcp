@@ -43,19 +43,35 @@ MCP Server（stdio または Streamable HTTP）
 </ul>
 <h3 id="translated-content-リポジトリ側で行うこと" class="tsd-anchor-link">translated-content リポジトリ側で行うこと<a href="#translated-content-リポジトリ側で行うこと" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>翻訳作業では <strong><code>translated-content</code> だけを Cursor のワークスペースとして開く</strong>ことが多く、この場合の MCP 接続は次のとおりです。</p>
-<p><strong>前提:</strong> <code>content</code>・<code>translated-content</code>・<code>mdn-translation-ja-mcp</code> の <strong>3 リポジトリを同じ親ディレクトリに並べる</strong>こと（上記ディレクトリツリー）。別の配置にする場合は、後述のとおり MCP の <code>env</code> で <code>content</code> / <code>translated-content</code> のパスを<strong>両方</strong>明示します。</p>
+<p><strong>前提:</strong> <code>content</code>・<code>translated-content</code>・<code>mdn-translation-ja-mcp</code> の <strong>3 リポジトリを同じ親ディレクトリに並べる</strong>こと（上記ディレクトリツリー）を推奨します。別の場所に置いている場合も、下記 <code>mcp.json</code> の <strong><code>env</code> に両方のルートを絶対パスで書く</strong>形は同じです。</p>
 <ol>
 <li><strong><code>translated-content</code> リポジトリのルート</strong>に、ディレクトリ <strong><code>.cursor</code></strong> を作成します。</li>
-<li><strong><code>translated-content/.cursor/mcp.json</code></strong> として <a href="media/translated-content-cursor-mcp-example.json">examples/translated-content-cursor-mcp-example.json</a> を参考に <code>mcpServers</code> を記述します（ワークスペースのルートが <code>translated-content</code> のとき、このパスに置きます）。</li>
-<li>サンプル中の <code>/absolute/path/to/...</code> は、次を指す <strong>実環境でのフルパス（絶対パス）</strong> に置き換えます。
+<li><strong><code>translated-content/.cursor/mcp.json</code></strong> を、次の <strong>実装例どおり</strong>に作成します（ワークスペースのルートが <code>translated-content</code> のとき、このパスに置きます）。<br>
+<a href="media/translated-content-cursor-mcp-example.json">examples/translated-content-cursor-mcp-example.json</a> は <strong>同一内容</strong>のファイルです。コピーしてからパスだけ差し替えても構いません。</li>
+</ol>
+<pre><code class="json">{
+  &quot;mcpServers&quot;: {
+    &quot;mdn-translation-ja&quot;: {
+      &quot;command&quot;: &quot;node&quot;,
+      &quot;args&quot;: [&quot;/absolute/path/to/mdn-translation-ja-mcp/dist/index.js&quot;],
+      &quot;env&quot;: {
+        &quot;MDN_CONTENT_ROOT&quot;: &quot;/absolute/path/to/content&quot;,
+        &quot;MDN_TRANSLATED_CONTENT_ROOT&quot;: &quot;/absolute/path/to/translated-content&quot;
+      }
+    }
+  }
+}
+</code><button type="button">Copy</button></pre>
+<ol start="3">
+<li>上記の <code>/absolute/path/to/...</code> は、次を指す <strong>実環境でのフルパス（絶対パス）</strong> に置き換えます。
 <ul>
-<li><code>.../content</code> — 英語原文リポジトリ（<a href="https://github.com/mdn/content">mdn/content</a>）のルート</li>
-<li><code>.../translated-content</code> — 日本語訳リポジトリ（<a href="https://github.com/mdn/translated-content">mdn/translated-content</a>）のルート</li>
-<li><code>.../mdn-translation-ja-mcp/dist/index.js</code> — 本ツールのエントリ（先に「mdn-translation-ja-mcp 側」で <code>npm run build</code> が必要）</li>
+<li><strong><code>args[0]</code></strong> — <code>mdn-translation-ja-mcp/dist/index.js</code> の絶対パス（先に「mdn-translation-ja-mcp 側」で <code>npm run build</code> 済みであること）</li>
+<li><strong><code>MDN_CONTENT_ROOT</code></strong> — 英語原文リポジトリ（<a href="https://github.com/mdn/content">mdn/content</a>）のルート</li>
+<li><strong><code>MDN_TRANSLATED_CONTENT_ROOT</code></strong> — 日本語訳リポジトリ（<a href="https://github.com/mdn/translated-content">mdn/translated-content</a>）のルート</li>
 </ul>
 </li>
 </ol>
-<p>同一親フォルダに 3 リポジトリを置く前提であっても、<code>args</code> と <code>env</code> の各パスは <strong>絶対パスで記載</strong>してください。</p>
+<p>同一親フォルダに 3 リポジトリを並べる場合も、<code>args</code> と <code>env</code> は <strong>必ず絶対パス</strong>で記載してください（プレースホルダのままにしないでください）。</p>
 <p><strong>注意（翻訳のコミット・PR）:</strong> <code>translated-content/.cursor/mcp.json</code> は <strong>手元の Cursor 用のローカル設定</strong>です。<strong>翻訳作業のコミットや <code>mdn/translated-content</code> へのプルリクエストの差分に含めないでください</strong>（絶対パスが入るため、リポジトリにコミットする想定ではありません）。誤ってステージしないよう、必要なら手元の <code>translated-content</code> で <code>.gitignore</code> に <code>.cursor/</code> を追加してください。</p>
 <h3 id="mdn-translation-ja-mcp-リポジトリ側で行うこと" class="tsd-anchor-link">mdn-translation-ja-mcp リポジトリ側で行うこと<a href="#mdn-translation-ja-mcp-リポジトリ側で行うこと" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>MCP サーバーとして使うには、少なくとも次を実行します。</p>
@@ -65,37 +81,6 @@ MCP Server（stdio または Streamable HTTP）
 <p>初めて本リポジトリだけ取得する場合の例:</p>
 <pre><code class="bash"><span class="hl-0">git</span><span class="hl-1"> </span><span class="hl-3">clone</span><span class="hl-1"> </span><span class="hl-3">https://github.com/gurezo/mdn-translation-ja-mcp</span><br/><span class="hl-0">cd</span><span class="hl-1"> </span><span class="hl-3">mdn-translation-ja-mcp</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">install</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">build</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">start</span><br/><span class="hl-4"># または: npm run start:http</span>
 </code><button type="button">Copy</button></pre>
-<h3 id="cursorのmcp設定（ほかのパターン）" class="tsd-anchor-link">Cursor の MCP 設定（ほかのパターン）<a href="#cursorのmcp設定（ほかのパターン）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>MCP の登録は Cursor の <strong><code>mcp.json</code></strong> で行います。<code>translated-content</code> をワークスペースに開く場合は <strong><code>translated-content/.cursor/mcp.json</code></strong>（上記）を使います。その他のワークスペースでは Cursor のユーザー設定側の <code>mcp.json</code> になることがあります。</p>
-<ul>
-<li><strong><code>translated-content</code> を開いて翻訳する場合（推奨）:</strong> 上記「translated-content リポジトリ側」と <a href="media/translated-content-cursor-mcp-example.json">examples/translated-content-cursor-mcp-example.json</a>。<code>env</code> に <code>MDN_CONTENT_ROOT</code> と <code>MDN_TRANSLATED_CONTENT_ROOT</code> を<strong>両方</strong>書きます（片方だけは不可。後述「パスの解決順」）。</li>
-<li><strong><code>content</code> / <code>translated-content</code> を別の場所に置く場合:</strong> 同じく <code>env</code> で<strong>両方</strong>に正しい絶対パスを指定します。</li>
-<li><strong>stdio（環境変数なし）:</strong> プロセスのカレントが <code>mdn-translation-ja-mcp</code> のルートで、親ディレクトリに兄弟として <code>content</code> と <code>translated-content</code> があるときは <code>env</code> を省略できます。例:</li>
-</ul>
-<pre><code class="json">{
-  &quot;mcpServers&quot;: {
-    &quot;mdn-translation-ja&quot;: {
-      &quot;command&quot;: &quot;node&quot;,
-      &quot;args&quot;: [&quot;/absolute/path/to/mdn-translation-ja-mcp/dist/index.js&quot;]
-    }
-  }
-}
-</code><button type="button">Copy</button></pre>
-<ul>
-<li><strong>Streamable HTTP:</strong> 先に <strong><code>npm run start:http</code></strong> でサーバーを起動してから接続します。例:</li>
-</ul>
-<pre><code class="json">{
-  &quot;mcpServers&quot;: {
-    &quot;mdn-translation-ja&quot;: {
-      &quot;type&quot;: &quot;http&quot;,
-      &quot;url&quot;: &quot;http://127.0.0.1:3050/mcp&quot;
-    }
-  }
-}
-</code><button type="button">Copy</button></pre>
-<p>既定ポートは <strong>3050</strong>、パスは <strong><code>/mcp</code></strong>（環境変数 <code>PORT</code> で変更可）。</p>
-<p><strong>Streamable HTTP で <code>MDN_CONTENT_ROOT</code> 等を使う場合</strong>は、<code>npm run start:http</code> を実行するシェルで export するか、プロセスマネージャ経由で渡してください。</p>
-
 <h2 id="📚-api-ドキュメント（typedoc）" class="tsd-anchor-link">📚 API ドキュメント（TypeDoc）<a href="#📚-api-ドキュメント（typedoc）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>TypeScript API リファレンスを TypeDoc で生成できます（出力先は <code>typedoc-out/</code>）。</p>
 <pre><code class="bash"><span class="hl-4"># 生成済みドキュメントの削除</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">docs:clean</span><br/><br/><span class="hl-4"># API ドキュメント生成</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">docs:build</span><br/><br/><span class="hl-4"># GitHub Pages へ公開（gh-pages ブランチ）</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">docs:publish</span>
@@ -141,7 +126,7 @@ MCP Server（stdio または Streamable HTTP）
 <p><code>mdn_trans_replace_glossary</code> と <code>mdn_trans_review</code> には、<strong>translated-content 内のファイルパス</strong>を渡してください（絶対パス、または <code>files/ja/</code> からの相対パス）。MCP はエディタの「開いているファイル」を知らないため、エージェントがパスを明示する想定です。</p>
 <h2 id="🗂️-パスの解決順" class="tsd-anchor-link">🗂️ パスの解決順<a href="#🗂️-パスの解決順" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>各ツールのワークスペース解決で共通です。<br>
-環境変数の要否は「translated-content リポジトリ側」「Cursor の MCP 設定（ほかのパターン）」の説明と同じ前提です。</p>
+環境変数の要否は「translated-content リポジトリ側」の <code>mcp.json</code>（<code>MDN_CONTENT_ROOT</code> / <code>MDN_TRANSLATED_CONTENT_ROOT</code> の指定）と同じ前提です。</p>
 <ol>
 <li><strong>環境変数（任意）</strong> —<br>
 <code>MDN_CONTENT_ROOT</code> と <code>MDN_TRANSLATED_CONTENT_ROOT</code> を<strong>両方</strong>指定すると、その絶対パスをそのまま使います。<br>
@@ -169,8 +154,8 @@ MCP Server（stdio または Streamable HTTP）
 <li>「この翻訳をルールでざっと確認して」→ <code>mdn_trans_review</code>（対象ファイルパスを指定。<strong>レビュー結果を理由にそのファイルを自動編集しない</strong>）。</li>
 </ul>
 <h3 id="translated-content-を-cursor-で開いて作業する場合" class="tsd-anchor-link">translated-content を Cursor で開いて作業する場合<a href="#translated-content-を-cursor-で開いて作業する場合" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>（MCP は <strong><code>translated-content/.cursor/mcp.json</code></strong>。手順と「翻訳 PR に <code>mcp.json</code> を含めない」旨の注意は「translated-content リポジトリ側で行うこと」を参照してください。）</p>
-<p>翻訳作業では <strong><code>translated-content</code> リポジトリだけをワークスペースとして開く</strong>運用がよくあります。次を満たすと、MCP 設定で <code>env</code> を付けなくても、サーバーが兄弟の <code>content</code> を解決できる場合があります（パス解決の詳細は「パスの解決順」）。</p>
+<p>（MCP の設定は <strong><code>translated-content/.cursor/mcp.json</code></strong>。手順と「翻訳 PR に <code>mcp.json</code> を含めない」旨の注意は「translated-content リポジトリ側で行うこと」を参照してください。）</p>
+<p>翻訳作業では <strong><code>translated-content</code> リポジトリだけをワークスペースとして開く</strong>運用がよくあります。上記のとおり <code>mcp.json</code> で <code>env</code> を指定していれば、ツールが <code>content</code> を参照する際のパスは一貫します（解決の詳細は「パスの解決順」）。</p>
 <ul>
 <li>親ディレクトリに <strong><code>content</code></strong> と <strong><code>translated-content</code></strong> が並んでいる（上記「前提環境」のディレクトリツリーと同じ）。</li>
 <li>Cursor で <strong>フォルダとして開いているルートが <code>translated-content</code></strong>（例: <code>.../mdn-work/translated-content</code>）。</li>

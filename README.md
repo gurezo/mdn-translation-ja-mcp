@@ -46,8 +46,8 @@ MCP Server（stdio または Streamable HTTP）
 
 ```bash
 mkdir -p mdn-work && cd mdn-work
-git clone https://github.com/<あなたのGitHubユーザー名>/content.git content
-git clone https://github.com/<あなたのGitHubユーザー名>/translated-content.git translated-content
+git clone https://github.com/<あなたのGitHubユーザー名>/content.git # fork した content をclone
+git clone https://github.com/<あなたのGitHubユーザー名>/translated-content.git # fork した translated-content をclone
 git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 ```
 
@@ -118,7 +118,7 @@ npm start
 
 ## 📚 API ドキュメント（TypeDoc）
 
-TypeScript API リファレンスを TypeDoc で生成できます（出力先は `typedoc-out/`）。
+TypeScript API リファレンスを TypeDoc で生成できます（出力先は `docs/`）。
 
 ```bash
 # 生成済みドキュメントの削除
@@ -228,15 +228,15 @@ jaFile: files/ja/glossary/symbol/index.md
 
 ## 🛠️ トラブルシュート
 
-| 症状                                            | 確認すること                                                                                                                 |
-| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| HTTP で Cursor が MCP に接続できない            | **`npm run start:http` が起動しているか**<br>Cursor の MCP 設定の `url`（ホスト・ポート・パス `/mcp`）が<br>一致しているか。 |
-| MCP が起動しない / `Cannot find module`         | `npm run build` 済みか。<br>stdio のときは `args` のパスが **`dist/index.js` の絶対パス**か。                                |
-| `dist/index.js` が無い                          | リポジトリルートで `npm install` と `npm run build`。                                                                        |
-| ワークスペースが解決できない                    | `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` は<br>**両方**セットするか、**両方**未設定にする。                       |
-| `content` / `translated-content` が見つからない | 親ディレクトリに `content` と `translated-content` があるか。<br>または上記環境変数で正しい絶対パスを指定。                  |
-| `mdn_trans_commit_get` が git 関連で失敗する    | `content` が **fork した [mdn/content](https://github.com/mdn/content) を clone** したリポジトリか、対象ファイルが追跡されているか。      |
-| Node のバージョンエラー                         | `package.json` の `engines` は `node >= 22`。                                                                                |
+| 症状                                            | 確認すること                                                                                                                         |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| HTTP で Cursor が MCP に接続できない            | **`npm run start:http` が起動しているか**<br>Cursor の MCP 設定の `url`（ホスト・ポート・パス `/mcp`）が<br>一致しているか。         |
+| MCP が起動しない / `Cannot find module`         | `npm run build` 済みか。<br>stdio のときは `args` のパスが **`dist/index.js` の絶対パス**か。                                        |
+| `dist/index.js` が無い                          | リポジトリルートで `npm install` と `npm run build`。                                                                                |
+| ワークスペースが解決できない                    | `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` は<br>**両方**セットするか、**両方**未設定にする。                               |
+| `content` / `translated-content` が見つからない | 親ディレクトリに `content` と `translated-content` があるか。<br>または上記環境変数で正しい絶対パスを指定。                          |
+| `mdn_trans_commit_get` が git 関連で失敗する    | `content` が **fork した [mdn/content](https://github.com/mdn/content) を clone** したリポジトリか、対象ファイルが追跡されているか。 |
+| Node のバージョンエラー                         | `package.json` の `engines` は `node >= 22`。                                                                                        |
 
 ## 🔐 ライセンスと第三者表記
 

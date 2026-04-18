@@ -3,9 +3,9 @@
 このツールは、MDN 翻訳作業を支援・自動化することを目的としています。  
 Cursor から利用し、翻訳の開始・同期・レビューを支援します。
 
-MDN の本文はリポジトリに含めず、手元で clone した
+MDN の本文はリポジトリに含めません。手元では
 [mdn/content](https://github.com/mdn/content) および
-[mdn/translated-content](https://github.com/mdn/translated-content) を参照する想定です。
+[mdn/translated-content](https://github.com/mdn/translated-content) を GitHub 上で **fork** し、その fork を **clone** して参照する想定です。
 
 ## 🎯 目的
 
@@ -35,20 +35,23 @@ MCP Server（stdio または Streamable HTTP）
 └── mdn-translation-ja-mcp
 ```
 
-### 必須リポジトリ
+### 必須リポジトリ（fork → clone）
 
-- [https://github.com/mdn/content](https://github.com/mdn/content)
-- [https://github.com/mdn/translated-content](https://github.com/mdn/translated-content)
+翻訳作業で参照する英語原文・日本語訳は、上流の次のリポジトリを自分の GitHub アカウントへ **fork** してから、手元へ **clone** します。
 
-親ディレクトリで次のように **clone** できます（ディレクトリ名は任意です）。  
-`content` と `translated-content` は [mdn/content](https://github.com/mdn/content) / [mdn/translated-content](https://github.com/mdn/translated-content) をそのまま clone しても、自分の fork を clone しても構いません（以下は fork の例です）。
+- 上流（fork 元）: [mdn/content](https://github.com/mdn/content)
+- 上流（fork 元）: [mdn/translated-content](https://github.com/mdn/translated-content)
+
+親ディレクトリで、fork したリポジトリを次のように **clone** します（クローン先ディレクトリ名は任意ですが、`content` / `translated-content` とすると後述のディレクトリツリーと一致します）。
 
 ```bash
 mkdir -p mdn-work && cd mdn-work
-git clone https://github.com/gurezo/content.git  # mdn/content の fork の例
-git clone https://github.com/gurezo/translated-content.git  # mdn/translated-content の fork の例
+git clone https://github.com/<あなたのGitHubユーザー名>/content.git content
+git clone https://github.com/<あなたのGitHubユーザー名>/translated-content.git translated-content
 git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 ```
+
+`<あなたのGitHubユーザー名>` は、fork 先のアカウント名に読み替えてください（上記は [mdn/content](https://github.com/mdn/content) / [mdn/translated-content](https://github.com/mdn/translated-content) の fork を clone する例です）。
 
 ### ランタイム
 
@@ -164,7 +167,7 @@ npm run docs:publish
    そこにある `content` と `translated-content` を参照します。
 
 **リポジトリ実体** — 解決した `content` 相当のルートには `files/en-us` が、  
-`translated-content` 相当のルートには `files/ja` がそれぞれディレクトリとして存在する必要があります（公式リポジトリを clone した状態）。  
+`translated-content` 相当のルートには `files/ja` がそれぞれディレクトリとして存在する必要があります（上流を fork して clone した状態で、リポジトリ一式が揃っていること）。  
 名前だけの空フォルダではエラーになります。
 
 環境変数の MCP 設定例は  
@@ -232,7 +235,7 @@ jaFile: files/ja/glossary/symbol/index.md
 | `dist/index.js` が無い                          | リポジトリルートで `npm install` と `npm run build`。                                                                        |
 | ワークスペースが解決できない                    | `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` は<br>**両方**セットするか、**両方**未設定にする。                       |
 | `content` / `translated-content` が見つからない | 親ディレクトリに `content` と `translated-content` があるか。<br>または上記環境変数で正しい絶対パスを指定。                  |
-| `mdn_trans_commit_get` が git 関連で失敗する    | `content` が **git clone** された<br>[mdn/content](https://github.com/mdn/content) か、対象ファイルが追跡されているか。      |
+| `mdn_trans_commit_get` が git 関連で失敗する    | `content` が **fork した [mdn/content](https://github.com/mdn/content) を clone** したリポジトリか、対象ファイルが追跡されているか。      |
 | Node のバージョンエラー                         | `package.json` の `engines` は `node >= 22`。                                                                                |
 
 ## 🔐 ライセンスと第三者表記
@@ -243,5 +246,5 @@ jaFile: files/ja/glossary/symbol/index.md
 ## ⚠️ 注意
 
 - MDN コンテンツは含まれません。
-- `content` / `translated-content` は別途 clone が必要です。
+- `content` / `translated-content` は上流を fork したうえで、別途 clone が必要です。
 - MDN のライセンスに従って利用してください。

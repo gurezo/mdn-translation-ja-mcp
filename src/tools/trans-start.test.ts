@@ -20,7 +20,7 @@ describe("mdnTransStart", () => {
     parent = fs.mkdtempSync(path.join(os.tmpdir(), "mdn-ts-"));
     const contentRoot = path.join(parent, "content");
     const translatedRoot = path.join(parent, "translated-content");
-    const rel = "files/en-us/docs/glossary/e2e_fixture/index.md";
+    const rel = "files/en-us/glossary/e2e_fixture/index.md";
     fs.mkdirSync(path.join(contentRoot, path.dirname(rel)), {
       recursive: true,
     });
@@ -39,7 +39,10 @@ describe("mdnTransStart", () => {
 
     expect(fs.existsSync(r.destFile)).toBe(true);
     expect(fs.readFileSync(r.destFile, "utf8")).toContain("body");
-    expect(r.destFile).toContain(`files${path.sep}ja${path.sep}docs${path.sep}glossary`);
-    expect(r.message).toContain("files/ja/docs/");
+    expect(r.destFile).toContain(
+      `files${path.sep}ja${path.sep}glossary${path.sep}e2e_fixture`,
+    );
+    expect(r.destFile).not.toContain(`${path.sep}docs${path.sep}`);
+    expect(r.message).toContain("files/ja/glossary/");
   });
 });

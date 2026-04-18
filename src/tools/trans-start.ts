@@ -36,7 +36,7 @@ export function mdnTransStart(
     "",
     "リポジトリ内の相対パス:",
     `- コピー元: ${rel}`,
-    `- コピー先: ${jaRel}（files/en-us を files/ja に置き換えたパス。docs セグメントは欠かさないこと）`,
+    `- コピー先: ${jaRel}（files/en-us を files/ja に置き換えただけのパス）`,
     "",
     "このツールは上記のファイルコピー以外は行いません。次は別作業です:",
     "- 本文の翻訳・編集",

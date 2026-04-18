@@ -29,9 +29,9 @@ export function createMcpServer(): McpServer {
   server.registerTool(
     "mdn_trans_start",
     {
-      title: "翻訳開始（原文コピー）",
+      title: "翻訳開始（原文コピーのみ）",
       description:
-        "MDN URL に対応する content の原文を translated-content/files/ja にコピーします。",
+        "Wiki 定義: content の files/en-us/docs/.../index.md を、同じ階層で files/ja/docs/.../index.md にコピーするのみ。翻訳・_redirects・他ファイル編集は行わない。",
       inputSchema: {
         url: z
           .string()

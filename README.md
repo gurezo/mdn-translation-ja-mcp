@@ -137,7 +137,7 @@ npm run docs:publish
 
 | MCP ツール名                 | 主な用途                                                                                        |
 | ---------------------------- | ----------------------------------------------------------------------------------------------- |
-| `mdn_trans_start`            | URL を指定して翻訳作業を開始（`content` → `translated-content/files/ja`）                       |
+| `mdn_trans_start`            | URL を指定し、`content` の `files/en-us/docs/.../index.md` を **`files/ja/docs/.../index.md` にコピーするだけ**（翻訳・`_redirects.txt`・他ファイルの修正はしない） |
 | `mdn_trans_commit_get`       | `content` の git 履歴からコミットハッシュを取得し、`l10n.sourceCommit` を翻訳ファイルに反映する |
 | `mdn_trans_replace_glossary` | 指定ファイル内の 1 引数 `{{glossary}}` を第 2 引数付きに置換する                                |
 | `mdn_trans_review`           | 翻訳ファイルの簡易レビュー（禁止・注意表現など）                                                |

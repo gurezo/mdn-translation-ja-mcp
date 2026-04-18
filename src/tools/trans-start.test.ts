@@ -39,5 +39,7 @@ describe("mdnTransStart", () => {
 
     expect(fs.existsSync(r.destFile)).toBe(true);
     expect(fs.readFileSync(r.destFile, "utf8")).toContain("body");
+    expect(r.destFile).toContain(`files${path.sep}ja${path.sep}docs${path.sep}glossary`);
+    expect(r.message).toContain("files/ja/docs/");
   });
 });

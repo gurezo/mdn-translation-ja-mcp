@@ -31,8 +31,25 @@ export function mdnTransStart(
   fs.mkdirSync(path.dirname(destFile), { recursive: true });
   fs.copyFileSync(sourceFile, destFile);
 
+  const message = [
+    "mdn_trans_start: Wiki 定義どおり、content の英語原文 1 ファイルを translated-content の対応パスへコピーしただけです。",
+    "",
+    "リポジトリ内の相対パス:",
+    `- コピー元: ${rel}`,
+    `- コピー先: ${jaRel}（files/en-us を files/ja に置き換えたパス。docs セグメントは欠かさないこと）`,
+    "",
+    "このツールは上記のファイルコピー以外は行いません。次は別作業です:",
+    "- 本文の翻訳・編集",
+    "- _redirects.txt の変更",
+    "- 他ドキュメントからのリンク修正",
+    "",
+    "絶対パス:",
+    `- 元: ${sourceFile}`,
+    `- 先: ${destFile}`,
+  ].join("\n");
+
   return {
-    message: `原文をコピーしました。\n- 元: ${sourceFile}\n- 先: ${destFile}`,
+    message,
     sourceFile,
     destFile,
   };

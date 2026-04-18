@@ -35,20 +35,23 @@ MCP Server（stdio または Streamable HTTP）
 └── mdn-translation-ja-mcp
 ```
 
-### 必須リポジトリ
+### 必須リポジトリ（fork → clone）
 
-- [https://github.com/mdn/content](https://github.com/mdn/content)
-- [https://github.com/mdn/translated-content](https://github.com/mdn/translated-content)
+翻訳作業で参照する英語原文・日本語訳は、上流の次のリポジトリを自分の GitHub アカウントへ **fork** してから、手元へ **clone** します。
 
-親ディレクトリで次のように **clone** できます（ディレクトリ名は任意です）。  
-`content` と `translated-content` は [mdn/content](https://github.com/mdn/content) / [mdn/translated-content](https://github.com/mdn/translated-content) をそのまま clone しても、自分の fork を clone しても構いません（以下は fork の例です）。
+- 上流（fork 元）: [mdn/content](https://github.com/mdn/content)
+- 上流（fork 元）: [mdn/translated-content](https://github.com/mdn/translated-content)
+
+親ディレクトリで、fork したリポジトリを次のように **clone** します（クローン先ディレクトリ名は任意ですが、`content` / `translated-content` とすると後述のディレクトリツリーと一致します）。
 
 ```bash
 mkdir -p mdn-work && cd mdn-work
-git clone https://github.com/gurezo/content.git  # mdn/content の fork の例
-git clone https://github.com/gurezo/translated-content.git  # mdn/translated-content の fork の例
+git clone https://github.com/<あなたのGitHubユーザー名>/content.git content
+git clone https://github.com/<あなたのGitHubユーザー名>/translated-content.git translated-content
 git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 ```
+
+`<あなたのGitHubユーザー名>` は、fork 先のアカウント名に読み替えてください（上記は [mdn/content](https://github.com/mdn/content) / [mdn/translated-content](https://github.com/mdn/translated-content) の fork を clone する例です）。
 
 ### ランタイム
 

@@ -3,9 +3,9 @@
 このツールは、MDN 翻訳作業を支援・自動化することを目的としています。  
 Cursor から利用し、翻訳の開始・同期・レビューを支援します。
 
-MDN の本文はリポジトリに含めず、手元で clone した
+MDN の本文はリポジトリに含めません。手元では
 [mdn/content](https://github.com/mdn/content) および
-[mdn/translated-content](https://github.com/mdn/translated-content) を参照する想定です。
+[mdn/translated-content](https://github.com/mdn/translated-content) を GitHub 上で **fork** し、その fork を **clone** して参照する想定です。
 
 ## 🎯 目的
 

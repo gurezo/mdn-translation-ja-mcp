@@ -12,6 +12,9 @@ export function setSourceCommitInBody(
 ): string {
   const res = matter(markdown);
   const data = { ...(res.data as FrontMatterData) };
+  // mdn_trans_commit_get の仕様として常に削除する。
+  delete data["page-type"];
+  delete data.sidebar;
   const l10n =
     typeof data.l10n === "object" &&
     data.l10n !== null &&

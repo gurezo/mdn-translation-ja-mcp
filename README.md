@@ -167,7 +167,7 @@ npm run docs:publish
    そこにある `content` と `translated-content` を参照します。
 
 **リポジトリ実体** — 解決した `content` 相当のルートには `files/en-us` が、  
-`translated-content` 相当のルートには `files/ja` がそれぞれディレクトリとして存在する必要があります（公式リポジトリを clone した状態）。  
+`translated-content` 相当のルートには `files/ja` がそれぞれディレクトリとして存在する必要があります（上流を fork して clone した状態で、リポジトリ一式が揃っていること）。  
 名前だけの空フォルダではエラーになります。
 
 環境変数の MCP 設定例は  

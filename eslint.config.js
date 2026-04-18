@@ -6,7 +6,13 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: ["dist/**", "node_modules/**", "coverage/**", "typedoc-out/**"],
+    ignores: [
+      "dist/**",
+      "node_modules/**",
+      "coverage/**",
+      "typedoc-out/**",
+      "docs/**",
+    ],
   },
   eslintConfigPrettier,
 );

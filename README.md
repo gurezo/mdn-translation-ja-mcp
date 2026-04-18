@@ -40,12 +40,13 @@ MCP Server（stdio または Streamable HTTP）
 - [https://github.com/mdn/content](https://github.com/mdn/content)
 - [https://github.com/mdn/translated-content](https://github.com/mdn/translated-content)
 
-親ディレクトリで次のように **clone** できます（ディレクトリ名は任意です）。
+親ディレクトリで次のように **clone** できます（ディレクトリ名は任意です）。  
+`content` と `translated-content` は [mdn/content](https://github.com/mdn/content) / [mdn/translated-content](https://github.com/mdn/translated-content) をそのまま clone しても、自分の fork を clone しても構いません（以下は fork の例です）。
 
 ```bash
 mkdir -p mdn-work && cd mdn-work
-git clone https://github.com/mdn/content.git
-git clone https://github.com/mdn/translated-content.git
+git clone https://github.com/gurezo/content.git  # mdn/content の fork の例
+git clone https://github.com/gurezo/translated-content.git  # mdn/translated-content の fork の例
 git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 ```
 

@@ -246,5 +246,5 @@ jaFile: files/ja/glossary/symbol/index.md
 ## ⚠️ 注意
 
 - MDN コンテンツは含まれません。
-- `content` / `translated-content` は別途 clone が必要です。
+- `content` / `translated-content` は上流を fork したうえで、別途 clone が必要です。
 - MDN のライセンスに従って利用してください。

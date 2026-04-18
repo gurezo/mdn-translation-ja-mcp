@@ -46,7 +46,7 @@ MCP Server（stdio または Streamable HTTP）
 
 ```bash
 mkdir -p mdn-work && cd mdn-work
-git clone https://github.com/<あなたのGitHubユーザー名>/content.git content
+git clone https://github.com/<あなたのGitHubユーザー名>/content.git # fork した content をclone
 git clone https://github.com/<あなたのGitHubユーザー名>/translated-content.git translated-content
 git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 ```

@@ -4,6 +4,9 @@ node_modules/
 # Build output
 dist/
 
+# Vitest temp git repos (workspace-local)
+.cache/
+
 # Logs
 *.log
 

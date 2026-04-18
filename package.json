@@ -5,19 +5,18 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && node scripts/copy-glossary-data.mjs && node scripts/copy-rules-data.mjs",
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-glossary-data.mjs && node scripts/copy-rules-data.mjs",
     "start": "node dist/index.js",
     "start:http": "node dist/http.js",
-    "docs:clean": "rm -rf docs/.nojekyll docs/assets docs/functions docs/hierarchy.html docs/index.html docs/media docs/modules docs/modules.html docs/types docs/variables",
+    "docs:clean": "rm -rf typedoc-out",
     "docs:build": "npm run docs:clean && typedoc --options typedoc.json",
     "docs:publish": "npm run docs:build",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
-    "test:e2e": "vitest run src/e2e",
     "test:watch": "vitest"
   },
   "engines": {

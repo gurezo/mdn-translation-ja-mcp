@@ -1,17 +1,14 @@
-/**
- * MDN 日本語翻訳支援 MCP サーバー（Streamable HTTP）。
- * ローカルで起動し、Cursor の mcp.json（type: http, url: .../mcp）から接続する。
- */
-import type { Request, Response } from "express";
 import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 
-import { createMdnTranslationMcpServer } from "./mcp-server-factory.js";
+import { createMcpServer } from "./create-mcp-server.js";
+
+const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3050;
 
 const app = createMcpExpressApp();
 
-app.post("/mcp", async (req: Request, res: Response) => {
-  const server = createMdnTranslationMcpServer();
+app.post("/mcp", async (req, res) => {
+  const server = createMcpServer();
   try {
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: undefined,
@@ -22,8 +19,8 @@ app.post("/mcp", async (req: Request, res: Response) => {
       void transport.close();
       void server.close();
     });
-  } catch (error) {
-    console.error("Error handling MCP request:", error);
+  } catch (err) {
+    console.error(err);
     if (!res.headersSent) {
       res.status(500).json({
         jsonrpc: "2.0",
@@ -37,7 +34,7 @@ app.post("/mcp", async (req: Request, res: Response) => {
   }
 });
 
-app.get("/mcp", (_req: Request, res: Response) => {
+app.get("/mcp", (_req, res) => {
   res.writeHead(405).end(
     JSON.stringify({
       jsonrpc: "2.0",
@@ -50,7 +47,7 @@ app.get("/mcp", (_req: Request, res: Response) => {
   );
 });
 
-app.delete("/mcp", (_req: Request, res: Response) => {
+app.delete("/mcp", (_req, res) => {
   res.writeHead(405).end(
     JSON.stringify({
       jsonrpc: "2.0",
@@ -63,13 +60,12 @@ app.delete("/mcp", (_req: Request, res: Response) => {
   );
 });
 
-/** 既定値。mdn/content 側のローカル翻訳環境（例: 5042 / 5043 / 8083）と衝突しにくいポートにする。 */
-const DEFAULT_PORT = 3050;
-const PORT = Number(process.env.PORT) || DEFAULT_PORT;
-app.listen(PORT, () => {
-  console.log(`MCP Streamable HTTP listening on http://127.0.0.1:${PORT}/mcp`);
-});
-
-process.on("SIGINT", () => {
-  process.exit(0);
+app.listen(port, (err?: Error) => {
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+  console.error(
+    `MCP Streamable HTTP (stateless) listening on port ${port} (/mcp)`,
+  );
 });

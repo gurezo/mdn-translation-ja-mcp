@@ -10,5 +10,6 @@ export const MCP_SERVER_INSTRUCTIONS = [
   "コピー先パスは URL `/en-US/docs/<Category>/<Slug...>` の `docs/` を除いた `files/ja/<category>/<slug...>/index.md` の形です（例: /en-US/docs/Glossary/Symbol → files/ja/glossary/symbol/index.md）。",
   "mdn_trans_replace_glossary と mdn_trans_review には、translated-content 内の翻訳ファイルパス（絶対パス、または files/ja/ からの相対）を渡してください。",
   "【重要】mdn_trans_review は対象ファイルを読み取るだけで書き込まない（readOnlyHint）。ユーザーが明示しない限り、レビュー結果を理由に該当ファイルを編集しないこと。",
-  "翻訳レビューの詳細は mozilla-japan の翻訳ガイドラインを参照し、エージェントが内容を確認してください。",
+  "翻訳レビューの詳細は .agents/skills/ の editorial-guideline / l10n-guideline / mozilla-l10n-glossary / japanese-style を参照し、エージェントが内容を確認してください。",
+  "MCP 翻訳手順は .cursor/skills/mdn-translation-workflow を参照してください。",
 ].join("\n");

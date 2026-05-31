@@ -21,7 +21,7 @@ Cursor
   ↓
 MCP Server（stdio または Streamable HTTP）
   ↓
-ローカルFS + Git + rules(JSON)
+ローカルFS + Git + Skills / shared/data
 ```
 
 ## 📦 前提環境
@@ -143,7 +143,7 @@ npm run docs:publish
 1. **翻訳開始** — 対象の MDN URL を伝え、**`mdn_trans_start`** で `ja` の `index.md` を用意します。
 2. **英語原文との同期** — **`mdn_trans_commit_get`** で `content` の該当ファイルに対する最新コミットを取得し、翻訳ファイルのフロントマターに **`l10n.sourceCommit`** を書き込みます。
 3. **用語 `{{glossary}}`** — **`mdn_trans_replace_glossary`** で、指定した翻訳ファイル内の `{{glossary("id")}}` を用語データに基づき `{{glossary("id", "表示名")}}` に置換します。
-4. **レビュー** — **`mdn_trans_review`** で禁止・注意表現リストに基づく簡易チェックを行います（**サーバーは対象ファイルを変更しません**。エージェントがレビュー結果だけを理由にそのファイルを編集しないよう注意してください。詳細はエージェントが [表記ガイドライン](https://github.com/mozilla-japan/translation/wiki/Editorial-Guideline) 等を参照してください）。
+4. **レビュー** — **`mdn_trans_review`** で禁止・注意表現リストに基づく簡易チェックを行います（**サーバーは対象ファイルを変更しません**。エージェントがレビュー結果だけを理由にそのファイルを編集しないよう注意してください。詳細は `.agents/skills/` のガイドライン Skills を参照してください）。
 
 | MCP ツール名                 | 主な用途                                                                                                                                                                                                                                                          |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -224,7 +224,38 @@ jaFile: files/ja/glossary/symbol/index.md
 **パス指定のコツ:** MCP はエディタの「開いているファイル」を自動では知らないため、**`files/ja/...` からの相対パス**（ワークスペースが `translated-content` のとき）か、**`index.md` の絶対パス**のどちらかを必ず含めます。  
 親ディレクトリ構成が異なる場合は、MCP 設定の `env` に `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**指定してください（[examples/translated-content-cursor-mcp-example.json](examples/translated-content-cursor-mcp-example.json)）。
 
-人手レビューでは、[表記ガイドライン](https://github.com/mozilla-japan/translation/wiki/Editorial-Guideline) などを参照してください。
+人手レビューでは、本リポジトリの `.agents/skills/`（表記 / L10N / 用語集 / 文体）を参照してください。
+
+## 🤖 Cursor AI 設定（Skills / Rules）
+
+本リポジトリには、MDN 日本語翻訳向けの Cursor Agent Skills と Rules が含まれます。
+
+```text
+mdn-translation-ja-mcp/
+├── .agents/skills/          # mozilla-japan 翻訳ガイドライン（外部ドメイン知識）
+│   ├── editorial-guideline/
+│   ├── l10n-guideline/
+│   ├── mozilla-l10n-glossary/
+│   └── japanese-style/
+└── .cursor/
+    ├── rules/               # 常時適用の基本制約
+    │   └── 00-mdn-translation.mdc
+    └── skills/              # MCP 翻訳ワークフロー
+        └── mdn-translation-workflow/
+```
+
+### translated-content で翻訳する場合（任意）
+
+翻訳作業では `translated-content` をワークスペースとして開くことが多いです。Skills / Rules を使う場合は、次のいずれかで展開します。
+
+```bash
+# 例: symlink（mdn-translation-ja-mcp と translated-content が兄弟ディレクトリの場合）
+ln -s ../mdn-translation-ja-mcp/.agents translated-content/.agents
+ln -s ../mdn-translation-ja-mcp/.cursor/rules translated-content/.cursor/rules-from-mcp
+# または cp -r でコピー
+```
+
+MCP 接続は従来どおり `translated-content/.cursor/mcp.json` に設定します（翻訳 PR に含めないでください）。
 
 ## 🛠️ トラブルシュート
 

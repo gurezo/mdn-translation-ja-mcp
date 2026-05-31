@@ -3,7 +3,7 @@ import path from "node:path";
 
 import type { WorkspaceRoots } from "../shared/workspace.js";
 import { loadProhibitedExpressions } from "../shared/load-prohibited-expressions.js";
-import { getRulesDir } from "../shared/paths.js";
+import { getProhibitedExpressionsPath } from "../shared/paths.js";
 
 const REVIEW_READ_ONLY_BANNER = [
   "========================================",
@@ -53,8 +53,7 @@ export function mdnTransReview(
     throw new Error(`ファイルが見つかりません: ${jaPath}`);
   }
 
-  const rulesDir = getRulesDir();
-  const prohibitedPath = path.join(rulesDir, "prohibited-expressions.json");
+  const prohibitedPath = getProhibitedExpressionsPath();
   const prohibited = loadProhibitedExpressions(prohibitedPath);
 
   const fd = fs.openSync(jaPath, fs.constants.O_RDONLY);

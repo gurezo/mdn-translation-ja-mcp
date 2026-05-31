@@ -1,5 +1,4 @@
 {
-  "$schema": "./prohibited-expressions.schema.json",
   "sourceUrl": "https://github.com/mozilla-japan/translation/wiki/Editorial-Guideline",
   "retrievedAt": "2026-03-22",
   "description": "表記ガイドライン等を前提にした禁止・注意表現の初期リスト（必要に応じて拡張）。",

@@ -13,7 +13,16 @@ When using workflows described in the README (e.g. aligning with [mdn/content](h
 
 ## Translation community references
 
-Guideline links used by this project (for example in MCP tools) may point to Mozilla Japan translation wiki pages, Google Sheets, or similar. Those materials are owned by their respective authors; see each linked page for terms of use.
+Guideline content in `.agents/skills/*/references/` is derived from Mozilla Japan translation community resources. Those materials are owned by their respective authors; see each linked page for terms of use.
+
+| Resource | URL |
+|----------|-----|
+| Editorial Guideline | https://github.com/mozilla-japan/translation/wiki/Editorial-Guideline |
+| L10N Guideline | https://github.com/mozilla-japan/translation/wiki/L10N-Guideline |
+| Mozilla L10N Glossary | https://github.com/mozilla-japan/translation/wiki/Mozilla-L10N-Glossary |
+| Japanese style spreadsheet | https://docs.google.com/spreadsheets/d/1y-hC-xMXawCgcYZwJDnvuSlAOTgMRLLyqXurpYkJbYE/edit#gid=0 |
+
+Guideline links used by MCP tools may also point to the above sources. MCP mechanical checks use `src/shared/data/prohibited-expressions.json`.
 
 ## MCP protocol
 

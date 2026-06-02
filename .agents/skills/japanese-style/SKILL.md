@@ -21,7 +21,7 @@ description: Applies Mozilla Japan Japanese style rules for desu-masu tone, hira
 | STYLE_LIST_AND_PROCEDURE_VOICE | 体言止めとです・ます調の混在 |
 | STYLE_L10N_METADATA | l10n.sourceCommit 等のメタデータ |
 
-`mdn_trans_review` は上記を自動検査しない。本スキルで手動確認する。
+`mdn_trans_review` が自動検査する ID: `STYLE_HIRAGANA_*`（表記統一）、`STYLE_DESU_MASU_*`（文体ヒューリスティック）。`STYLE_KATAKANA_AND_GLOSSARY_CONSISTENCY`・`STYLE_LIST_AND_PROCEDURE_VOICE` は人手確認。
 
 ## Workflow
 

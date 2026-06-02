@@ -15,13 +15,29 @@ function toolText(body: string) {
 }
 
 /** mdn_trans_review 専用: 読み取り専用であることをクライアントとエージェントの両方に伝える */
-function toolReviewResult(body: string) {
+function toolReviewResult(
+  body: string,
+  meta: {
+    jaFile: string;
+    findings: {
+      skill: string;
+      ruleId: string;
+      severity: string;
+      message: string;
+      excerpt?: string;
+    }[];
+    summaryBySkill: Record<string, number>;
+  },
+) {
   return {
     content: [{ type: "text" as const, text: body }],
     structuredContent: {
       tool: "mdn_trans_review",
       readsFileOnly: true,
       mustNotModifyReviewedFile: true,
+      jaFile: meta.jaFile,
+      findings: meta.findings,
+      summaryBySkill: meta.summaryBySkill,
     },
   };
 }
@@ -108,9 +124,9 @@ export function createMcpServer(): McpServer {
   server.registerTool(
     "mdn_trans_review",
     {
-      title: "翻訳の簡易レビュー（読み取りのみ）",
+      title: "翻訳のガイドライン機械レビュー（読み取りのみ）",
       description:
-        "禁止・注意表現リスト等に基づき、翻訳ファイルを読み取って機械的にチェックします。サーバーは対象ファイルへ一切書き込みません（readOnlyHint）。エージェントはこのツール呼び出しの前後を問わず、レビュー結果を理由に当該ファイルを編集・整形・追記してはならない。ユーザーが「修正して」等と明示した場合のみ編集してよい。",
+        ".agents/skills 由来の機械チェック（表記・文体・l10n メタデータ・glossary マクロ等）を翻訳ファイルに対して実行します。サーバーは対象ファイルへ一切書き込みません（readOnlyHint）。エージェントはレビュー結果を理由に当該ファイルを編集・整形・追記してはならない。ユーザーが「修正して」等と明示した場合のみ編集してよい。",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -126,7 +142,11 @@ export function createMcpServer(): McpServer {
     async ({ jaFile }) => {
       const roots = resolveWorkspaceRoots();
       const r = mdnTransReview(roots, { jaFile });
-      return toolReviewResult(r.message);
+      return toolReviewResult(r.message, {
+        jaFile: r.jaFile,
+        findings: r.findings,
+        summaryBySkill: r.summaryBySkill,
+      });
     },
   );
 

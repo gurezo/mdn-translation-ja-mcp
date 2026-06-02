@@ -20,7 +20,15 @@ alwaysApply: true
 | --- | --- |
 | `jaFile` | translated-content 内のパス（`files/ja/.../index.md` または絶対パス） |
 
-ユーザーが「`mdn_trans_review` を実行して」と依頼した場合は、**MCP ツール `mdn_trans_review` を `jaFile` 付きで呼び出し**、返却テキストをそのまま報告する。ツールが使えない場合は、シェル代替ではなく MCP 設定（`translated-content/.cursor/mcp.json`）の確認をユーザーに案内する。
+ユーザーが「`mdn_trans_review` を実行して」と依頼した場合は、**MCP ツール `mdn_trans_review` を `jaFile` 付きで呼び出し**、返却テキストをそのまま報告する。
+
+MCP ツールが利用できない場合のみ、**mdn-translation-ja-mcp** リポジトリで次を実行する（`npm start` ではない）:
+
+`npm run mdn:trans:review -- --jaFile=files/ja/.../index.md`
+
+（`MDN_CONTENT_ROOT` / `MDN_TRANSLATED_CONTENT_ROOT` が設定されていること）
+
+それ以外は `node scripts/setup-translated-content-cursor.mjs` で `translated-content/.cursor/mcp.json` を生成し、Cursor をリロードするよう案内する。
 
 ## 読み取り専用
 

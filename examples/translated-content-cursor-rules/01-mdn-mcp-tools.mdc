@@ -12,3 +12,5 @@ alwaysApply: true
 - **必須:** MCP ツール `mdn_trans_review` に `jaFile`（例: `files/ja/.../index.md`）を渡して呼び出す
 
 `mdn_trans_review` の結果を理由に対象 `index.md` を編集・保存しない（ユーザーが明示的に修正を依頼した場合のみ可）。
+
+MCP が使えないときのみ: `mdn-translation-ja-mcp` で `npm run mdn:trans:review -- --jaFile=...`（`npm start` ではない）。

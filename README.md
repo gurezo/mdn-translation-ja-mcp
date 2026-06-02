@@ -90,16 +90,23 @@ git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 
 同一親フォルダに 3 リポジトリを並べる場合も、`args` と `env` は **必ず絶対パス**で記載してください（プレースホルダのままにしないでください）。
 
-4. **（推奨）Rules** — エージェントが `mdn_trans_*` をシェルコマンドと誤認しないよう、`translated-content/.cursor/rules/` に MCP 呼び出し用ルールを置きます。
+4. **（推奨）一括セットアップ** — `mdn-translation-ja-mcp` でビルド済みなら、次で `mcp.json` と Rules を自動生成できます。
 
 ```bash
-mkdir -p translated-content/.cursor/rules
-cp examples/translated-content-cursor-rules/01-mdn-mcp-tools.mdc translated-content/.cursor/rules/
-# または兄弟配置時:
-# cp ../mdn-translation-ja-mcp/examples/translated-content-cursor-rules/01-mdn-mcp-tools.mdc translated-content/.cursor/rules/
+cd mdn-translation-ja-mcp
+npm run build
+npm run setup:translated-content-cursor
+# translated-content のパスが兄弟でない場合:
+# node scripts/setup-translated-content-cursor.mjs /path/to/translated-content
 ```
 
-5. **（任意）Skills** — [「translated-content で翻訳する場合（任意）」](#translated-content-で翻訳する場合任意) を参照。
+手動で置く場合は `examples/translated-content-cursor-rules/01-mdn-mcp-tools.mdc` を `translated-content/.cursor/rules/` にコピー。
+
+5. **Cursor をリロード** — `mcp.json` 追加・変更後はウィンドウの再読み込みが必要です。
+
+6. **MCP 接続確認** — Cursor の **Settings → MCP** でサーバー **`mdn-translation-ja`** が有効でエラーなく接続されていること。
+
+7. **（任意）Skills** — [「translated-content で翻訳する場合（任意）」](#translated-content-で翻訳する場合任意) を参照。
 
 **注意（翻訳のコミット・PR）:** `translated-content/.cursor/` は **手元の Cursor 用のローカル設定**です。**翻訳作業のコミットや `mdn/translated-content` へのプルリクエストの差分に含めないでください**（絶対パスが入るため、リポジトリにコミットする想定ではありません）。誤ってステージしないよう、必要なら手元の `translated-content` で `.gitignore` に `.cursor/` を追加してください。
 
@@ -114,7 +121,9 @@ npm install
 npm run build   # dist/index.js / dist/http.js が生成される
 ```
 
-ビルド後、動作確認として stdio の **`npm start`** または Streamable HTTP の **`npm run start:http`** を使えます（Cursor から stdio で接続するときは、通常は Cursor が `node dist/index.js` を起動します）。
+ビルド後、stdio の動作確認に **`npm start`** または Streamable HTTP に **`npm run start:http`** を使えます。
+
+**重要:** チャットのエージェントが `mdn_trans_review` を実行するために **`npm start` を手動で走らせる必要はありません**。エージェントは Cursor が **`mcp.json` 経由で起動した MCP サーバー**のツールを使います。`npm start` はターミナルでのサーバー単体確認用です。
 
 初めて本リポジトリだけ取得する場合の例:
 
@@ -288,7 +297,7 @@ MCP 接続は `translated-content/.cursor/mcp.json` に設定します（翻訳 
 | `content` / `translated-content` が見つからない | 親ディレクトリに `content` と `translated-content` があるか。<br>または上記環境変数で正しい絶対パスを指定。                          |
 | `mdn_trans_commit_get` が git 関連で失敗する    | `content` が **fork した [mdn/content](https://github.com/mdn/content) を clone** したリポジトリか、対象ファイルが追跡されているか。 |
 | Node のバージョンエラー                         | `package.json` の `engines` は `node >= 22`。                                                                                        |
-| `mdn_trans_review` がシェルで見つからない      | **MCP ツール**として呼ぶ（サーバー `mdn-translation-ja`）。<br>`translated-content/.cursor/mcp.json` が有効か、Cursor の MCP 一覧で接続されているか。<br>`translated-content/.cursor/rules/01-mdn-mcp-tools.mdc` を配置したか。                                                                 |
+| `mdn_trans_review` がシェルで見つからない      | **`npm start` では解決しない**（エージェント用ではない）。<br>ワークスペースが **`translated-content`** か、`translated-content/.cursor/mcp.json` があるか。<br>`npm run setup:translated-content-cursor` 後に Cursor をリロードしたか。<br>Settings → MCP で **`mdn-translation-ja`** が接続済みか。<br>フォールバック: `mdn-translation-ja-mcp` で `npm run mdn:trans:review -- --jaFile=files/ja/.../index.md` |
 
 ## 🔐 ライセンスと第三者表記
 

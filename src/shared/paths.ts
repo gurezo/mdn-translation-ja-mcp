@@ -12,3 +12,8 @@ export function getGlossaryTermsPath(): string {
 export function getProhibitedExpressionsPath(): string {
   return path.join(sharedDir, "data", "prohibited-expressions.json");
 }
+
+/** review-rules.json（dist/shared/data） */
+export function getReviewRulesPath(): string {
+  return path.join(sharedDir, "data", "review-rules.json");
+}

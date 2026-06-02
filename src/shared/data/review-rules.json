@@ -1,0 +1,150 @@
+{
+  "description": ".agents/skills 由来の機械チェックルール（references から抽出）",
+  "retrievedAt": "2026-06-02",
+  "items": [
+    {
+      "id": "EDITORIAL_FORBIDDEN_DASH",
+      "skill": "editorial-guideline",
+      "matchType": "literal",
+      "pattern": "―",
+      "severity": "warning",
+      "message": "約物「―」は使用しない（表記ガイドライン）。",
+      "sourceRef": "editorial-guideline/references/editorial-guideline.md#約物の表記"
+    },
+    {
+      "id": "EDITORIAL_FORBIDDEN_TILDE",
+      "skill": "editorial-guideline",
+      "matchType": "literal",
+      "pattern": "～",
+      "severity": "warning",
+      "message": "全角チルダ「～」(U+FF5E) は使用しない。",
+      "sourceRef": "editorial-guideline/references/editorial-guideline.md#約物の表記"
+    },
+    {
+      "id": "EDITORIAL_TERM_BROWSER_SHORT",
+      "skill": "editorial-guideline",
+      "matchType": "regex",
+      "pattern": "ブラウザ(?!ー)",
+      "severity": "warning",
+      "message": "browser は「ブラウザー」と表記する（「ブラウザ」は不採用）。",
+      "sourceRef": "editorial-guideline/references/editorial-guideline.md#MDN 翻訳で頻出する用語表記"
+    },
+    {
+      "id": "EDITORIAL_TERM_BINARY_SHORT",
+      "skill": "editorial-guideline",
+      "matchType": "regex",
+      "pattern": "バイナリ(?!ー)",
+      "severity": "warning",
+      "message": "binary は「バイナリー」と表記する。",
+      "sourceRef": "editorial-guideline/references/editorial-guideline.md#MDN 翻訳で頻出する用語表記"
+    },
+    {
+      "id": "EDITORIAL_TERM_SYNTAX_KATAKANA",
+      "skill": "editorial-guideline",
+      "matchType": "literal",
+      "pattern": "シンタックス",
+      "severity": "warning",
+      "message": "syntax は「構文」と表記する（「シンタックス」は不採用）。",
+      "sourceRef": "editorial-guideline/references/editorial-guideline.md#MDN 翻訳で頻出する用語表記"
+    },
+    {
+      "id": "EDITORIAL_TERM_SIGN_IN",
+      "skill": "editorial-guideline",
+      "matchType": "literal",
+      "pattern": "サインイン",
+      "severity": "warning",
+      "message": "sign in は「ログイン」と表記する。",
+      "sourceRef": "editorial-guideline/references/editorial-guideline.md#MDN 翻訳で頻出する用語表記"
+    },
+    {
+      "id": "EDITORIAL_TERM_SIGN_OUT",
+      "skill": "editorial-guideline",
+      "matchType": "literal",
+      "pattern": "サインアウト",
+      "severity": "warning",
+      "message": "sign out は「ログアウト」と表記する。",
+      "sourceRef": "editorial-guideline/references/editorial-guideline.md#MDN 翻訳で頻出する用語表記"
+    },
+    {
+      "id": "EDITORIAL_TERM_WIDGET_MISSPELL",
+      "skill": "editorial-guideline",
+      "matchType": "literal",
+      "pattern": "ウィジット",
+      "severity": "warning",
+      "message": "widget は「ウィジェット」と表記する。",
+      "sourceRef": "editorial-guideline/references/editorial-guideline.md#MDN 翻訳で頻出する用語表記"
+    },
+    {
+      "id": "STYLE_HIRAGANA_NG_SHITASAI",
+      "skill": "japanese-style",
+      "matchType": "literal",
+      "pattern": "下さい",
+      "severity": "warning",
+      "message": "「下さい」ではなく「ください」を使用する。",
+      "sourceRef": "japanese-style/references/style-rules.md#表記統一"
+    },
+    {
+      "id": "STYLE_HIRAGANA_NG_NO_TAME",
+      "skill": "japanese-style",
+      "matchType": "literal",
+      "pattern": "の為",
+      "severity": "warning",
+      "message": "「の為」ではなく「のため」を使用する。",
+      "sourceRef": "japanese-style/references/style-rules.md#表記統一"
+    },
+    {
+      "id": "STYLE_HIRAGANA_NG_DEKIRU",
+      "skill": "japanese-style",
+      "matchType": "literal",
+      "pattern": "出来る",
+      "severity": "warning",
+      "message": "「出来る」ではなく「できる」を使用する。",
+      "sourceRef": "japanese-style/references/style-rules.md#表記統一"
+    },
+    {
+      "id": "STYLE_HIRAGANA_NG_SUBETE",
+      "skill": "japanese-style",
+      "matchType": "literal",
+      "pattern": "全て",
+      "severity": "info",
+      "message": "「全て」ではなく「すべて」（ひらがな）を推奨。",
+      "sourceRef": "japanese-style/references/style-rules.md#表記統一"
+    },
+    {
+      "id": "STYLE_HIRAGANA_NG_YOMIKOMI",
+      "skill": "japanese-style",
+      "matchType": "literal",
+      "pattern": "読込み",
+      "severity": "warning",
+      "message": "「読込み」ではなく「読み込み」を使用する。",
+      "sourceRef": "japanese-style/references/style-rules.md#送りがな"
+    },
+    {
+      "id": "STYLE_HIRAGANA_NG_HARITSUKE",
+      "skill": "japanese-style",
+      "matchType": "literal",
+      "pattern": "貼付け",
+      "severity": "warning",
+      "message": "「貼付け」ではなく「貼り付け」を使用する。",
+      "sourceRef": "japanese-style/references/style-rules.md#送りがな"
+    },
+    {
+      "id": "STYLE_DESU_MASU_DEARU",
+      "skill": "japanese-style",
+      "matchType": "regex",
+      "pattern": "である。",
+      "severity": "warning",
+      "message": "だ・である調の文末が含まれています。です・ます調との混在に注意。",
+      "sourceRef": "japanese-style/references/style-rules.md#STYLE_DESU_MASU_AND_DEARU_MIX"
+    },
+    {
+      "id": "STYLE_DESU_MASU_DA",
+      "skill": "japanese-style",
+      "matchType": "regex",
+      "pattern": "[^っ]だ。",
+      "severity": "info",
+      "message": "「だ。」で終わる文があります。です・ます調との混在に注意。",
+      "sourceRef": "japanese-style/references/style-rules.md#STYLE_DESU_MASU_AND_DEARU_MIX"
+    }
+  ]
+}

@@ -90,7 +90,18 @@ git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 
 同一親フォルダに 3 リポジトリを並べる場合も、`args` と `env` は **必ず絶対パス**で記載してください（プレースホルダのままにしないでください）。
 
-**注意（翻訳のコミット・PR）:** `translated-content/.cursor/mcp.json` は **手元の Cursor 用のローカル設定**です。**翻訳作業のコミットや `mdn/translated-content` へのプルリクエストの差分に含めないでください**（絶対パスが入るため、リポジトリにコミットする想定ではありません）。誤ってステージしないよう、必要なら手元の `translated-content` で `.gitignore` に `.cursor/` を追加してください。
+4. **（推奨）Rules** — エージェントが `mdn_trans_*` をシェルコマンドと誤認しないよう、`translated-content/.cursor/rules/` に MCP 呼び出し用ルールを置きます。
+
+```bash
+mkdir -p translated-content/.cursor/rules
+cp examples/translated-content-cursor-rules/01-mdn-mcp-tools.mdc translated-content/.cursor/rules/
+# または兄弟配置時:
+# cp ../mdn-translation-ja-mcp/examples/translated-content-cursor-rules/01-mdn-mcp-tools.mdc translated-content/.cursor/rules/
+```
+
+5. **（任意）Skills** — [「translated-content で翻訳する場合（任意）」](#translated-content-で翻訳する場合任意) を参照。
+
+**注意（翻訳のコミット・PR）:** `translated-content/.cursor/` は **手元の Cursor 用のローカル設定**です。**翻訳作業のコミットや `mdn/translated-content` へのプルリクエストの差分に含めないでください**（絶対パスが入るため、リポジトリにコミットする想定ではありません）。誤ってステージしないよう、必要なら手元の `translated-content` で `.gitignore` に `.cursor/` を追加してください。
 
 ### mdn-translation-ja-mcp リポジトリ側で行うこと
 
@@ -217,9 +228,11 @@ jaFile: files/ja/glossary/symbol/index.md
 ```
 
 ```text
-mdn_trans_review を実行して。レビュー結果だけ報告し、files/ja/glossary/symbol/index.md は編集・保存しないで。
+MCP ツール mdn_trans_review を実行して。レビュー結果だけ報告し、files/ja/glossary/symbol/index.md は編集・保存しないで。
 jaFile: files/ja/glossary/symbol/index.md
 ```
+
+**重要:** `mdn_trans_*` は **MCP ツール名**であり、ターミナルのシェルコマンドではありません。エージェントは Cursor の MCP サーバー `mdn-translation-ja` から呼び出してください。
 
 **パス指定のコツ:** MCP はエディタの「開いているファイル」を自動では知らないため、**`files/ja/...` からの相対パス**（ワークスペースが `translated-content` のとき）か、**`index.md` の絶対パス**のどちらかを必ず含めます。  
 親ディレクトリ構成が異なる場合は、MCP 設定の `env` に `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**指定してください（[examples/translated-content-cursor-mcp-example.json](examples/translated-content-cursor-mcp-example.json)）。
@@ -237,11 +250,15 @@ mdn-translation-ja-mcp/
 │   ├── l10n-guideline/
 │   ├── mozilla-l10n-glossary/
 │   └── japanese-style/
-└── .cursor/
-    ├── rules/               # 常時適用の基本制約
-    │   └── 00-mdn-translation.mdc
-    └── skills/              # MCP 翻訳ワークフロー
-        └── mdn-translation-workflow/
+├── .cursor/
+│   ├── rules/               # 常時適用の基本制約・MCP 呼び出し制約
+│   │   ├── 00-mdn-translation.mdc
+│   │   └── 01-mdn-mcp-tools.mdc
+│   └── skills/              # MCP 翻訳ワークフロー
+│       └── mdn-translation-workflow/
+└── examples/
+    ├── translated-content-cursor-mcp-example.json
+    └── translated-content-cursor-rules/   # translated-content へコピーする Rules 例
 ```
 
 ### translated-content で翻訳する場合（任意）
@@ -251,11 +268,14 @@ mdn-translation-ja-mcp/
 ```bash
 # 例: symlink（mdn-translation-ja-mcp と translated-content が兄弟ディレクトリの場合）
 ln -s ../mdn-translation-ja-mcp/.agents translated-content/.agents
-ln -s ../mdn-translation-ja-mcp/.cursor/rules translated-content/.cursor/rules-from-mcp
-# または cp -r でコピー
+ln -s ../mdn-translation-ja-mcp/.cursor/skills translated-content/.cursor/skills
+
+mkdir -p translated-content/.cursor/rules
+cp ../mdn-translation-ja-mcp/examples/translated-content-cursor-rules/01-mdn-mcp-tools.mdc translated-content/.cursor/rules/
+# または mdn-translation-ja-mcp の .cursor/rules/*.mdc をまとめてコピー
 ```
 
-MCP 接続は従来どおり `translated-content/.cursor/mcp.json` に設定します（翻訳 PR に含めないでください）。
+MCP 接続は `translated-content/.cursor/mcp.json` に設定します（翻訳 PR に含めないでください）。**`rules-from-mcp` のような別名ディレクトリでは Cursor が Rules を読み込めません。** 必ず `translated-content/.cursor/rules/` に置いてください。
 
 ## 🛠️ トラブルシュート
 
@@ -268,6 +288,7 @@ MCP 接続は従来どおり `translated-content/.cursor/mcp.json` に設定し�
 | `content` / `translated-content` が見つからない | 親ディレクトリに `content` と `translated-content` があるか。<br>または上記環境変数で正しい絶対パスを指定。                          |
 | `mdn_trans_commit_get` が git 関連で失敗する    | `content` が **fork した [mdn/content](https://github.com/mdn/content) を clone** したリポジトリか、対象ファイルが追跡されているか。 |
 | Node のバージョンエラー                         | `package.json` の `engines` は `node >= 22`。                                                                                        |
+| `mdn_trans_review` がシェルで見つからない      | **MCP ツール**として呼ぶ（サーバー `mdn-translation-ja`）。<br>`translated-content/.cursor/mcp.json` が有効か、Cursor の MCP 一覧で接続されているか。<br>`translated-content/.cursor/rules/01-mdn-mcp-tools.mdc` を配置したか。                                                                 |
 
 ## 🔐 ライセンスと第三者表記
 

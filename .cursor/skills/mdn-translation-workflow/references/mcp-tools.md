@@ -1,5 +1,7 @@
 # MCP ツール対応表
 
+**これらはシェルコマンドではない。** Cursor の MCP サーバー `mdn-translation-ja` 経由で呼び出す。ターミナルで `mdn_trans_review` 等を実行しない。
+
 | MCP ツール名 | 主な用途 |
 | --- | --- |
 | `mdn_trans_start` | URL を指定し、`content` の `index.md` を `translated-content/files/ja/.../index.md` にコピー |
@@ -30,6 +32,13 @@
 ```
 
 `examples/translated-content-cursor-mcp-example.json` と同一内容。
+
+## エージェント向け呼び出し手順
+
+1. Cursor の MCP 一覧でサーバー `mdn-translation-ja` が有効か確認する
+2. ツール `mdn_trans_review` を選び、引数 `jaFile` に translated-content 内のパスを渡す
+3. 返却された text（と structuredContent）をユーザーに報告する
+4. シェルで同名コマンドを探したり、手動で禁止表現スキャンに置き換えたりしない
 
 ## レビュー後の制約
 

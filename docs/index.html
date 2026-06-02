@@ -89,7 +89,7 @@ MCP Server（stdio または Streamable HTTP）
 <li><strong>翻訳開始</strong> — 対象の MDN URL を伝え、<strong><code>mdn_trans_start</code></strong> で <code>ja</code> の <code>index.md</code> を用意します。</li>
 <li><strong>英語原文との同期</strong> — <strong><code>mdn_trans_commit_get</code></strong> で <code>content</code> の該当ファイルに対する最新コミットを取得し、翻訳ファイルのフロントマターに <strong><code>l10n.sourceCommit</code></strong> を書き込みます。</li>
 <li><strong>用語 <code>{{glossary}}</code></strong> — <strong><code>mdn_trans_replace_glossary</code></strong> で、指定した翻訳ファイル内の <code>{{glossary(&quot;id&quot;)}}</code> を用語データに基づき <code>{{glossary(&quot;id&quot;, &quot;表示名&quot;)}}</code> に置換します。</li>
-<li><strong>レビュー</strong> — <strong><code>mdn_trans_review</code></strong> で禁止・注意表現リストに基づく簡易チェックを行います（<strong>サーバーは対象ファイルを変更しません</strong>。エージェントがレビュー結果だけを理由にそのファイルを編集しないよう注意してください。詳細は <code>.agents/skills/</code> のガイドライン Skills を参照してください）。</li>
+<li><strong>レビュー</strong> — <strong><code>mdn_trans_review</code></strong> で <code>.agents/skills</code> 由来のガイドライン機械チェック（表記・文体・l10n メタデータ・glossary マクロ等）を行います（<strong>サーバーは対象ファイルを変更しません</strong>。意訳の自然さなど未自動の項目は人手確認。エージェントはレビュー結果だけを理由にそのファイルを編集しないよう注意してください）。</li>
 </ol>
 <table>
 <thead>
@@ -113,7 +113,7 @@ MCP Server（stdio または Streamable HTTP）
 </tr>
 <tr>
 <td><code>mdn_trans_review</code></td>
-<td>翻訳ファイルの簡易レビュー（禁止・注意表現など）。<strong>読み取りのみ</strong>（対象 <code>index.md</code> には書き込まない）</td>
+<td>翻訳ファイルのガイドライン機械レビュー（4 スキル分のルール）。<strong>読み取りのみ</strong>（対象 <code>index.md</code> には書き込まない）</td>
 </tr>
 </tbody>
 </table>

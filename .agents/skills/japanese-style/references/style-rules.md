@@ -15,7 +15,7 @@ title: 日本語の文体
 | STYLE_LIST_AND_PROCEDURE_VOICE | 箇条書き・手順で体言止めとです・ます調が混在していないか |
 | STYLE_L10N_METADATA | front-matter の l10n.sourceCommit 等が適切か |
 
-`mdn_trans_review` は上記を自動検査しない。エージェントが本 references を参照して確認する。
+`mdn_trans_review` が自動検査: `STYLE_HIRAGANA_*`、`STYLE_DESU_MASU_*`。`STYLE_L10N_METADATA` は l10n-guideline 側で検査。`STYLE_KATAKANA_AND_GLOSSARY_CONSISTENCY`・`STYLE_LIST_AND_PROCEDURE_VOICE` は人手確認。
 
 ## 基本文体
 

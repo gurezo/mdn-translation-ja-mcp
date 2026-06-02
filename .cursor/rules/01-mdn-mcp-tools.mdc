@@ -1,0 +1,39 @@
+---
+description: MDN 翻訳 MCP ツールの呼び出し方（シェルではなく MCP）
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# MDN 翻訳 MCP ツール — 呼び出し制約
+
+## 必須
+
+`mdn_trans_start` / `mdn_trans_commit_get` / `mdn_trans_replace_glossary` / `mdn_trans_review` は **シェルコマンド・npm スクリプト・CLI ではない**。
+
+- **禁止:** ターミナルで `mdn_trans_review` 等を実行しようとすること
+- **禁止:** リポジトリ内に同名のシェルスクリプトを探して代替実行すること
+- **必須:** Cursor の **MCP ツール**として呼び出す（サーバー名: `mdn-translation-ja`、ツール名: 上記のスネークケース名）
+
+## mdn_trans_review の引数
+
+| 引数 | 説明 |
+| --- | --- |
+| `jaFile` | translated-content 内のパス（`files/ja/.../index.md` または絶対パス） |
+
+ユーザーが「`mdn_trans_review` を実行して」と依頼した場合は、**MCP ツール `mdn_trans_review` を `jaFile` 付きで呼び出し**、返却テキストをそのまま報告する。
+
+MCP ツールが利用できない場合のみ、**mdn-translation-ja-mcp** リポジトリで次を実行する（`npm start` ではない）:
+
+`npm run mdn:trans:review -- --jaFile=files/ja/.../index.md`
+
+（`MDN_CONTENT_ROOT` / `MDN_TRANSLATED_CONTENT_ROOT` が設定されていること）
+
+それ以外は `node scripts/setup-translated-content-cursor.mjs` で `translated-content/.cursor/mcp.json` を生成し、Cursor をリロードするよう案内する。
+
+## 読み取り専用
+
+`mdn_trans_review` の結果を理由に、対象 `index.md` を編集・保存しない（ユーザーが明示的に修正を依頼した場合のみ可）。
+
+## translated-content ワークスペース
+
+ワークスペースが `translated-content` のときも同じ。MCP は `translated-content/.cursor/mcp.json` で接続する（`mdn-translation-ja-mcp` を開いている必要はない）。

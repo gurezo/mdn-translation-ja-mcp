@@ -28,6 +28,10 @@ alwaysApply: false
 - 見出し・リスト・コードブロックの Markdown 構造は維持
 - メニュー項目やボタンラベルは `"ラベル"` で表す
 
+## MCP ツール
+
+`mdn_trans_review` 等は **MCP ツール**（サーバー `mdn-translation-ja`）でありシェルコマンドではない。ターミナルで実行せず MCP 経由で呼び出す。詳細は `01-mdn-mcp-tools.mdc` を参照。
+
 ## MCP レビュー制約
 
 `mdn_trans_review` 実行後は、レビュー結果を理由に対象ファイルを編集・保存してはならない（ユーザーが明示的に修正を依頼した場合のみ可）。

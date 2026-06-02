@@ -90,7 +90,25 @@ git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 
 同一親フォルダに 3 リポジトリを並べる場合も、`args` と `env` は **必ず絶対パス**で記載してください（プレースホルダのままにしないでください）。
 
-**注意（翻訳のコミット・PR）:** `translated-content/.cursor/mcp.json` は **手元の Cursor 用のローカル設定**です。**翻訳作業のコミットや `mdn/translated-content` へのプルリクエストの差分に含めないでください**（絶対パスが入るため、リポジトリにコミットする想定ではありません）。誤ってステージしないよう、必要なら手元の `translated-content` で `.gitignore` に `.cursor/` を追加してください。
+4. **（推奨）一括セットアップ** — `mdn-translation-ja-mcp` でビルド済みなら、次で `mcp.json` と Rules を自動生成できます。
+
+```bash
+cd mdn-translation-ja-mcp
+npm run build
+npm run setup:translated-content-cursor
+# translated-content のパスが兄弟でない場合:
+# node scripts/setup-translated-content-cursor.mjs /path/to/translated-content
+```
+
+手動で置く場合は `examples/translated-content-cursor-rules/01-mdn-mcp-tools.mdc` を `translated-content/.cursor/rules/` にコピー。
+
+5. **Cursor をリロード** — `mcp.json` 追加・変更後はウィンドウの再読み込みが必要です。
+
+6. **MCP 接続確認** — Cursor の **Settings → MCP** でサーバー **`mdn-translation-ja`** が有効でエラーなく接続されていること。
+
+7. **（任意）Skills** — [「translated-content で翻訳する場合（任意）」](#translated-content-で翻訳する場合任意) を参照。
+
+**注意（翻訳のコミット・PR）:** `translated-content/.cursor/` は **手元の Cursor 用のローカル設定**です。**翻訳作業のコミットや `mdn/translated-content` へのプルリクエストの差分に含めないでください**（絶対パスが入るため、リポジトリにコミットする想定ではありません）。誤ってステージしないよう、必要なら手元の `translated-content` で `.gitignore` に `.cursor/` を追加してください。
 
 ### mdn-translation-ja-mcp リポジトリ側で行うこと
 
@@ -103,7 +121,9 @@ npm install
 npm run build   # dist/index.js / dist/http.js が生成される
 ```
 
-ビルド後、動作確認として stdio の **`npm start`** または Streamable HTTP の **`npm run start:http`** を使えます（Cursor から stdio で接続するときは、通常は Cursor が `node dist/index.js` を起動します）。
+ビルド後、stdio の動作確認に **`npm start`** または Streamable HTTP に **`npm run start:http`** を使えます。
+
+**重要:** チャットのエージェントが `mdn_trans_review` を実行するために **`npm start` を手動で走らせる必要はありません**。エージェントは Cursor が **`mcp.json` 経由で起動した MCP サーバー**のツールを使います。`npm start` はターミナルでのサーバー単体確認用です。
 
 初めて本リポジトリだけ取得する場合の例:
 
@@ -143,14 +163,14 @@ npm run docs:publish
 1. **翻訳開始** — 対象の MDN URL を伝え、**`mdn_trans_start`** で `ja` の `index.md` を用意します。
 2. **英語原文との同期** — **`mdn_trans_commit_get`** で `content` の該当ファイルに対する最新コミットを取得し、翻訳ファイルのフロントマターに **`l10n.sourceCommit`** を書き込みます。
 3. **用語 `{{glossary}}`** — **`mdn_trans_replace_glossary`** で、指定した翻訳ファイル内の `{{glossary("id")}}` を用語データに基づき `{{glossary("id", "表示名")}}` に置換します。
-4. **レビュー** — **`mdn_trans_review`** で禁止・注意表現リストに基づく簡易チェックを行います（**サーバーは対象ファイルを変更しません**。エージェントがレビュー結果だけを理由にそのファイルを編集しないよう注意してください。詳細は `.agents/skills/` のガイドライン Skills を参照してください）。
+4. **レビュー** — **`mdn_trans_review`** で `.agents/skills` 由来のガイドライン機械チェック（表記・文体・l10n メタデータ・glossary マクロ等）を行います（**サーバーは対象ファイルを変更しません**。意訳の自然さなど未自動の項目は人手確認。エージェントはレビュー結果だけを理由にそのファイルを編集しないよう注意してください）。
 
 | MCP ツール名                 | 主な用途                                                                                                                                                                                                                                                          |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `mdn_trans_start`            | URL を指定し、`content` の `files/en-us/<category>/<slug...>/index.md` を **`translated-content` の `files/ja/<category>/<slug...>/index.md` にコピーするだけ**（翻訳・`_redirects.txt`・他ファイルの修正はしない。URL 側の `/docs/` はファイルパスには現れない） |
 | `mdn_trans_commit_get`       | `content` の git 履歴からコミットハッシュを取得し、`l10n.sourceCommit` を翻訳ファイルに反映する                                                                                                                                                                   |
 | `mdn_trans_replace_glossary` | 指定ファイル内の 1 引数 `{{glossary}}` を第 2 引数付きに置換する                                                                                                                                                                                                  |
-| `mdn_trans_review`           | 翻訳ファイルの簡易レビュー（禁止・注意表現など）。**読み取りのみ**（対象 `index.md` には書き込まない）                                                                                                                                                            |
+| `mdn_trans_review`           | 翻訳ファイルのガイドライン機械レビュー（4 スキル分のルール）。**読み取りのみ**（対象 `index.md` には書き込まない）                                                                                                                                                 |
 
 `mdn_trans_replace_glossary` と `mdn_trans_review` には、**translated-content 内のファイルパス**を渡してください（絶対パス、または `files/ja/` からの相対パス）。MCP はエディタの「開いているファイル」を知らないため、エージェントがパスを明示する想定です。
 
@@ -217,9 +237,11 @@ jaFile: files/ja/glossary/symbol/index.md
 ```
 
 ```text
-mdn_trans_review を実行して。レビュー結果だけ報告し、files/ja/glossary/symbol/index.md は編集・保存しないで。
+MCP ツール mdn_trans_review を実行して。レビュー結果だけ報告し、files/ja/glossary/symbol/index.md は編集・保存しないで。
 jaFile: files/ja/glossary/symbol/index.md
 ```
+
+**重要:** `mdn_trans_*` は **MCP ツール名**であり、ターミナルのシェルコマンドではありません。エージェントは Cursor の MCP サーバー `mdn-translation-ja` から呼び出してください。
 
 **パス指定のコツ:** MCP はエディタの「開いているファイル」を自動では知らないため、**`files/ja/...` からの相対パス**（ワークスペースが `translated-content` のとき）か、**`index.md` の絶対パス**のどちらかを必ず含めます。  
 親ディレクトリ構成が異なる場合は、MCP 設定の `env` に `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**指定してください（[examples/translated-content-cursor-mcp-example.json](examples/translated-content-cursor-mcp-example.json)）。
@@ -237,11 +259,15 @@ mdn-translation-ja-mcp/
 │   ├── l10n-guideline/
 │   ├── mozilla-l10n-glossary/
 │   └── japanese-style/
-└── .cursor/
-    ├── rules/               # 常時適用の基本制約
-    │   └── 00-mdn-translation.mdc
-    └── skills/              # MCP 翻訳ワークフロー
-        └── mdn-translation-workflow/
+├── .cursor/
+│   ├── rules/               # 常時適用の基本制約・MCP 呼び出し制約
+│   │   ├── 00-mdn-translation.mdc
+│   │   └── 01-mdn-mcp-tools.mdc
+│   └── skills/              # MCP 翻訳ワークフロー
+│       └── mdn-translation-workflow/
+└── examples/
+    ├── translated-content-cursor-mcp-example.json
+    └── translated-content-cursor-rules/   # translated-content へコピーする Rules 例
 ```
 
 ### translated-content で翻訳する場合（任意）
@@ -251,11 +277,14 @@ mdn-translation-ja-mcp/
 ```bash
 # 例: symlink（mdn-translation-ja-mcp と translated-content が兄弟ディレクトリの場合）
 ln -s ../mdn-translation-ja-mcp/.agents translated-content/.agents
-ln -s ../mdn-translation-ja-mcp/.cursor/rules translated-content/.cursor/rules-from-mcp
-# または cp -r でコピー
+ln -s ../mdn-translation-ja-mcp/.cursor/skills translated-content/.cursor/skills
+
+mkdir -p translated-content/.cursor/rules
+cp ../mdn-translation-ja-mcp/examples/translated-content-cursor-rules/01-mdn-mcp-tools.mdc translated-content/.cursor/rules/
+# または mdn-translation-ja-mcp の .cursor/rules/*.mdc をまとめてコピー
 ```
 
-MCP 接続は従来どおり `translated-content/.cursor/mcp.json` に設定します（翻訳 PR に含めないでください）。
+MCP 接続は `translated-content/.cursor/mcp.json` に設定します（翻訳 PR に含めないでください）。**`rules-from-mcp` のような別名ディレクトリでは Cursor が Rules を読み込めません。** 必ず `translated-content/.cursor/rules/` に置いてください。
 
 ## 🛠️ トラブルシュート
 
@@ -268,6 +297,7 @@ MCP 接続は従来どおり `translated-content/.cursor/mcp.json` に設定し�
 | `content` / `translated-content` が見つからない | 親ディレクトリに `content` と `translated-content` があるか。<br>または上記環境変数で正しい絶対パスを指定。                          |
 | `mdn_trans_commit_get` が git 関連で失敗する    | `content` が **fork した [mdn/content](https://github.com/mdn/content) を clone** したリポジトリか、対象ファイルが追跡されているか。 |
 | Node のバージョンエラー                         | `package.json` の `engines` は `node >= 22`。                                                                                        |
+| `mdn_trans_review` がシェルで見つからない      | **`npm start` では解決しない**（エージェント用ではない）。<br>ワークスペースが **`translated-content`** か、`translated-content/.cursor/mcp.json` があるか。<br>`npm run setup:translated-content-cursor` 後に Cursor をリロードしたか。<br>Settings → MCP で **`mdn-translation-ja`** が接続済みか。<br>フォールバック: `mdn-translation-ja-mcp` で `npm run mdn:trans:review -- --jaFile=files/ja/.../index.md` |
 
 ## 🔐 ライセンスと第三者表記
 

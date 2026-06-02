@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "mdn-translation-ja": {
+      "command": "node",
+      "args": ["${workspaceFolder}/dist/index.js"],
+      "env": {
+        "MDN_CONTENT_ROOT": "${workspaceFolder}/../content",
+        "MDN_TRANSLATED_CONTENT_ROOT": "${workspaceFolder}/../translated-content"
+      }
+    }
+  }
+}

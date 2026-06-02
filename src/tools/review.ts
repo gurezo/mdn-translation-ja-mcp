@@ -1,9 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import {
+  formatFindingsReport,
+  runGuidelineReview,
+} from "../review/run-guideline-review.js";
 import type { WorkspaceRoots } from "../shared/workspace.js";
-import { loadProhibitedExpressions } from "../shared/load-prohibited-expressions.js";
-import { getProhibitedExpressionsPath } from "../shared/paths.js";
 
 const REVIEW_READ_ONLY_BANNER = [
   "========================================",
@@ -20,10 +22,18 @@ export type ReviewArgs = {
 };
 
 export type ReviewFinding = {
+  skill: string;
   ruleId: string;
   severity: string;
   message: string;
   excerpt?: string;
+};
+
+export type ReviewResult = {
+  message: string;
+  jaFile: string;
+  findings: ReviewFinding[];
+  summaryBySkill: Record<string, number>;
 };
 
 function resolveJaFile(roots: WorkspaceRoots, jaFile: string): string {
@@ -41,20 +51,17 @@ function resolveJaFile(roots: WorkspaceRoots, jaFile: string): string {
 }
 
 /**
- * 禁止・注意表現の簡易チェック（読み取りのみ）。
+ * .agents/skills 由来のガイドライン機械チェック（読み取りのみ）。
  * 対象ファイルやリポジトリには一切書き込まない。
  */
 export function mdnTransReview(
   roots: WorkspaceRoots,
   args: ReviewArgs,
-): { message: string; jaFile: string; findings: ReviewFinding[] } {
+): ReviewResult {
   const jaPath = resolveJaFile(roots, args.jaFile);
   if (!fs.existsSync(jaPath)) {
     throw new Error(`ファイルが見つかりません: ${jaPath}`);
   }
-
-  const prohibitedPath = getProhibitedExpressionsPath();
-  const prohibited = loadProhibitedExpressions(prohibitedPath);
 
   const fd = fs.openSync(jaPath, fs.constants.O_RDONLY);
   let text: string;
@@ -63,39 +70,19 @@ export function mdnTransReview(
   } finally {
     fs.closeSync(fd);
   }
-  const findings: ReviewFinding[] = [];
 
-  for (const item of prohibited.items) {
-    if (item.matchType !== "literal") {
-      continue;
-    }
-    if (text.includes(item.pattern)) {
-      findings.push({
-        ruleId: item.id,
-        severity: item.severity,
-        message: item.message,
-        excerpt: item.pattern,
-      });
-    }
-  }
+  const { findings, summaryBySkill } = runGuidelineReview(text);
 
-  const lines: string[] = [
+  const message = [
     REVIEW_READ_ONLY_BANNER,
-    `レビュー対象: ${jaPath}`,
-    `検出件数: ${findings.length}`,
-    "",
+    formatFindingsReport(jaPath, { findings, summaryBySkill }),
     "（このツールはファイルを書き込みません。読み取りとレポートのみです。）",
-    "（禁止・注意表現リストに基づく簡易チェック。詳細はエージェントがガイドラインを参照してください。）",
-  ];
-  for (const f of findings) {
-    lines.push(
-      `- [${f.severity}] ${f.ruleId}: ${f.message}${f.excerpt ? `（パターン: ${f.excerpt}）` : ""}`,
-    );
-  }
+  ].join("\n");
 
   return {
-    message: lines.join("\n"),
+    message,
     jaFile: jaPath,
     findings,
+    summaryBySkill,
   };
 }

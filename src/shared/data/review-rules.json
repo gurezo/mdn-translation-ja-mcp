@@ -21,12 +21,48 @@
       "sourceRef": "editorial-guideline/references/editorial-guideline.md#約物の表記"
     },
     {
+      "id": "EDITORIAL_WEB_APPLICATION_LATIN",
+      "skill": "editorial-guideline",
+      "matchType": "literal",
+      "pattern": "Web アプリケーション",
+      "severity": "warning",
+      "message": "「Web アプリケーション」ではなく「ウェブアプリケーション」と表記する。",
+      "sourceRef": "editorial-guideline/references/editorial-guideline.md#MDN 翻訳で頻出する用語表記"
+    },
+    {
+      "id": "EDITORIAL_INTERFACE_SPELLING",
+      "skill": "editorial-guideline",
+      "matchType": "literal",
+      "pattern": "インターフェース",
+      "severity": "warning",
+      "message": "MDN 日本語訳では「インターフェイス」に統一する（「インターフェース」は不採用）。",
+      "sourceRef": "mozilla-japan MDN 翻訳レビュー慣行"
+    },
+    {
+      "id": "EDITORIAL_SPEC_HEADING",
+      "skill": "editorial-guideline",
+      "matchType": "literal",
+      "pattern": "## 仕様",
+      "severity": "warning",
+      "message": "見出しは「## 仕様書」に統一する（「## 仕様」はフラグメント不一致の原因になる）。",
+      "sourceRef": "mozilla-japan MDN 翻訳レビュー慣行"
+    },
+    {
+      "id": "EDITORIAL_BROWSER_COMPAT_HEADING",
+      "skill": "editorial-guideline",
+      "matchType": "literal",
+      "pattern": "## ブラウザの互換性",
+      "severity": "warning",
+      "message": "見出しは「## ブラウザーの互換性」に統一する（自動生成フラグメントと一致させる）。",
+      "sourceRef": "mozilla-japan MDN 翻訳レビュー慣行"
+    },
+    {
       "id": "EDITORIAL_TERM_BROWSER_SHORT",
       "skill": "editorial-guideline",
       "matchType": "regex",
       "pattern": "ブラウザ(?!ー)",
       "severity": "warning",
-      "message": "browser は「ブラウザー」と表記する（「ブラウザ」は不採用）。",
+      "message": "browser は「ブラウザー」と表記する（「ブラウザ」は不採用。互換性見出しは「## ブラウザーの互換性」）。",
       "sourceRef": "editorial-guideline/references/editorial-guideline.md#MDN 翻訳で頻出する用語表記"
     },
     {

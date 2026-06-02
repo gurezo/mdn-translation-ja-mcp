@@ -48,7 +48,7 @@
 
 `mdn_trans_review` が機械チェックするスキル（未自動の項目は人手確認）:
 
-- editorial-guideline（禁止記号・頻出語・禁止表現リスト）
+- editorial-guideline（禁止記号・頻出語・MDN 見出し慣行・禁止表現リスト）
 - japanese-style（ひらがな推奨表・文体ヒューリスティック）
 - l10n-guideline（`l10n.sourceCommit`）
 - mozilla-l10n-glossary（1 引数 `{{glossary}}`）

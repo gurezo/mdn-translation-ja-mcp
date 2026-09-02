@@ -429,7 +429,99 @@ Cursor の UI / Agent UX。MCP 利用の必須条件にはしない（#109 で�
 | setup / examples / mcp.json | | | | 残す | |
 | `.cursor/settings.json` | | | | | 残骸 |
 
-## 以降の節
+## 重複ルール・ワークフロー
 
-- 重複ルール・ワークフロー
-- #105 へ渡す未決事項
+同一趣旨が複数の置き場にあり、MCP 接続だけではどれが正本か分からない。
+
+### MCP ツールをシェルで実行するな / review は読み取り専用
+
+同じ制約が次に繰り返し書かれている。
+
+| 置き場 | 差分 |
+| --- | --- |
+| `src/mcp-server-instructions.ts` | 最優先として 4 ツール名と review 読み取り専用 |
+| `.cursor/rules/01-mdn-mcp-tools.mdc` | alwaysApply。CLI フォールバックと setup 案内あり |
+| `examples/translated-content-cursor-rules/01-mdn-mcp-tools.mdc` | 上記の短縮版。setup がこちらをコピー |
+| `.cursor/skills/mdn-translation-workflow/SKILL.md` | ツール対応表とチャット例 |
+| `.cursor/skills/mdn-translation-workflow/references/mcp-tools.md` | 対応表・mcp.json 例・呼び出し手順 |
+| `.cursor/rules/00-mdn-translation.mdc` | MCP 節で 01 へ誘導、review 制約を再掲 |
+| `README.md` | ツール表、チャット例、トラブルシュート |
+| `mdn_trans_review` の description と `REVIEW_READ_ONLY_BANNER` | ツール応答にも同じ制約 |
+
+正本候補は MCP Prompt（＋ Tool の annotations / structuredContent）。Cursor Rule は optional な再掲に縮小できる。
+
+### 標準翻訳フロー（5 手順）
+
+| 置き場 | 内容 |
+| --- | --- |
+| `.cursor/skills/mdn-translation-workflow/SKILL.md` | start → `.agents/skills` で翻訳 → commit_get → replace_glossary → review |
+| `README.md`「翻訳フロー（最短）」 | 同じ 4 Tools の順序。翻訳実施（人手）の節は短い |
+| `MCP_SERVER_INSTRUCTIONS` | フロー本体は書かず Skill パスへ誘導 |
+
+正本候補は MCP Prompt。README は #111 で Prompt への参照に寄せる。
+
+### 翻訳原則（です・ます、コード非翻訳、意訳）
+
+| 置き場 | 内容 |
+| --- | --- |
+| `.cursor/rules/00-mdn-translation.mdc` | 要約。`**/*.md` に条件適用 |
+| `.agents/skills/l10n-guideline` | 意訳・ですます・UI・メタデータ |
+| `.agents/skills/japanese-style` | ですます混在、ひらがな、リスト文体 |
+| `review-rules.json` の `STYLE_DESU_MASU_*` | である。 / だ。 のヒューリスティック |
+
+00 Rule は Skills の薄いコピー。Resource 公開後は必須でなくなる。
+
+### 用語・表記
+
+| 置き場 | 機械 / 人手 |
+| --- | --- |
+| `.agents/skills/editorial-guideline/references` | 人手。長音・単位・メニューなど |
+| `.agents/skills/mozilla-l10n-glossary/references` | 人手。excerpt + Wiki 手順 |
+| `review-rules.json` | 機械。頻出語・禁止約物・見出しのサブセット |
+| `prohibited-expressions.json` | 機械。プレースホルダ |
+| `glossary-terms.json` | 機械。11 語の第 2 引数 |
+
+抽出漏れ（長音規則など）とデータの矛盾（「ブラウザ」 vs 「ブラウザー」）がある。Resource 化時に正本を一つに揃える必要がある（#106）。
+
+### ルール ID の所属ずれ
+
+| ID | Skill 文書上の所属 | 実装の `skill` |
+| --- | --- | --- |
+| `STYLE_L10N_METADATA` | japanese-style の ID 表 | `l10n-guideline`（`l10n-metadata.ts`） |
+| `STYLE_DESU_MASU_AND_DEARU_MIX` | japanese-style の人手 ID | 機械 ID は `STYLE_DESU_MASU_DEARU` / `STYLE_DESU_MASU_DA` |
+| `STYLE_KATAKANA_AND_GLOSSARY_CONSISTENCY` | japanese-style | 未自動 |
+| `STYLE_LIST_AND_PROCEDURE_VOICE` | japanese-style | 未自動 |
+
+レビュー結果のスキル別集計と Skill 文書の ID 表が一致しない。
+
+### Cursor セットアップ手順の重複
+
+| 置き場 | 内容 |
+| --- | --- |
+| `README.md`「translated-content リポジトリ側で行うこと」 | mcp.json 手書き、setup、Rules コピー、Skills 任意 |
+| `scripts/setup-translated-content-cursor.mjs` の stdout | 生成後の Cursor リロード手順 |
+| workflow Skill の Prerequisites | 3 リポジトリ兄弟、mcp.json、Rules コピー推奨 |
+
+#109 / #111 で「MCP サーバー登録だけ」に寄せると、この塊を縮小できる。
+
+## #105 へ渡す未決事項
+
+本文書は分類候補までとする。次は設計 Issue で決める。
+
+- Tools / Resources / Prompts の責務定義とディレクトリ構成（`integrations/cursor/` を含む）
+- `MCP_SERVER_INSTRUCTIONS` を Prompt へ移したあとのサーバー指示の残量
+- `.agents/skills` を Resource のソース・オブ・トゥルースにするか、shared domain を別に切るか
+- `src/shared/data` と Skill references の同期方法（単一ソース）
+- 既存 4 Tools の名前・引数を #108 まで維持するか
+- Cursor Rule / Skill を optional として残す最小セット
+- stdio / HTTP 以外のクライアント（Claude Code / VS Code 等）で Resource / Prompt をどう見せるか（#110）
+
+## Issue #104 の完了対応
+
+| 完了条件 | この文書での対応 |
+| --- | --- |
+| `.cursor` の全 Rules / Skills の役割が一覧化されている | 「Cursor Rules / Skills の役割」 |
+| `.agents/skills` の全 Skill の役割が一覧化されている | 「Agent Skills の役割」 |
+| MCP Tools が依存している Skill / data が明確になっている | 「MCP Tools と Skill / data の依存関係」 |
+| MCP へ移行するものと Cursor 側へ残すものが分類されている | 「MCP 移行対象と Cursor 残置の分類」 |
+| 重複しているルール・ワークフローが特定されている | 「重複ルール・ワークフロー」 |

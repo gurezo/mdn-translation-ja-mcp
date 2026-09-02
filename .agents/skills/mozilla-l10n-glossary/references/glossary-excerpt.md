@@ -11,7 +11,7 @@ description: MDN 翻訳で頻出する用語の抜粋。{{glossary}} 第2引数�
 | compile | compile | コンパイル | 動詞・名詞とも「コンパイル」 |
 | jit | Just-In-Time Compilation (JIT) | 実行時コンパイル (JIT) | 用語集ページの表記に合わせる |
 | api | API | API | 頭字語は表記ガイドラインに従い統一 |
-| browser | browser | ブラウザ | ユーザーエージェント文脈で頻出 |
+| browser | browser | ブラウザー | 表記ガイドラインに合わせる（「ブラウザ」は不採用） |
 | css | CSS | CSS | 言語名としてそのまま |
 | dom | DOM | DOM | Document Object Model の略称 |
 | html | HTML | HTML | マークアップ言語名 |

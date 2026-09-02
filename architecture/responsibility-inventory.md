@@ -342,8 +342,94 @@ TypeDoc の API リファレンスのみ（`typedoc.json` の `out: "docs"`）�
 
 アーキテクチャ・責務・翻訳ガイドラインは Pages に未掲載。公開面の更新は #111。
 
+## MCP 移行対象と Cursor 残置の分類
+
+以下は現状に基づく **移行候補** である。Tools / Resources / Prompts の責務確定、Cursor integration の配置、既存 API 互換は [#105](https://github.com/gurezo/mdn-translation-ja-mcp/issues/105) が行う。本 Issue ではファイルを移動・削除しない。
+
+### 1. MCP Tool に置くべきもの
+
+副作用のある操作と、機械実行可能な検査。粒度の再設計は [#108](https://github.com/gurezo/mdn-translation-ja-mcp/issues/108)。
+
+| 現状 | 理由 |
+| --- | --- |
+| `mdn_trans_start` | 原文ファイルのコピー |
+| `mdn_trans_commit_get` | git 履歴取得と front-matter 書き込み |
+| `mdn_trans_replace_glossary` | 用語 JSON に基づく本文置換 |
+| `mdn_trans_review` | 機械レビュー（読み取り専用） |
+
+CLI `mdn:trans:review` は Tool のフォールバックであり、MCP の必須面にはしない。stdio / HTTP は同じ Tool 集合を維持する。
+
+### 2. MCP Resource に置くべきもの
+
+クライアントが読む翻訳知識。実装は [#106](https://github.com/gurezo/mdn-translation-ja-mcp/issues/106)。
+
+| 現状の置き場 | Resource 化する内容 |
+| --- | --- |
+| `.agents/skills/editorial-guideline/references/` | 表記ガイドライン |
+| `.agents/skills/l10n-guideline/references/` | L10N ガイドライン |
+| `.agents/skills/japanese-style/references/style-rules.md` | 文体ルール |
+| `.agents/skills/mozilla-l10n-glossary/references/` | 用語抜粋と Wiki 参照手順 |
+| `src/shared/data/glossary-terms.json` | 機械用 glossary（Tool も継続利用） |
+| `src/shared/data/review-rules.json` | 機械チェックルール |
+| `src/shared/data/prohibited-expressions.json` | 禁止・注意表現 |
+
+Skill の `SKILL.md`（When to use / checklist）は Resource の短い案内にするか、Prompt 側の手順に含めるか #105 で決める。
+
+### 3. MCP Prompt に置くべきもの
+
+標準手順と呼び出し制約。実装は [#107](https://github.com/gurezo/mdn-translation-ja-mcp/issues/107)。
+
+| 現状の置き場 | Prompt 化する内容 |
+| --- | --- |
+| `.cursor/skills/mdn-translation-workflow/SKILL.md` | 翻訳開始 → 翻訳 → sourceCommit → glossary → レビュー |
+| `.cursor/skills/mdn-translation-workflow/references/mcp-tools.md` | ツール対応表とパス指定 |
+| `MCP_SERVER_INSTRUCTIONS` の手順・制約 | シェル誤認禁止、review 読み取り専用、コピーのみ、パス規則 |
+| `.cursor/rules/01-mdn-mcp-tools.mdc` の制約本文 | 同上（Cursor Rule としては optional に縮小） |
+| `.cursor/rules/00-mdn-translation.mdc` の翻訳原則 | ドメイン要約。Resource と重複するため Prompt の前提節か Resource へ |
+
+サーバー instructions を Prompt / Resource へ寄せたあと、instructions は「Prompt を使え」程度に薄くできる。#105 の互換方針待ち。
+
+### 4. MCP クライアント固有設定として残すもの
+
+Cursor の UI / Agent UX。MCP 利用の必須条件にはしない（#109 で必須依存を外す）。
+
+| 現状 | 残す理由 |
+| --- | --- |
+| `.cursor/mcp.json`（本リポジトリ） | Cursor のサーバー登録形式 |
+| `translated-content/.cursor/mcp.json` の生成 | 同上。他クライアントは各自の設定形式 |
+| `scripts/setup-translated-content-cursor.mjs` | Cursor 向け一括セットアップ |
+| `examples/translated-content-cursor-*` | Cursor 向け雛形 |
+| `.cursor/rules/01-mdn-mcp-tools.mdc` の薄い残置 | Cursor エージェントがツール名をシェル実行する問題への optional 対策 |
+| `.cursor/skills` の残置 | Cursor で Skill を開く UX が便利なら optional integration |
+
+#105 の目標配置 `integrations/cursor/` は、上記 optional 群の行き先候補である。
+
+### 5. 廃止可能なもの（候補。本 Issue では削除しない）
+
+| 対象 | 理由 |
+| --- | --- |
+| `.cursor/settings.json` の `mdn-wdb-doc-ja-mcp` | 現行サーバー名・トランスポートと不一致。旧プロジェクト残骸 |
+| MCP 呼び出し制約の多重コピー | instructions / Rules / Skill / examples Rule / README の 5 系統。Prompt へ集約したあと冗長分を落とせる |
+| `.cursor/rules/00-mdn-translation.mdc` の独立維持 | Agent Skills / 将来 Resource の要約コピー。Prompt か Resource があれば必須ではない |
+| `glossary-terms.json` の `browser` → 「ブラウザ」 | 表記ルール「ブラウザー」と矛盾。廃止というよりデータ修正候補（#106 または glossary 系 Issue） |
+
+「廃止」はファイル削除を意味しない。親 Issue #103 のとおり、便利な Cursor UX は optional として残してよい。
+
+### 分類マトリクス（要約）
+
+| 要素 | Tool | Resource | Prompt | クライアント固有 | 廃止候補 |
+| --- | --- | --- | --- | --- | --- |
+| 4 MCP Tools | 残す | | | | |
+| `src/shared/data/*.json` | Tool が読む | 公開する | | | 用語の矛盾は修正候補 |
+| `.agents/skills` references | | 公開する | | optional Skill として残せる | |
+| workflow Skill | | | 公開する | optional | |
+| `MCP_SERVER_INSTRUCTIONS` | | | 寄せる | | 重複分は縮小 |
+| `.cursor/rules/01-*` | | | 本文を寄せる | 薄い Rule として残せる | 冗長コピー |
+| `.cursor/rules/00-*` | | または Prompt | または Prompt | | 独立維持は不要になり得る |
+| setup / examples / mcp.json | | | | 残す | |
+| `.cursor/settings.json` | | | | | 残骸 |
+
 ## 以降の節
 
-- MCP 移行対象と Cursor 残置の分類
 - 重複ルール・ワークフロー
 - #105 へ渡す未決事項

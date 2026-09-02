@@ -201,6 +201,17 @@ npm run docs:publish
 
 想定外のエラー（パス解決失敗、ファイル未存在、Git 取得失敗など）は **ツール実装が例外を投げ**、クライアント側でツール呼び出しエラーとして扱われることがあります。
 
+## 🔎 他 MCP クライアントでの確認
+
+Cursor 以外では **MCP Inspector** で Tools / Resources / Prompts を確認できます（`.cursor` は不要です）。
+
+```bash
+npm run build
+npm run inspect   # GUI。CLI 手順は architecture/client-verification.md
+```
+
+検証結果と Claude Code / VS Code の設定例は [architecture/client-verification.md](architecture/client-verification.md) を参照してください。
+
 ## 💬 Cursor での利用例（エージェント）
 
 MCP を有効にしたうえで、**チャットで対象ページの MDN URL を伝え**、主に次のツールをエージェントに実行させます。

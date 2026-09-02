@@ -6,7 +6,7 @@ title: Client Integration
 
 サーバー側の契約はどのクライアントでも同じです（`node dist/index.js` + 環境変数）。設定ファイルの形式だけがクライアント固有です。
 
-接続例の一覧は [examples/](../examples/) です。
+接続例の一覧は [examples/README.md](../examples/README.md) です。
 
 ## 最小（必須）
 

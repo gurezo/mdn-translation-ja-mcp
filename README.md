@@ -87,9 +87,9 @@ npm run build
 - `env.MDN_CONTENT_ROOT`: content のルート
 - `env.MDN_TRANSLATED_CONTENT_ROOT`: translated-content のルート
 
-設定ファイルの例は [examples/](examples/) です。
+設定ファイルの例は [examples/README.md](examples/README.md) です。
 
-- MCP 共通: [examples/mcp/](examples/mcp/)（Claude Code / VS Code / Inspector）
+- MCP 共通: [examples/mcp/README.md](examples/mcp/README.md)（Claude Code / VS Code / Inspector）
 - Cursor: [examples/cursor/mcp.example.json](examples/cursor/mcp.example.json)
 
 クライアント別の置き場は [site/client-integration.md](site/client-integration.md) を参照してください。
@@ -178,7 +178,7 @@ npm run setup:translated-content-cursor
 
 ## 他 MCP クライアント
 
-Cursor 以外では [examples/mcp/](examples/mcp/) の JSON を使います。MCP Inspector なら `.cursor` は不要です。
+Cursor 以外では [examples/mcp/README.md](examples/mcp/README.md) の JSON を使います。MCP Inspector なら `.cursor` は不要です。
 
 ```bash
 npm run build

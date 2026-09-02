@@ -31,7 +31,7 @@
 }
 ```
 
-`examples/translated-content-cursor-mcp-example.json` と同一内容。
+`integrations/cursor/mcp.example.json` と同一内容。
 
 ## エージェント向け呼び出し手順
 

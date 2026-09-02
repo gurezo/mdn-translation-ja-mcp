@@ -199,7 +199,7 @@ MCP クライアントが必要なのは **サーバー登録だけ** である�
 | `.cursor/mcp.json`（本リポジトリ） | Cursor のサーバー登録形式 |
 | `translated-content/.cursor/mcp.json` の生成 | 同上。他クライアントは各自の設定形式 |
 | `scripts/setup-translated-content-cursor.mjs` | Cursor 向け一括セットアップ。#109 で Rules 自動コピーを optional 化する |
-| `examples/translated-content-cursor-*` | Cursor 向け雛形 |
+| `integrations/cursor/` | Cursor 向け雛形 |
 | `.cursor/rules/01-mdn-mcp-tools.mdc` の薄い残置 | Cursor エージェントがツール名をシェル実行する問題への optional 対策 |
 | `.cursor/skills` の残置 | Cursor で Skill を開く UX が便利なら残してよい。正本は Prompt |
 

@@ -66,7 +66,7 @@ git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 
 1. **`translated-content` リポジトリのルート**に、ディレクトリ **`.cursor`** を作成します。
 2. **`translated-content/.cursor/mcp.json`** を、次の **実装例どおり**に作成します（ワークスペースのルートが `translated-content` のとき、このパスに置きます）。  
-   [examples/translated-content-cursor-mcp-example.json](examples/translated-content-cursor-mcp-example.json) は **同一内容**のファイルです。コピーしてからパスだけ差し替えても構いません。
+   [integrations/cursor/mcp.example.json](integrations/cursor/mcp.example.json) は **同一内容**のファイルです。コピーしてからパスだけ差し替えても構いません。
 
 ```json
 {
@@ -100,7 +100,7 @@ npm run setup:translated-content-cursor
 # node scripts/setup-translated-content-cursor.mjs /path/to/translated-content
 ```
 
-手動で置く場合は `examples/translated-content-cursor-rules/01-mdn-mcp-tools.mdc` を `translated-content/.cursor/rules/` にコピー。
+手動で置く場合は `integrations/cursor/rules/01-mdn-mcp-tools.mdc` を `translated-content/.cursor/rules/` にコピー。
 
 5. **Cursor をリロード** — `mcp.json` 追加・変更後はウィンドウの再読み込みが必要です。
 
@@ -191,7 +191,7 @@ npm run docs:publish
 名前だけの空フォルダではエラーになります。
 
 環境変数の MCP 設定例は  
-[examples/translated-content-cursor-mcp-example.json](examples/translated-content-cursor-mcp-example.json) を参照してください。
+[integrations/cursor/mcp.example.json](integrations/cursor/mcp.example.json) を参照してください。
 
 ## 📋 MCP ツールの応答
 
@@ -244,7 +244,7 @@ jaFile: files/ja/glossary/symbol/index.md
 **重要:** `mdn_trans_*` は **MCP ツール名**であり、ターミナルのシェルコマンドではありません。エージェントは Cursor の MCP サーバー `mdn-translation-ja` から呼び出してください。
 
 **パス指定のコツ:** MCP はエディタの「開いているファイル」を自動では知らないため、**`files/ja/...` からの相対パス**（ワークスペースが `translated-content` のとき）か、**`index.md` の絶対パス**のどちらかを必ず含めます。  
-親ディレクトリ構成が異なる場合は、MCP 設定の `env` に `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**指定してください（[examples/translated-content-cursor-mcp-example.json](examples/translated-content-cursor-mcp-example.json)）。
+親ディレクトリ構成が異なる場合は、MCP 設定の `env` に `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**指定してください（[integrations/cursor/mcp.example.json](integrations/cursor/mcp.example.json)）。
 
 人手レビューでは、本リポジトリの `.agents/skills/`（表記 / L10N / 用語集 / 文体）を参照してください。
 
@@ -265,9 +265,9 @@ mdn-translation-ja-mcp/
 │   │   └── 01-mdn-mcp-tools.mdc
 │   └── skills/              # MCP 翻訳ワークフロー
 │       └── mdn-translation-workflow/
-└── examples/
-    ├── translated-content-cursor-mcp-example.json
-    └── translated-content-cursor-rules/   # translated-content へコピーする Rules 例
+└── integrations/cursor/     # Cursor 向け optional 雛形
+    ├── mcp.example.json
+    └── rules/01-mdn-mcp-tools.mdc
 ```
 
 ### translated-content で翻訳する場合（任意）
@@ -280,7 +280,7 @@ ln -s ../mdn-translation-ja-mcp/.agents translated-content/.agents
 ln -s ../mdn-translation-ja-mcp/.cursor/skills translated-content/.cursor/skills
 
 mkdir -p translated-content/.cursor/rules
-cp ../mdn-translation-ja-mcp/examples/translated-content-cursor-rules/01-mdn-mcp-tools.mdc translated-content/.cursor/rules/
+cp ../mdn-translation-ja-mcp/integrations/cursor/rules/01-mdn-mcp-tools.mdc translated-content/.cursor/rules/
 # または mdn-translation-ja-mcp の .cursor/rules/*.mdc をまとめてコピー
 ```
 

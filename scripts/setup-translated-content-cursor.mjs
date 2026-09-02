@@ -59,8 +59,9 @@ fs.writeFileSync(
 
 const ruleSrc = path.join(
   mcpRepoRoot,
-  "examples",
-  "translated-content-cursor-rules",
+  "integrations",
+  "cursor",
+  "rules",
   "01-mdn-mcp-tools.mdc",
 );
 const ruleDest = path.join(rulesDir, "01-mdn-mcp-tools.mdc");

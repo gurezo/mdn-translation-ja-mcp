@@ -26,7 +26,7 @@
 | Agent Skills | `.agents/skills/` |
 | 機械チェック用データ | `src/shared/data/` |
 | Cursor 向けセットアップ | `scripts/setup-translated-content-cursor.mjs` |
-| 利用例 | `examples/translated-content-*` |
+| 利用例 | `integrations/cursor/` |
 | 利用者向け手順 | `README.md` |
 | GitHub Pages | `docs/`（TypeDoc 出力） |
 
@@ -311,18 +311,18 @@ Skill ファイルは参照しない。パス解決は環境変数とディレ�
 `npm run setup:translated-content-cursor`。`translated-content/.cursor/` に次を生成する。
 
 - `mcp.json`（`dist/index.js` の絶対パスと環境変数）
-- `rules/01-mdn-mcp-tools.mdc`（`examples/translated-content-cursor-rules/` からコピー）
+- `rules/01-mdn-mcp-tools.mdc`（`integrations/cursor/rules/` からコピー）
 
 `.agents/skills` と workflow Skill、`00-mdn-translation.mdc` はコピーしない。README では別途 symlink / コピーを「任意」と案内する。
 
 Cursor 向け必須セットアップの中核。他 MCP クライアントでは不要。
 
-### `examples/`
+### `integrations/cursor/`
 
 | ファイル | 役割 |
 | --- | --- |
-| `translated-content-cursor-mcp-example.json` | `translated-content/.cursor/mcp.json` の雛形（絶対パスのプレースホルダ） |
-| `translated-content-cursor-rules/01-mdn-mcp-tools.mdc` | setup がコピーする Rule。本リポジトリの `.cursor/rules/01-mdn-mcp-tools.mdc` より短い（CLI フォールバックと workspace 節が簡略） |
+| `mcp.example.json` | `translated-content/.cursor/mcp.json` の雛形（絶対パスのプレースホルダ） |
+| `rules/01-mdn-mcp-tools.mdc` | setup がコピーする Rule。本リポジトリの `.cursor/rules/01-mdn-mcp-tools.mdc` より短い（CLI フォールバックと workspace 節が簡略） |
 
 ### README.md
 
@@ -398,7 +398,7 @@ Cursor の UI / Agent UX。MCP 利用の必須条件にはしない（#109 で�
 | `.cursor/mcp.json`（本リポジトリ） | Cursor のサーバー登録形式 |
 | `translated-content/.cursor/mcp.json` の生成 | 同上。他クライアントは各自の設定形式 |
 | `scripts/setup-translated-content-cursor.mjs` | Cursor 向け一括セットアップ |
-| `examples/translated-content-cursor-*` | Cursor 向け雛形 |
+| `integrations/cursor/` | Cursor 向け雛形 |
 | `.cursor/rules/01-mdn-mcp-tools.mdc` の薄い残置 | Cursor エージェントがツール名をシェル実行する問題への optional 対策 |
 | `.cursor/skills` の残置 | Cursor で Skill を開く UX が便利なら optional integration |
 
@@ -441,7 +441,7 @@ Cursor の UI / Agent UX。MCP 利用の必須条件にはしない（#109 で�
 | --- | --- |
 | `src/mcp-server-instructions.ts` | 最優先として 4 ツール名と review 読み取り専用 |
 | `.cursor/rules/01-mdn-mcp-tools.mdc` | alwaysApply。CLI フォールバックと setup 案内あり |
-| `examples/translated-content-cursor-rules/01-mdn-mcp-tools.mdc` | 上記の短縮版。setup がこちらをコピー |
+| `integrations/cursor/rules/01-mdn-mcp-tools.mdc` | 上記の短縮版。setup がこちらをコピー |
 | `.cursor/skills/mdn-translation-workflow/SKILL.md` | ツール対応表とチャット例 |
 | `.cursor/skills/mdn-translation-workflow/references/mcp-tools.md` | 対応表・mcp.json 例・呼び出し手順 |
 | `.cursor/rules/00-mdn-translation.mdc` | MCP 節で 01 へ誘導、review 制約を再掲 |

@@ -346,3 +346,17 @@ Cursor Rules / Skills は MCP 利用の必須条件ではない。
 | Tools / Resources / Prompts を利用できる   | Inspector CLI と [`src/index.stdio.test.ts`](../src/index.stdio.test.ts) |
 | `.cursor` なしで基本フローを確認できる     | 一時ワークスペースに `.cursor` を置かない                                |
 | 検証結果がドキュメント化されている         | [client-verification.md](./client-verification.md)                       |
+
+## Issue #111 の完了対応
+
+README / GitHub Pages / examples を MCP-native な構成へ更新した。
+
+| 完了条件 | 対応 |
+| --- | --- |
+| README から Cursor 必須と誤解される記述がなくなっている | [README.md](../README.md) の最小セットアップはサーバー登録。Cursor は optional 節 |
+| 最小セットアップ手順が明確になっている | README と [site/getting-started.md](../site/getting-started.md) |
+| Cursor integration が optional として説明されている | README、[site/client-integration.md](../site/client-integration.md)、[integrations/cursor/README.md](../integrations/cursor/README.md) |
+| Tools / Resources / Prompts が説明されている | README の独立節と `site/mcp-*.md` |
+| Cursor 以外の利用例が追加されている | [examples/mcp/](../examples/mcp/) |
+| GitHub Pages が新アーキテクチャを反映している | TypeDoc `projectDocuments`（`site/`）と再生成した `docs/` |
+| examples が責務別に整理されている | [examples/mcp/](../examples/mcp/) と [examples/cursor/](../examples/cursor/) |

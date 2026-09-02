@@ -47,3 +47,68 @@ Cursor 専用の Rules / Skills は、必要な場合だけ利用する optional
 - stdio（`src/index.ts`）と Streamable HTTP（`src/http.ts`）は同じ `createMcpServer()` を使う。
 
 本文書は上記を前提に、責務・配置・互換の **決定** を書く。
+
+## 目標アーキテクチャ
+
+MCP クライアントはサーバーを登録するだけで、Tools / Resources / Prompts と shared translation domain へ届く。Cursor Rules / Skills は必須条件にしない。
+
+```text
+MCP Client（Cursor / Claude / VS Code / other）
+    │  stdio または Streamable HTTP
+    ▼
+mdn-translation-ja-mcp
+├─ Tools
+├─ Resources
+├─ Prompts
+└─ shared translation domain
+       │
+       ├─ content
+       └─ translated-content
+
+integrations/cursor/   … optional UX（接続雛形・薄い Rule）
+```
+
+```mermaid
+flowchart TD
+  subgraph clients [MCP clients]
+    Cursor
+    Claude
+    VSCode
+    Other
+  end
+  subgraph server [mdn-translation-ja-mcp]
+    factory[createMcpServer]
+    tools[Tools]
+    resources[Resources]
+    prompts[Prompts]
+    domain[shared translation domain]
+  end
+  subgraph repos [Local repos]
+    content
+    translated[translated-content]
+  end
+  subgraph optional [optional]
+    cursorInt[integrations/cursor]
+  end
+  clients -->|"stdio or Streamable HTTP"| factory
+  factory --> tools
+  factory --> resources
+  factory --> prompts
+  tools --> domain
+  resources --> domain
+  prompts --> tools
+  prompts --> resources
+  domain --> content
+  domain --> translated
+  cursorInt -.->|"optional UX"| Cursor
+```
+
+### トランスポート
+
+stdio（`src/index.ts`）と Streamable HTTP（`src/http.ts`）は、既存どおり同じ `createMcpServer()` に載せる。機能差をトランスポートに持たない。Tools / Resources / Prompts はすべてこのファクトリで登録する。
+
+### クライアント非依存
+
+サーバーが提供する知識・手順・操作は MCP の Tools / Resources / Prompts で完結する。特定クライアントのファイルパス（例: `.cursor/skills/...`）をサーバー指示に含めない。
+
+Claude Code / VS Code 等での見え方の検証は #110。本設計は「同じ `createMcpServer()` が同じ三面を出す」ことだけを約束する。

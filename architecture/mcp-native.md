@@ -271,3 +271,55 @@ Tools は filesystem と機械用 JSON を読む。Resources は人手 Markdown 
 Markdown は人手知識、JSON は機械サブセットである。JSON を Markdown から生成するスクリプトの有無は #106 の実装詳細とする。
 
 矛盾（例: `glossary-terms.json` の「ブラウザ」と表記ルールの「ブラウザー」）は Resource 化時（#106）に正本へ揃える。ルール ID の所属ずれ（`STYLE_L10N_METADATA` 等）も #106 または #108 で文書と実装を一致させる。
+
+## 既存 API との互換方針
+
+本設計の実装は **追加と移行** であり、既存の Cursor 利用者を本 Issue で壊さない。
+
+### 凍結する範囲
+
+- 既存 4 Tools の **名前・引数・副作用の範囲は #108 まで維持** する。
+- stdio と Streamable HTTP は常に同じ Tool / Resource / Prompt 集合を出す。
+- CLI `npm run mdn:trans:review` は MCP 面の必須ではないフォールバックとして残す。
+- Cursor 利用者は現行 `.cursor` のまま動く。本 Issue では `.cursor` / `.agents/skills` を移動・削除しない。
+
+### 追加のみ（破壊的変更なし）
+
+- Resource / Prompt は未登録の面を足すだけである。既存 Tool の呼び出し方は変えない。
+- `MCP_SERVER_INSTRUCTIONS` の Cursor パス削除は Prompt 実装（#107）と同時に行う。本 Issue では方針のみ。
+- setup スクリプトの Rules 自動コピー見直しは #109。
+
+### 後続 Issue への引き渡し
+
+| Issue | 本設計が渡す決定 |
+| --- | --- |
+| #106 | Resource URI、正本（Markdown / JSON）、Tools と同一ソース |
+| #107 | Prompt 名、手順の所在、instructions の目標残量と Cursor パス削除 |
+| #108 | 4 Tools を維持したうえで高レベル Tool の要否を判断。本 Issue では新 Tool を足さない |
+| #109 | `integrations/cursor/` への集約、optional 最小セット、`settings.json` 削除 |
+| #110 | 同じ `createMcpServer()` を他クライアントで検証 |
+| #111 | README を「MCP サーバー登録だけ」へ寄せる。本 Issue では更新しない |
+
+## 棚卸し未決事項への回答
+
+[responsibility-inventory.md](./responsibility-inventory.md) の「#105 へ渡す未決事項」への決定。
+
+| 未決事項 | 決定 |
+| --- | --- |
+| Tools / Resources / Prompts の責務とディレクトリ構成 | 本文書の該当節。`integrations/cursor/` は optional の目標配置 |
+| instructions の残量 | Tool 制約・review 読み取り専用・ワークスペース・Prompt 名。Cursor Skill パスは削除 |
+| `.agents/skills` を正本にするか shared domain を切るか | 論理正本は domain Markdown（現状は `references/`）。`SKILL.md` はラッパ。物理移動は `src/domain/`（#106/#109） |
+| JSON と Skill references の同期 | 二重の正本を作らない。生成スクリプトの有無は #106 |
+| 4 Tools の名前・引数 | #108 まで維持 |
+| Cursor Rule / Skill の最小セット | 接続設定 + 薄い `01-mdn-mcp-tools.mdc`。00 Rule と workflow Skill は必須から外す |
+| 他クライアントでの見せ方 | 同じ三面を出す。個別 UX は #110 |
+
+## Issue #105 の完了対応
+
+| 完了条件 | この文書での対応 |
+| --- | --- |
+| 新アーキテクチャ図が作成されている | 「目標アーキテクチャ」 |
+| Tools / Resources / Prompts の責務が定義されている | 「Tools / Resources / Prompts の責務」 |
+| Cursor 固有機能の責務が定義されている | 「Cursor 固有機能の責務」 |
+| ディレクトリ構成案が決定している | 「目標ディレクトリ構成と shared domain」 |
+| 既存 API との互換方針が決定している | 「既存 API との互換方針」 |

@@ -66,7 +66,7 @@ git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 
 1. **`translated-content` リポジトリのルート**に、ディレクトリ **`.cursor`** を作成します。
 2. **`translated-content/.cursor/mcp.json`** を、次の **実装例どおり**に作成します（ワークスペースのルートが `translated-content` のとき、このパスに置きます）。  
-   [integrations/cursor/mcp.example.json](integrations/cursor/mcp.example.json) は **同一内容**のファイルです。コピーしてからパスだけ差し替えても構いません。
+   [examples/cursor/mcp.example.json](examples/cursor/mcp.example.json) は **同一内容**のファイルです。コピーしてからパスだけ差し替えても構いません。
 
 ```json
 {
@@ -191,7 +191,7 @@ npm run docs:publish
 名前だけの空フォルダではエラーになります。
 
 環境変数の MCP 設定例は  
-[integrations/cursor/mcp.example.json](integrations/cursor/mcp.example.json) を参照してください。
+[examples/cursor/mcp.example.json](examples/cursor/mcp.example.json) を参照してください。
 
 ## 📋 MCP ツールの応答
 
@@ -255,7 +255,7 @@ jaFile: files/ja/glossary/symbol/index.md
 **重要:** `mdn_trans_*` は **MCP ツール名**であり、ターミナルのシェルコマンドではありません。エージェントは Cursor の MCP サーバー `mdn-translation-ja` から呼び出してください。
 
 **パス指定のコツ:** MCP はエディタの「開いているファイル」を自動では知らないため、**`files/ja/...` からの相対パス**（ワークスペースが `translated-content` のとき）か、**`index.md` の絶対パス**のどちらかを必ず含めます。  
-親ディレクトリ構成が異なる場合は、MCP 設定の `env` に `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**指定してください（[integrations/cursor/mcp.example.json](integrations/cursor/mcp.example.json)）。
+親ディレクトリ構成が異なる場合は、MCP 設定の `env` に `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を**両方**指定してください（[examples/cursor/mcp.example.json](examples/cursor/mcp.example.json)）。
 
 人手レビューでは MCP Resources（`mdn://guidelines/editorial` / `l10n` / `japanese-style`、`mdn://glossary`）を参照してください。`.agents/skills` をワークスペースへコピーする必要はありません。
 
@@ -284,9 +284,10 @@ mdn-translation-ja-mcp/
 │   └── skills/              # MCP 翻訳ワークフロー
 │       └── mdn-translation-workflow/
 └── integrations/cursor/     # Cursor 向け optional 雛形
-    ├── mcp.example.json
-    └── rules/01-mdn-mcp-tools.mdc
+        └── rules/01-mdn-mcp-tools.mdc
 ```
+
+接続 JSON の正本は [examples/cursor/mcp.example.json](examples/cursor/mcp.example.json) です。
 
 ### translated-content で翻訳する場合（任意）
 

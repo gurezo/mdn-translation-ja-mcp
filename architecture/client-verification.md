@@ -138,42 +138,10 @@ npx --yes @modelcontextprotocol/inspector --cli http://127.0.0.1:13050/mcp \
 
 ## 他クライアントの設定例（未実機）
 
-形式はクライアント固有。サーバー側の契約は同じ（`node dist/index.js` + 環境変数）。
+形式はクライアント固有。サーバー側の契約は同じ（`node dist/index.js` + 環境変数）。JSON の正本は [examples/mcp/](../examples/mcp/) です。
 
-### Claude Code（`.mcp.json`）
-
-```json
-{
-  "mcpServers": {
-    "mdn-translation-ja": {
-      "command": "node",
-      "args": ["/absolute/path/to/mdn-translation-ja-mcp/dist/index.js"],
-      "env": {
-        "MDN_CONTENT_ROOT": "/absolute/path/to/content",
-        "MDN_TRANSLATED_CONTENT_ROOT": "/absolute/path/to/translated-content"
-      }
-    }
-  }
-}
-```
-
-### VS Code（`.vscode/mcp.json`）
-
-```json
-{
-  "servers": {
-    "mdn-translation-ja": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["/absolute/path/to/mdn-translation-ja-mcp/dist/index.js"],
-      "env": {
-        "MDN_CONTENT_ROOT": "/absolute/path/to/content",
-        "MDN_TRANSLATED_CONTENT_ROOT": "/absolute/path/to/translated-content"
-      }
-    }
-  }
-}
-```
+- Claude Code: [examples/mcp/claude-code.mcp.json](../examples/mcp/claude-code.mcp.json)（プロジェクトの `.mcp.json`）
+- VS Code: [examples/mcp/vscode.mcp.json](../examples/mcp/vscode.mcp.json)（`.vscode/mcp.json`）
 
 ## Issue #110 の完了対応
 

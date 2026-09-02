@@ -6,9 +6,9 @@ MCP クライアントはサーバーを登録するだけで、Tools / Resource
 
 ## 最低限（必須）
 
-Cursor で使う場合に必要なのは MCP 接続設定だけです。
+Cursor で使う場合に必要なのは MCP 接続設定だけです。接続 JSON の正本は [examples/cursor/mcp.example.json](../../examples/cursor/mcp.example.json) です。
 
-- 手動: [mcp.example.json](./mcp.example.json) を `translated-content/.cursor/mcp.json` にコピーし、絶対パスを書き換える
+- 手動: 上記 JSON を `translated-content/.cursor/mcp.json` にコピーし、絶対パスを書き換える
 - 一括: `mdn-translation-ja-mcp` で `npm run setup:translated-content-cursor`（`mcp.json` のみ生成）
 
 `translated-content/.cursor/` は手元のローカル設定です。翻訳 PR に含めないでください。

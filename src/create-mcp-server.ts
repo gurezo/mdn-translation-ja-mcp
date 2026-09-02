@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import * as z from "zod";
 
 import { MCP_SERVER_INSTRUCTIONS } from "./mcp-server-instructions.js";
+import { registerTranslationPrompts } from "./prompts/register.js";
 import { registerGuidelineResources } from "./resources/register.js";
 import { resolveWorkspaceRoots } from "./shared/workspace.js";
 import { mdnTransStart } from "./tools/trans-start.js";
@@ -152,6 +153,7 @@ export function createMcpServer(): McpServer {
   );
 
   registerGuidelineResources(server);
+  registerTranslationPrompts(server);
 
   return server;
 }

@@ -119,7 +119,7 @@ export function createMcpServer(): McpServer {
     {
       title: "翻訳のガイドライン機械レビュー（読み取りのみ）",
       description:
-        ".agents/skills 由来の機械チェック（表記・文体・l10n メタデータ・glossary マクロ等）を翻訳ファイルに対して実行します。サーバーは対象ファイルへ一切書き込みません（readOnlyHint）。エージェントはレビュー結果を理由に当該ファイルを編集・整形・追記してはならない。ユーザーが「修正して」等と明示した場合のみ編集してよい。",
+        "ガイドライン機械チェック（表記・文体・l10n メタデータ・glossary マクロ等。ルールは mdn://data/review-rules と同じ JSON）を翻訳ファイルに対して実行します。サーバーは対象ファイルへ一切書き込みません（readOnlyHint）。エージェントはレビュー結果を理由に当該ファイルを編集・整形・追記してはならない。ユーザーが「修正して」等と明示した場合のみ編集してよい。",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,

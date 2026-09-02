@@ -7,7 +7,7 @@
 | `mdn_trans_start` | URL を指定し、`content` の `index.md` を `translated-content/files/ja/.../index.md` にコピー |
 | `mdn_trans_commit_get` | `content` の最新コミットを取得し、`l10n.sourceCommit` を翻訳ファイルに反映 |
 | `mdn_trans_replace_glossary` | `{{glossary("id")}}` を `{{glossary("id", "表示")}}` に置換 |
-| `mdn_trans_review` | `.agents/skills` 由来のガイドライン機械チェック（**読み取りのみ**） |
+| `mdn_trans_review` | ガイドライン機械チェック（`src/shared/data` の JSON。**読み取りのみ**） |
 
 ## パス指定
 
@@ -31,7 +31,7 @@
 }
 ```
 
-`examples/translated-content-cursor-mcp-example.json` と同一内容。
+`integrations/cursor/mcp.example.json` と同一内容。
 
 ## エージェント向け呼び出し手順
 
@@ -44,11 +44,13 @@
 
 `mdn_trans_review` は対象ファイルを変更しない。エージェントはレビュー結果を理由に当該ファイルを編集してはならない（ユーザーが「修正して」と明示した場合のみ可）。
 
-## ガイドライン Skills
+## ガイドライン Resources
 
-`mdn_trans_review` が機械チェックするスキル（未自動の項目は人手確認）:
+人手翻訳では MCP Resources を読む（`.agents/skills` のコピーは不要）:
 
-- editorial-guideline（禁止記号・頻出語・MDN 見出し慣行・禁止表現リスト）
-- japanese-style（ひらがな推奨表・文体ヒューリスティック）
-- l10n-guideline（`l10n.sourceCommit`）
-- mozilla-l10n-glossary（1 引数 `{{glossary}}`）
+- `mdn://guidelines/editorial`
+- `mdn://guidelines/l10n`
+- `mdn://guidelines/japanese-style`
+- `mdn://glossary`
+
+`mdn_trans_review` の機械チェックは `mdn://data/review-rules` / `glossary-terms` / `prohibited-expressions` と同じ JSON を使う。未自動の項目は人手確認。

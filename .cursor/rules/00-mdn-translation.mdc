@@ -38,4 +38,4 @@ alwaysApply: false
 
 ## 詳細ガイドライン
 
-表記・L10N・用語集・文体の詳細は `.agents/skills/` の各スキルを参照する。
+表記・L10N・用語集・文体の詳細は MCP Resources（`mdn://guidelines/editorial` / `l10n` / `japanese-style`、`mdn://glossary`）を参照する。`.agents/skills` を translated-content へコピーする必要はない。

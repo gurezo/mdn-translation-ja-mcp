@@ -37,7 +37,7 @@ export type ReviewResult = {
 };
 
 /**
- * .agents/skills 由来のガイドライン機械チェック（読み取りのみ）。
+ * ガイドライン機械チェック（読み取りのみ。ルールは src/shared/data の JSON）。
  * 対象ファイルやリポジトリには一切書き込まない。
  */
 export function mdnTransReview(

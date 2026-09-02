@@ -28,7 +28,9 @@ MCP ツールが利用できない場合のみ、**mdn-translation-ja-mcp** リ�
 
 （`MDN_CONTENT_ROOT` / `MDN_TRANSLATED_CONTENT_ROOT` が設定されていること）
 
-それ以外は `node scripts/setup-translated-content-cursor.mjs` で `translated-content/.cursor/mcp.json` を生成し、Cursor をリロードするよう案内する。
+それ以外は `node scripts/setup-translated-content-cursor.mjs` で `translated-content/.cursor/mcp.json` を生成し、Cursor をリロードするよう案内する。Rules / Skills のコピーは不要（任意の薄い Rule は `--with-rules`）。
+
+標準手順は MCP Prompt（`mdn_translate` / `mdn_sync` / `mdn_review`）を使う。
 
 ## 読み取り専用
 

@@ -5,12 +5,15 @@ description: Runs the MDN Japanese translation MCP workflow via Cursor MCP (serv
 
 # MDN Translation Workflow
 
+この Skill は Cursor 向けの **optional** 補助です。正本の手順は MCP Prompt（`mdn_translate` / `mdn_sync` / `mdn_review`）です。translated-content へこの Skill や Rules をコピーしなくても、MCP サーバー登録だけで基本フローを実行できます。
+
 ## Prerequisites
 
 - `content` / `translated-content` / `mdn-translation-ja-mcp` が同じ親ディレクトリに並んでいる
-- `translated-content/.cursor/mcp.json` で MCP サーバー `mdn-translation-ja` が設定済み
+- MCP サーバー `mdn-translation-ja` が設定済み（Cursor では `translated-content/.cursor/mcp.json`）
 - 翻訳作業は `translated-content` をワークスペースとして開く
-- **推奨:** `translated-content/.cursor/rules/` に本リポジトリの `.cursor/rules/*.mdc` を symlink またはコピー（MCP ツールをシェルと誤認しないため）
+
+薄い Rule（`integrations/cursor/rules/01-mdn-mcp-tools.mdc`）は、エージェントがツール名をシェルと誤認する場合だけ任意で入れる。
 
 ## MCP の呼び出し方（重要）
 
@@ -25,6 +28,8 @@ description: Runs the MDN Japanese translation MCP workflow via Cursor MCP (serv
 
 ユーザーが「`mdn_trans_review` を実行して」と書いた場合も、**MCP ツール**として `jaFile` を渡して呼び出す。
 
+標準フローをまとめて実行するときは Prompt `mdn_translate` を使う。
+
 ## Workflow
 
 ### 1. 翻訳開始
@@ -38,12 +43,12 @@ url: https://developer.mozilla.org/en-US/docs/...
 
 ### 2. 翻訳実施
 
-`.agents/skills/` の4スキルを参照:
+MCP Resources を読む（`.agents/skills` のコピーは不要）:
 
-- editorial-guideline — 表記
-- l10n-guideline — 意訳・UI 表現
-- mozilla-l10n-glossary — 用語
-- japanese-style — 文体
+- `mdn://guidelines/editorial` — 表記
+- `mdn://guidelines/l10n` — 意訳・UI 表現
+- `mdn://glossary` — 用語
+- `mdn://guidelines/japanese-style` — 文体
 
 ### 3. sourceCommit 反映
 
@@ -79,3 +84,4 @@ jaFile: files/ja/.../index.md
 ## Additional resources
 
 - MCP ツール詳細: [references/mcp-tools.md](references/mcp-tools.md)
+- Cursor 向け optional 雛形: `integrations/cursor/README.md`

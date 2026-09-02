@@ -230,10 +230,120 @@ flowchart TD
 
 translated-content ワークスペースで Skills を使わない場合、機械チェック可能なサブセット以外のガイドラインはエージェントに届かない。これが「MCP を繋いだだけでは想定した翻訳体験にならない」主因の一つである。
 
+## MCP Tools と Skill / data の依存関係
+
+### トランスポートと入口
+
+| 入口 | パス | 役割 |
+| --- | --- | --- |
+| stdio | `src/index.ts` → `createMcpServer()` | Cursor の `mcp.json` `command` から起動 |
+| Streamable HTTP | `src/http.ts` → 同じ `createMcpServer()` | `npm run start:http`。機能集合は stdio と同一 |
+| CLI フォールバック | `src/cli/review.ts` | `npm run mdn:trans:review`。`mdn_trans_review` 相当。MCP 未接続時のみ |
+
+Resources / Prompts は未登録。サーバー説明は `src/mcp-server-instructions.ts` の `MCP_SERVER_INSTRUCTIONS`（Cursor のサーバー指示）。
+
+### ワークスペース解決
+
+全 Tools が `resolveWorkspaceRoots()`（`src/shared/workspace.ts`）を使う。
+
+1. `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` を両方指定
+2. 未設定ならプロセス cwd の親にある `content` / `translated-content`
+
+Skill ファイルは参照しない。パス解決は環境変数とディレクトリ配置のみ。
+
+### Tools 一覧と依存
+
+| Tool | 実装 | 書き込み | Skill 依存 | data 依存 | その他 |
+| --- | --- | --- | --- | --- | --- |
+| `mdn_trans_start` | `src/tools/trans-start.ts` | `translated-content` へ原文コピー | なし | なし | URL 解決 `mdn-url-resolve.ts` |
+| `mdn_trans_commit_get` | `src/tools/commit-get.ts` | `l10n.sourceCommit` を書き込み | なし | なし | git `get-source-commit.ts`、front-matter |
+| `mdn_trans_replace_glossary` | `src/tools/replace-glossary.ts` | 第 2 引数付きに置換して保存 | なし（JSON のみ） | `glossary-terms.json` | `glossary-macro.ts` |
+| `mdn_trans_review` | `src/tools/review.ts` | なし（readOnlyHint） | なし（ランタイムは JSON + チェッカー） | `review-rules.json`、`prohibited-expressions.json` | スキル名は結果のグループ化にのみ使用 |
+
+`mdn_trans_review` の説明文・レポートは「`.agents/skills` 由来」と書くが、ファイル I/O は対象 `index.md` の読み取りと `src/shared/data`（ビルド後は `dist/shared/data`）のみ。
+
+### `src/shared/data`
+
+`scripts/copy-shared-data.mjs` が `tsc` 後に JSON を `dist/shared/data` へ複製する。パス解決は `src/shared/paths.ts`。
+
+| ファイル | 利用者 | 由来 | 内容 |
+| --- | --- | --- | --- |
+| `glossary-terms.json` | `mdn_trans_replace_glossary` | 用語集の機械用サブセット | 11 語。`id` → `secondArg` |
+| `review-rules.json` | `mdn_trans_review`（`findingsFromRuleItems`） | `.agents/skills` references から抽出と明記 | 禁止約物、頻出語、見出し慣行、ひらがな、だ・であるヒューリスティック |
+| `prohibited-expressions.json` | `mdn_trans_review`（`findingsFromProhibited`） | editorial-guideline を前提にした初期リスト | 「要翻訳」等のプレースホルダと TODO / FIXME / [WIP] |
+
+`review-rules.json` の `skill` フィールドは editorial-guideline / japanese-style。l10n と glossary の機械チェックは JSON ではなく専用チェッカー。
+
+#### データとガイドラインのずれ
+
+- `glossary-terms.json` の `browser.secondArg` は「ブラウザ」。`review-rules.json` の `EDITORIAL_TERM_BROWSER_SHORT` と glossary-lookup.md は「ブラウザー」を要求する。
+- `review-rules.json` の `retrievedAt` は 2026-06-02、`prohibited-expressions.json` は 2026-03-22、Skill references の `retrievedAt` は 2026-05-31。同期元が一つではない。
+
+### レビューエンジン
+
+`src/review/run-guideline-review.ts` が次を合成する。
+
+| チェッカー | ソース | 報告スキル |
+| --- | --- | --- |
+| `findingsFromRuleItems` | `review-rules.json` | 各 item の `skill` |
+| `findingsFromProhibited` | `prohibited-expressions.json` | 常に `editorial-guideline` |
+| `findingsFromL10nMetadata` | front-matter | `l10n-guideline`（`STYLE_L10N_METADATA`） |
+| `findingsFromGlossaryMacros` | 本文の 1 引数 `{{glossary}}` | `mozilla-l10n-glossary`（`GLOSSARY_SINGLE_ARG`） |
+
+`REVIEW_SKILL_ORDER` は 4 スキル名。未自動項目（意訳、カタカナと glossary の整合、リスト文体）はレポートで人手確認を促すだけ。
+
+### `MCP_SERVER_INSTRUCTIONS` が依存する Cursor 側知識
+
+`src/mcp-server-instructions.ts` は次をサーバー指示に含める。
+
+- 4 Tools はシェルではない
+- `mdn_trans_review` は読み取り専用
+- 兄弟ディレクトリまたは環境変数
+- `mdn_trans_start` はコピーのみ
+- **「MCP 翻訳手順は `.cursor/skills/mdn-translation-workflow` を参照」**
+
+最後の行により、MCP サーバーの利用説明が Cursor Skill パスに結合している。他クライアントではこのパスは存在しない。
+
+## setup / examples / README / GitHub Pages
+
+### `scripts/setup-translated-content-cursor.mjs`
+
+`npm run setup:translated-content-cursor`。`translated-content/.cursor/` に次を生成する。
+
+- `mcp.json`（`dist/index.js` の絶対パスと環境変数）
+- `rules/01-mdn-mcp-tools.mdc`（`examples/translated-content-cursor-rules/` からコピー）
+
+`.agents/skills` と workflow Skill、`00-mdn-translation.mdc` はコピーしない。README では別途 symlink / コピーを「任意」と案内する。
+
+Cursor 向け必須セットアップの中核。他 MCP クライアントでは不要。
+
+### `examples/`
+
+| ファイル | 役割 |
+| --- | --- |
+| `translated-content-cursor-mcp-example.json` | `translated-content/.cursor/mcp.json` の雛形（絶対パスのプレースホルダ） |
+| `translated-content-cursor-rules/01-mdn-mcp-tools.mdc` | setup がコピーする Rule。本リポジトリの `.cursor/rules/01-mdn-mcp-tools.mdc` より短い（CLI フォールバックと workspace 節が簡略） |
+
+### README.md
+
+Cursor 前提の利用者向け手順。調査対象としての役割:
+
+- 3 リポジトリ並列、fork → clone、`translated-content/.cursor/mcp.json`
+- setup スクリプトと Rules コピー
+- 翻訳フロー最短（4 Tools の順序）
+- Skills / Rules の任意展開（symlink）
+- トラブルシュート（MCP をシェルと誤認した場合を含む）
+
+MCP 指示・Rules・workflow Skill と内容が重複する。本格更新は #111。
+
+### GitHub Pages（`docs/`）
+
+TypeDoc の API リファレンスのみ（`typedoc.json` の `out: "docs"`）。`npm run docs:clean` がディレクトリを削除するため、本棚卸し文書はここに置かない。
+
+アーキテクチャ・責務・翻訳ガイドラインは Pages に未掲載。公開面の更新は #111。
+
 ## 以降の節
 
-- MCP Tools と Skill / data の依存関係
-- setup / examples / README / GitHub Pages
 - MCP 移行対象と Cursor 残置の分類
 - 重複ルール・ワークフロー
 - #105 へ渡す未決事項

@@ -1,5 +1,5 @@
 {
-  "description": ".agents/skills 由来の機械チェックルール（references から抽出）",
+  "description": "機械チェックルール（mdn://data/review-rules と同じ JSON。ガイドライン Markdown から抽出）",
   "retrievedAt": "2026-06-02",
   "items": [
     {

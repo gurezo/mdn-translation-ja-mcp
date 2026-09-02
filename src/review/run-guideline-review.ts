@@ -48,7 +48,7 @@ export function formatFindingsReport(
     `レビュー対象: ${jaPath}`,
     `検出件数: ${result.findings.length}`,
     "",
-    "（.agents/skills 由来の機械チェック。意訳の自然さ等は人手確認が必要です。）",
+    "（機械チェック。ルールは mdn://data/review-rules と同じ JSON。意訳の自然さ等は人手確認が必要です。）",
     "",
   ];
 

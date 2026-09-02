@@ -160,9 +160,78 @@ flowchart TD
 
 翻訳作業ワークスペース（`translated-content`）では、上記のうち接続設定と `01-mdn-mcp-tools.mdc` 相当が setup スクリプトで複製される。`00-mdn-translation.mdc` と workflow Skill、`.agents/skills` は README 上「任意」だが、人手翻訳・手順遵守には事実上必要になっている。
 
+## Agent Skills の役割
+
+`.agents/skills/` は mozilla-japan 翻訳ガイドラインを Cursor Agent Skill 形式にしたもの。人手の翻訳・レビュー用のドメイン知識であり、MCP サーバーは実行時にこれらの Markdown を読まない。
+
+`mdn_trans_review` はスキル名（`REVIEW_SKILL_ORDER`）で検出をグループ化するが、検査本体は `src/shared/data` へ抽出した JSON と専用チェッカーである。
+
+### 共通構造
+
+各スキルは `SKILL.md`（いつ使うか・チェックリスト・手順）と `references/`（出典から抜粋した詳細）からなる。
+
+| Skill | 出典 |
+| --- | --- |
+| `editorial-guideline` | https://github.com/mozilla-japan/translation/wiki/Editorial-Guideline |
+| `l10n-guideline` | https://github.com/mozilla-japan/translation/wiki/L10N-Guideline |
+| `mozilla-l10n-glossary` | https://github.com/mozilla-japan/translation/wiki/Mozilla-L10N-Glossary |
+| `japanese-style` | 日本語の文体スプレッドシート（style-rules.md の sourceUrl） |
+
+### `editorial-guideline`
+
+| 項目 | 内容 |
+| --- | --- |
+| 役割 | 表記・約物・単位・カタカナ長音・ブランディング・頻出用語 |
+| 人手 | 半角スペース、日付・数字・容量、メニュー `[項目]`、引用符「」 |
+| 機械チェックへ抽出 | 禁止約物（―、～）、頻出語（ウェブアプリケーション、ブラウザー、バイナリー、構文、ログイン等）、MDN 見出し慣行（仕様書 / ブラウザーの互換性） |
+| 機械に載っていない例 | カタカナ長音の一般規則、単位の詳細、メニュー三点リーダー省略 |
+
+禁止表現リスト `prohibited-expressions.json` も editorial-guideline スキル名で報告される（プレースホルダ「要翻訳」等）。references 本文からの直接抽出ではない。
+
+### `l10n-guideline`
+
+| 項目 | 内容 |
+| --- | --- |
+| 役割 | 意訳・自然な日本語、UI コンテクスト別表現、です・ます調、L10N メタデータ |
+| 人手 | 逐語訳回避、UI の体言止め / 動詞末尾、「Web」→「ウェブ」、括弧前後の空白 |
+| 機械チェック | `findingsFromL10nMetadata`: front-matter の `l10n.sourceCommit` のみ（ルール ID `STYLE_L10N_METADATA`） |
+| 機械に載っていない例 | 意訳の自然さ、UI コンテクスト別フレーズ |
+
+`STYLE_L10N_METADATA` は japanese-style の ID 表にも載るが、実装の `skill` フィールドは `l10n-guideline`。
+
+### `mozilla-l10n-glossary`
+
+| 項目 | 内容 |
+| --- | --- |
+| 役割 | 英語技術用語の訳語と `{{glossary("id", "表示名")}}` の第 2 引数 |
+| 人手 | `glossary-excerpt.md` 検索、未掲載時は Wiki（`glossary-lookup.md`） |
+| 機械 | `mdn_trans_replace_glossary` が `glossary-terms.json` で第 2 引数を補完。`mdn_trans_review` は 1 引数マクロを `GLOSSARY_SINGLE_ARG` として検出 |
+| JSON との関係 | Skill 本文が `src/shared/data/glossary-terms.json` を MCP 用語データとして明示。excerpt は人が読む抜粋、JSON は機械用のサブセット |
+
+### `japanese-style`
+
+| 項目 | 内容 |
+| --- | --- |
+| 役割 | です・ます調、ひらがな / 漢字、箇条書き・手順の文体 |
+| 人手確認 ID | `STYLE_KATAKANA_AND_GLOSSARY_CONSISTENCY`、`STYLE_LIST_AND_PROCEDURE_VOICE` |
+| 機械チェック | `STYLE_HIRAGANA_*`（下さい / の為 / 出来る / 全て / 読込み / 貼付け）、`STYLE_DESU_MASU_*`（である。 / だ。） |
+| ID のずれ | 人手用 ID `STYLE_DESU_MASU_AND_DEARU_MIX` に対し、機械側 ID は `STYLE_DESU_MASU_DEARU` / `STYLE_DESU_MASU_DA` |
+
+### Agent Skills と MCP の関係（要約）
+
+```text
+.agents/skills/*/SKILL.md + references/
+        │ 人手翻訳・人手レビュー
+        │
+        ├─ 抽出済み ─► src/shared/data/*.json  ─► mdn_trans_review
+        │                                         mdn_trans_replace_glossary
+        └─ 未抽出   ─► エージェントが Skill を読んで判断（MCP 未接続では届かない）
+```
+
+translated-content ワークスペースで Skills を使わない場合、機械チェック可能なサブセット以外のガイドラインはエージェントに届かない。これが「MCP を繋いだだけでは想定した翻訳体験にならない」主因の一つである。
+
 ## 以降の節
 
-- Agent Skills の役割
 - MCP Tools と Skill / data の依存関係
 - setup / examples / README / GitHub Pages
 - MCP 移行対象と Cursor 残置の分類

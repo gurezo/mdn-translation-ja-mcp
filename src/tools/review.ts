@@ -1,10 +1,10 @@
 import fs from "node:fs";
-import path from "node:path";
 
 import {
   formatFindingsReport,
   runGuidelineReview,
 } from "../review/run-guideline-review.js";
+import { resolveJaFile } from "../shared/resolve-ja-file.js";
 import type { WorkspaceRoots } from "../shared/workspace.js";
 
 const REVIEW_READ_ONLY_BANNER = [
@@ -35,20 +35,6 @@ export type ReviewResult = {
   findings: ReviewFinding[];
   summaryBySkill: Record<string, number>;
 };
-
-function resolveJaFile(roots: WorkspaceRoots, jaFile: string): string {
-  const p = path.isAbsolute(jaFile)
-    ? jaFile
-    : path.join(roots.translatedRoot, jaFile);
-  const normalized = path.normalize(p);
-  const base = path.resolve(roots.translatedRoot);
-  if (!normalized.startsWith(base + path.sep) && normalized !== base) {
-    throw new Error(
-      `指定パスは translated-content の外に出ています: ${jaFile}`,
-    );
-  }
-  return normalized;
-}
 
 /**
  * .agents/skills 由来のガイドライン機械チェック（読み取りのみ）。

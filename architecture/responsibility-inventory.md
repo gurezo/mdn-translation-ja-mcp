@@ -89,9 +89,79 @@ flowchart TD
 | クライアント固有 | Cursor の UI / Agent UX に依存する設定 | `.cursor` と setup スクリプト |
 | 廃止候補 | 重複・残骸。本 Issue では削除しない | 後述 |
 
-## 目次（以降の節で埋める）
+## Cursor Rules / Skills の役割
 
-- Cursor Rules / Skills の役割
+`.cursor/` は Cursor クライアント固有の接続設定・エージェント制約・ワークフロー知識である。翻訳作業では `translated-content` 側へコピーまたは symlink しないと、MCP サーバー接続だけでは同じ体験にならない。
+
+### `.cursor/mcp.json`
+
+| 項目 | 内容 |
+| --- | --- |
+| 役割 | 本リポジトリを Cursor で開いたときの MCP サーバー起動設定（stdio） |
+| サーバー名 | `mdn-translation-ja` |
+| 起動 | `node ${workspaceFolder}/dist/index.js` |
+| 環境変数 | `MDN_CONTENT_ROOT` / `MDN_TRANSLATED_CONTENT_ROOT`（兄弟ディレクトリ想定） |
+| 必須性 | Cursor で本サーバーを使うには同等の設定が必要。形式は Cursor 固有 |
+
+`translated-content` ワークスペースでは、このファイルではなく `translated-content/.cursor/mcp.json`（setup スクリプトまたは examples から生成）を使う。
+
+### `.cursor/rules/00-mdn-translation.mdc`
+
+| 項目 | 内容 |
+| --- | --- |
+| 役割 | MDN 日本語翻訳の基本制約（原則・非翻訳対象・用語マクロ・フォーマット） |
+| 適用 | `globs: ["**/*.md"]`、`alwaysApply: false` |
+| 含む知識 | です・ます調、コードブロック非翻訳、`{{glossary}}` 2 引数、メニューは `"ラベル"` |
+| 他への誘導 | MCP 呼び出しは `01-mdn-mcp-tools.mdc`、詳細ガイドラインは `.agents/skills/` |
+| 重複 | `.agents/skills` の l10n / japanese-style / glossary と原則が重なる |
+
+### `.cursor/rules/01-mdn-mcp-tools.mdc`
+
+| 項目 | 内容 |
+| --- | --- |
+| 役割 | MCP ツールをシェルコマンドと誤認しないための呼び出し制約 |
+| 適用 | `globs: ["**/*"]`、`alwaysApply: true` |
+| 含む知識 | 4 ツール名、`mdn_trans_review` の `jaFile`、読み取り専用制約、CLI フォールバック、`translated-content` ワークスペースでの接続先 |
+| 必須性 | Cursor エージェントがツール名をターミナルで実行しようとする問題への対策。他 MCP クライアントでは不要な場合がある |
+
+### `.cursor/skills/mdn-translation-workflow/SKILL.md`
+
+| 項目 | 内容 |
+| --- | --- |
+| 役割 | 標準翻訳フロー（開始 → 翻訳 → sourceCommit → glossary → レビュー） |
+| 前提 | 3 リポジトリが兄弟、`translated-content/.cursor/mcp.json` 済み、Rules のコピー推奨 |
+| 翻訳実施時 | `.agents/skills` の 4 スキルを参照するよう指示 |
+| MCP との関係 | `MCP_SERVER_INSTRUCTIONS` がこの Skill を「翻訳手順」として参照する |
+
+### `.cursor/skills/mdn-translation-workflow/references/mcp-tools.md`
+
+| 項目 | 内容 |
+| --- | --- |
+| 役割 | 4 Tools の対応表、パス指定、mcp.json 例、エージェント向け呼び出し手順 |
+| 重複 | `01-mdn-mcp-tools.mdc`、README、`MCP_SERVER_INSTRUCTIONS` と同じ制約を再掲 |
+
+### `.cursor/settings.json`
+
+| 項目 | 内容 |
+| --- | --- |
+| 役割 | 不明。キー `mdn-wdb-doc-ja-mcp` と localhost:3000 の REST エンドポイント |
+| 現状 | 現行 MCP サーバー名 `mdn-translation-ja` および stdio / Streamable HTTP 実装と一致しない |
+| 扱い | 旧プロジェクト名の残骸として廃止候補（本 Issue では削除しない） |
+
+### Cursor 側の依存関係（要約）
+
+```text
+.cursor/mcp.json          … 接続（クライアント固有）
+.cursor/rules/01-*.mdc    … ツール呼び出し UX（クライアント固有、常時）
+.cursor/rules/00-*.mdc    … 翻訳原則の要約（ドメイン知識の薄いコピー）
+.cursor/skills/workflow   … 標準フロー（MCP Prompt 候補）
+.cursor/settings.json     … 現行実装と無関係
+```
+
+翻訳作業ワークスペース（`translated-content`）では、上記のうち接続設定と `01-mdn-mcp-tools.mdc` 相当が setup スクリプトで複製される。`00-mdn-translation.mdc` と workflow Skill、`.agents/skills` は README 上「任意」だが、人手翻訳・手順遵守には事実上必要になっている。
+
+## 以降の節
+
 - Agent Skills の役割
 - MCP Tools と Skill / data の依存関係
 - setup / examples / README / GitHub Pages

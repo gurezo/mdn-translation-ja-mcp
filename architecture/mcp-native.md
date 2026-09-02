@@ -117,22 +117,22 @@ Claude Code / VS Code 等での見え方の検証は #110。本設計は「同�
 
 三面の境界を次で固定する。実装は #106 / #107 / #108。
 
-| 面 | 責務 | 置くもの | 置かないもの |
-| --- | --- | --- | --- |
-| Tool | 決定的な副作用・機械検査 | 既存 4 Tools（`mdn_trans_start` / `mdn_trans_commit_get` / `mdn_trans_replace_glossary` / `mdn_trans_review`） | 自然言語翻訳、手順のオーケストレーション |
-| Resource | クライアントが読む知識（読み取り専用） | 4 ガイドライン本文、glossary 抜粋、機械用 JSON | 手順テンプレート、ファイル書き込み |
-| Prompt | クライアント LLM 向け手順 | 翻訳フロー・同期・レビュー | サーバー内 LLM 実行 |
+| 面       | 責務                                   | 置くもの                                                                                                       | 置かないもの                             |
+| -------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Tool     | 決定的な副作用・機械検査               | 既存 4 Tools（`mdn_trans_start` / `mdn_trans_commit_get` / `mdn_trans_replace_glossary` / `mdn_trans_review`） | 自然言語翻訳、手順のオーケストレーション |
+| Resource | クライアントが読む知識（読み取り専用） | 4 ガイドライン本文、glossary 抜粋、機械用 JSON                                                                 | 手順テンプレート、ファイル書き込み       |
+| Prompt   | クライアント LLM 向け手順              | 翻訳フロー・同期・レビュー                                                                                     | サーバー内 LLM 実行                      |
 
 ### Tools
 
 既存 4 Tools を MCP の操作面として維持する。
 
-| Tool | 副作用 | 読み取り |
-| --- | --- | --- |
-| `mdn_trans_start` | `translated-content` へ原文コピー | content の原文 |
-| `mdn_trans_commit_get` | `l10n.sourceCommit` 書き込み | content の git 履歴 |
-| `mdn_trans_replace_glossary` | glossary 第 2 引数を置換して保存 | `glossary-terms.json` |
-| `mdn_trans_review` | なし（`readOnlyHint`） | 対象 `index.md` と機械ルール |
+| Tool                         | 副作用                            | 読み取り                     |
+| ---------------------------- | --------------------------------- | ---------------------------- |
+| `mdn_trans_start`            | `translated-content` へ原文コピー | content の原文               |
+| `mdn_trans_commit_get`       | `l10n.sourceCommit` 書き込み      | content の git 履歴          |
+| `mdn_trans_replace_glossary` | glossary 第 2 引数を置換して保存  | `glossary-terms.json`        |
+| `mdn_trans_review`           | なし（`readOnlyHint`）            | 対象 `index.md` と機械ルール |
 
 CLI `npm run mdn:trans:review` は Tool のフォールバックであり、MCP の必須面にはしない。
 
@@ -142,15 +142,15 @@ CLI `npm run mdn:trans:review` は Tool のフォールバックであり、MCP 
 
 #106 の URI 案を採用する。実装時に MCP 仕様・SDK へ合わせて変更してよい。
 
-| URI | 内容 | 現状の置き場 |
-| --- | --- | --- |
-| `mdn://guidelines/editorial` | 表記ガイドライン | `.agents/skills/editorial-guideline/references/` |
-| `mdn://guidelines/l10n` | L10N ガイドライン | `.agents/skills/l10n-guideline/references/` |
-| `mdn://guidelines/japanese-style` | 文体ルール | `.agents/skills/japanese-style/references/style-rules.md` |
-| `mdn://glossary` | 用語抜粋と Wiki 参照手順 | `.agents/skills/mozilla-l10n-glossary/references/` |
-| `mdn://data/glossary-terms` | 機械用 glossary | `src/shared/data/glossary-terms.json` |
-| `mdn://data/review-rules` | 機械チェックルール | `src/shared/data/review-rules.json` |
-| `mdn://data/prohibited-expressions` | 禁止・注意表現 | `src/shared/data/prohibited-expressions.json` |
+| URI                                 | 内容                     | 現状の置き場                                              |
+| ----------------------------------- | ------------------------ | --------------------------------------------------------- |
+| `mdn://guidelines/editorial`        | 表記ガイドライン         | `.agents/skills/editorial-guideline/references/`          |
+| `mdn://guidelines/l10n`             | L10N ガイドライン        | `.agents/skills/l10n-guideline/references/`               |
+| `mdn://guidelines/japanese-style`   | 文体ルール               | `.agents/skills/japanese-style/references/style-rules.md` |
+| `mdn://glossary`                    | 用語抜粋と Wiki 参照手順 | `.agents/skills/mozilla-l10n-glossary/references/`        |
+| `mdn://data/glossary-terms`         | 機械用 glossary          | `src/shared/data/glossary-terms.json`                     |
+| `mdn://data/review-rules`           | 機械チェックルール       | `src/shared/data/review-rules.json`                       |
+| `mdn://data/prohibited-expressions` | 禁止・注意表現           | `src/shared/data/prohibited-expressions.json`             |
 
 `mdn_trans_review` と Resource は同一データソースを使う（#106 の要件）。二重の正本は作らない。
 
@@ -160,11 +160,11 @@ Skill の `SKILL.md`（When to use / checklist）は Resource にしない。Pro
 
 #107 の名称案を採用する。実装時に変更してよい。Prompt はサーバー内部で LLM を走らせない。クライアントの LLM に標準手順とコンテキストを渡す。
 
-| Prompt | 担う手順 | 現状の置き場 |
-| --- | --- | --- |
-| `mdn_translate` | 翻訳開始 → ガイドライン参照 → 翻訳 → sourceCommit → glossary → レビュー | `.cursor/skills/mdn-translation-workflow/SKILL.md` |
-| `mdn_sync` | 既存訳の `sourceCommit` 同期 | workflow Skill の subset、README |
-| `mdn_review` | 機械レビュー呼び出しと人手確認項目 | workflow Skill のレビュー節、`01-mdn-mcp-tools.mdc` |
+| Prompt          | 担う手順                                                                | 現状の置き場                                        |
+| --------------- | ----------------------------------------------------------------------- | --------------------------------------------------- |
+| `mdn_translate` | 翻訳開始 → ガイドライン参照 → 翻訳 → sourceCommit → glossary → レビュー | `.cursor/skills/mdn-translation-workflow/SKILL.md`  |
+| `mdn_sync`      | 既存訳の `sourceCommit` 同期                                            | workflow Skill の subset、README                    |
+| `mdn_review`    | 機械レビュー呼び出しと人手確認項目                                      | workflow Skill のレビュー節、`01-mdn-mcp-tools.mdc` |
 
 `mdn_translate` が参照する Tool / Resource の順序は #107 の想定フローに従う。ツール対応表とパス指定は Prompt に含め、Cursor 専用 Skill を必須にしない。
 
@@ -183,41 +183,41 @@ Skill の `SKILL.md`（When to use / checklist）は Resource にしない。Pro
 
 ## Cursor 固有機能の責務
 
-Cursor 固有設定は MCP 利用の必須条件にしない。目標配置は Issue 文面どおり `integrations/cursor/`。本 Issue ではファイルを移動しない。実移動と setup の見直しは #109。
+Cursor 固有設定は MCP 利用の必須条件にしない。optional 資産は `integrations/cursor/` に集約した（[#109](https://github.com/gurezo/mdn-translation-ja-mcp/issues/109)）。
 
 ```text
 integrations/
-└─ cursor/     … optional UX（接続雛形・薄い Rule・setup）
+└─ cursor/     … optional UX（接続雛形・薄い Rule）
 ```
 
-MCP クライアントが必要なのは **サーバー登録だけ** である。Cursor では `.cursor/mcp.json`（または同等の MCP 設定）がそれに当たる。Rules / Skills がなくても、Tools / Resources / Prompts で基本翻訳フローを実行できる状態を #109 の完了条件とする。
+MCP クライアントが必要なのは **サーバー登録だけ** である。Cursor では `.cursor/mcp.json`（または同等の MCP 設定）がそれに当たる。Rules / Skills がなくても、Tools / Resources / Prompts で基本翻訳フローを実行できる。
 
 ### optional として残すもの
 
-| 現状 | 残す理由 |
-| --- | --- |
-| `.cursor/mcp.json`（本リポジトリ） | Cursor のサーバー登録形式 |
-| `translated-content/.cursor/mcp.json` の生成 | 同上。他クライアントは各自の設定形式 |
-| `scripts/setup-translated-content-cursor.mjs` | Cursor 向け一括セットアップ。#109 で Rules 自動コピーを optional 化する |
-| `integrations/cursor/` | Cursor 向け雛形 |
-| `.cursor/rules/01-mdn-mcp-tools.mdc` の薄い残置 | Cursor エージェントがツール名をシェル実行する問題への optional 対策 |
-| `.cursor/skills` の残置 | Cursor で Skill を開く UX が便利なら残してよい。正本は Prompt |
+| 現状                                            | 残す理由                                                                    |
+| ----------------------------------------------- | --------------------------------------------------------------------------- |
+| `.cursor/mcp.json`（本リポジトリ）              | Cursor のサーバー登録形式                                                   |
+| `translated-content/.cursor/mcp.json` の生成    | 同上。他クライアントは各自の設定形式                                        |
+| `scripts/setup-translated-content-cursor.mjs`   | Cursor 向け一括セットアップ。既定は `mcp.json` のみ。Rule は `--with-rules` |
+| `integrations/cursor/`                          | Cursor 向け雛形                                                             |
+| `.cursor/rules/01-mdn-mcp-tools.mdc` の薄い残置 | Cursor エージェントがツール名をシェル実行する問題への optional 対策         |
+| `.cursor/skills` の残置                         | Cursor で Skill を開く UX が便利なら残してよい。正本は Prompt               |
 
 ### 必須から外すもの（知識は MCP 側へ）
 
-| 現状 | 移行先 |
-| --- | --- |
-| `.cursor/rules/00-mdn-translation.mdc` | Resource（ガイドライン要約）および Prompt の前提節 |
-| `.cursor/skills/mdn-translation-workflow` | Prompt（`mdn_translate` / `mdn_sync` / `mdn_review`） |
-| `.agents/skills` の translated-content へのコピー | Resource。Skill ラッパは optional |
+| 現状                                              | 移行先                                                |
+| ------------------------------------------------- | ----------------------------------------------------- |
+| `.cursor/rules/00-mdn-translation.mdc`            | Resource（ガイドライン要約）および Prompt の前提節    |
+| `.cursor/skills/mdn-translation-workflow`         | Prompt（`mdn_translate` / `mdn_sync` / `mdn_review`） |
+| `.agents/skills` の translated-content へのコピー | Resource。Skill ラッパは optional                     |
 
-translated-content ワークスペースへ `.cursor/rules` / `.cursor/skills` / `.agents/skills` をコピーしなくても、MCP サーバー登録だけで基本フローが走ることを #109 が保証する。
+translated-content ワークスペースへ `.cursor/rules` / `.cursor/skills` / `.agents/skills` をコピーしなくても、MCP サーバー登録だけで基本フローが走る（#109 で保証）。
 
-### #109 で削除する候補
+### #109 で削除した候補
 
-| 対象 | 理由 |
-| --- | --- |
-| `.cursor/settings.json` の `mdn-wdb-doc-ja-mcp` | 現行サーバー名・トランスポートと不一致。旧プロジェクト残骸 |
+| 対象                                            | 理由                                                                        |
+| ----------------------------------------------- | --------------------------------------------------------------------------- |
+| `.cursor/settings.json` の `mdn-wdb-doc-ja-mcp` | 現行サーバー名・トランスポートと不一致。旧プロジェクト残骸。#109 で削除済み |
 
 「削除」は便利な Cursor UX の全廃を意味しない。親 Issue #103 のとおり、optional integration として残してよい。
 
@@ -250,11 +250,11 @@ architecture/              # 設計文書（本 Issue）
 
 ### filesystem 操作と翻訳知識の分離
 
-| 層 | 役割 | 現状のパス |
-| --- | --- | --- |
-| filesystem / git | 原文コピー、front-matter、パス解決 | `src/tools` / `src/git` / `src/shared/workspace.ts` |
-| 翻訳知識（人手） | ガイドライン本文 | `.agents/skills/*/references/`（将来 `src/domain/`） |
-| 翻訳知識（機械） | レビュー・glossary 置換用 JSON | `src/shared/data/*.json` |
+| 層               | 役割                               | 現状のパス                                           |
+| ---------------- | ---------------------------------- | ---------------------------------------------------- |
+| filesystem / git | 原文コピー、front-matter、パス解決 | `src/tools` / `src/git` / `src/shared/workspace.ts`  |
+| 翻訳知識（人手） | ガイドライン本文                   | `.agents/skills/*/references/`（将来 `src/domain/`） |
+| 翻訳知識（機械） | レビュー・glossary 置換用 JSON     | `src/shared/data/*.json`                             |
 
 Tools は filesystem と機械用 JSON を読む。Resources は人手 Markdown と機械 JSON を同じファイルから公開する。Prompts は手順だけを持ち、ガイドライン本文を複製しない。
 
@@ -262,11 +262,11 @@ Tools は filesystem と機械用 JSON を読む。Resources は人手 Markdown 
 
 二重の正本を作らない。
 
-| 層 | 正本 | 派生 |
-| --- | --- | --- |
-| 人が読むガイドライン | domain の Markdown（現状は `.agents/skills/*/references/`） | Resource が同じファイルを読む |
-| 機械チェック | `src/shared/data/*.json` | Tools と Resource が同一 JSON を読む |
-| Agent Skill ラッパ | `.agents/skills/*/SKILL.md` | 正本ではない。#109 で optional 化 |
+| 層                   | 正本                                                        | 派生                                 |
+| -------------------- | ----------------------------------------------------------- | ------------------------------------ |
+| 人が読むガイドライン | domain の Markdown（現状は `.agents/skills/*/references/`） | Resource が同じファイルを読む        |
+| 機械チェック         | `src/shared/data/*.json`                                    | Tools と Resource が同一 JSON を読む |
+| Agent Skill ラッパ   | `.agents/skills/*/SKILL.md`                                 | 正本ではない。#109 で optional 化    |
 
 Markdown は人手知識、JSON は機械サブセットである。JSON を Markdown から生成するスクリプトの有無は #106 の実装詳細とする。
 
@@ -287,39 +287,51 @@ Markdown は人手知識、JSON は機械サブセットである。JSON を Mar
 
 - Resource / Prompt は未登録の面を足すだけである。既存 Tool の呼び出し方は変えない。
 - `MCP_SERVER_INSTRUCTIONS` の Cursor パス削除は Prompt 実装（#107）と同時に行う。本 Issue では方針のみ。
-- setup スクリプトの Rules 自動コピー見直しは #109。
+- setup スクリプトの Rules 自動コピー見直しは #109（完了。既定は `mcp.json` のみ）。
 
 ### 後続 Issue への引き渡し
 
-| Issue | 本設計が渡す決定 |
-| --- | --- |
-| #106 | Resource URI、正本（Markdown / JSON）、Tools と同一ソース |
-| #107 | Prompt 名、手順の所在、instructions の目標残量と Cursor パス削除 |
-| #108 | 4 Tools を維持し、高レベル Tool は追加しない（[tools.md](./tools.md)）。本 Issue では新 Tool を足さない |
-| #109 | `integrations/cursor/` への集約、optional 最小セット、`settings.json` 削除 |
-| #110 | 同じ `createMcpServer()` を他クライアントで検証 |
-| #111 | README を「MCP サーバー登録だけ」へ寄せる。本 Issue では更新しない |
+| Issue | 本設計が渡す決定                                                                                        |
+| ----- | ------------------------------------------------------------------------------------------------------- |
+| #106  | Resource URI、正本（Markdown / JSON）、Tools と同一ソース                                               |
+| #107  | Prompt 名、手順の所在、instructions の目標残量と Cursor パス削除                                        |
+| #108  | 4 Tools を維持し、高レベル Tool は追加しない（[tools.md](./tools.md)）。本 Issue では新 Tool を足さない |
+| #109  | `integrations/cursor/` への集約、optional 最小セット、`settings.json` 削除（完了）                      |
+| #110  | 同じ `createMcpServer()` を他クライアントで検証                                                         |
+| #111  | README を「MCP サーバー登録だけ」へ寄せる。本 Issue では更新しない                                      |
 
 ## 棚卸し未決事項への回答
 
 [responsibility-inventory.md](./responsibility-inventory.md) の「#105 へ渡す未決事項」への決定。
 
-| 未決事項 | 決定 |
-| --- | --- |
-| Tools / Resources / Prompts の責務とディレクトリ構成 | 本文書の該当節。`integrations/cursor/` は optional の目標配置 |
-| instructions の残量 | Tool 制約・review 読み取り専用・ワークスペース・Prompt 名。Cursor Skill パスは削除 |
+| 未決事項                                               | 決定                                                                                                           |
+| ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Tools / Resources / Prompts の責務とディレクトリ構成   | 本文書の該当節。`integrations/cursor/` は optional の目標配置                                                  |
+| instructions の残量                                    | Tool 制約・review 読み取り専用・ワークスペース・Prompt 名。Cursor Skill パスは削除                             |
 | `.agents/skills` を正本にするか shared domain を切るか | 論理正本は domain Markdown（現状は `references/`）。`SKILL.md` はラッパ。物理移動は `src/domain/`（#106/#109） |
-| JSON と Skill references の同期 | 二重の正本を作らない。生成スクリプトの有無は #106 |
-| 4 Tools の名前・引数 | 維持する（[#108](./tools.md)） |
-| Cursor Rule / Skill の最小セット | 接続設定 + 薄い `01-mdn-mcp-tools.mdc`。00 Rule と workflow Skill は必須から外す |
-| 他クライアントでの見せ方 | 同じ三面を出す。個別 UX は #110 |
+| JSON と Skill references の同期                        | 二重の正本を作らない。生成スクリプトの有無は #106                                                              |
+| 4 Tools の名前・引数                                   | 維持する（[#108](./tools.md)）                                                                                 |
+| Cursor Rule / Skill の最小セット                       | 接続設定 + 薄い `01-mdn-mcp-tools.mdc`。00 Rule と workflow Skill は必須から外す                               |
+| 他クライアントでの見せ方                               | 同じ三面を出す。個別 UX は #110                                                                                |
 
 ## Issue #105 の完了対応
 
-| 完了条件 | この文書での対応 |
-| --- | --- |
-| 新アーキテクチャ図が作成されている | 「目標アーキテクチャ」 |
-| Tools / Resources / Prompts の責務が定義されている | 「Tools / Resources / Prompts の責務」 |
-| Cursor 固有機能の責務が定義されている | 「Cursor 固有機能の責務」 |
-| ディレクトリ構成案が決定している | 「目標ディレクトリ構成と shared domain」 |
-| 既存 API との互換方針が決定している | 「既存 API との互換方針」 |
+| 完了条件                                           | この文書での対応                         |
+| -------------------------------------------------- | ---------------------------------------- |
+| 新アーキテクチャ図が作成されている                 | 「目標アーキテクチャ」                   |
+| Tools / Resources / Prompts の責務が定義されている | 「Tools / Resources / Prompts の責務」   |
+| Cursor 固有機能の責務が定義されている              | 「Cursor 固有機能の責務」                |
+| ディレクトリ構成案が決定している                   | 「目標ディレクトリ構成と shared domain」 |
+| 既存 API との互換方針が決定している                | 「既存 API との互換方針」                |
+
+## Issue #109 の完了対応
+
+Cursor Rules / Skills は MCP 利用の必須条件ではない。
+
+| 完了条件                                                      | 対応                                                                        |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `.cursor/rules` がなくても基本翻訳フローを実行できる          | Prompt / Resource / Tool。setup は Rule をコピーしない                      |
+| `.cursor/skills` がなくても基本翻訳フローを実行できる         | 正本は `mdn_translate` 等。Skill は optional                                |
+| Cursor 固有設定が optional と明記されている                   | README と [integrations/cursor/README.md](../integrations/cursor/README.md) |
+| setup script が不要なファイルをコピーしない                   | 既定は `mcp.json` のみ。`--with-rules` は任意                               |
+| Cursor integration を追加した場合のメリットが明文化されている | [integrations/cursor/README.md](../integrations/cursor/README.md)           |

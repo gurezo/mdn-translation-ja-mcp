@@ -8,5 +8,14 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "excludeInternal": true,
-  "sort": ["source-order"]
+  "sort": ["documents-first", "source-order"],
+  "projectDocuments": [
+    "site/architecture.md",
+    "site/getting-started.md",
+    "site/mcp-tools.md",
+    "site/mcp-resources.md",
+    "site/mcp-prompts.md",
+    "site/translation-workflow.md",
+    "site/client-integration.md"
+  ]
 }

@@ -3,7 +3,7 @@
 親 Issue: [#103](https://github.com/gurezo/mdn-translation-ja-mcp/issues/103)
 本 Issue: [#104](https://github.com/gurezo/mdn-translation-ja-mcp/issues/104)
 
-後続: アーキテクチャ境界の確定は [#105](https://github.com/gurezo/mdn-translation-ja-mcp/issues/105)。本文書の分類は **移行候補** であり、最終決定ではない。
+後続: アーキテクチャ境界の確定は [#105](https://github.com/gurezo/mdn-translation-ja-mcp/issues/105)（[mcp-native.md](./mcp-native.md)）。本文書の分類は棚卸し時点の **移行候補** である。責務の決定は mcp-native.md を正とする。
 
 ## 目的
 
@@ -506,7 +506,7 @@ Cursor の UI / Agent UX。MCP 利用の必須条件にはしない（#109 で�
 
 ## #105 へ渡す未決事項
 
-本文書は分類候補までとする。次は設計 Issue で決める。
+本文書は分類候補までとする。決定は [mcp-native.md](./mcp-native.md) を正とする。
 
 - Tools / Resources / Prompts の責務定義とディレクトリ構成（`integrations/cursor/` を含む）
 - `MCP_SERVER_INSTRUCTIONS` を Prompt へ移したあとのサーバー指示の残量

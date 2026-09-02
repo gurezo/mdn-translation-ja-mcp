@@ -5,7 +5,7 @@
 
 入力: [#104](https://github.com/gurezo/mdn-translation-ja-mcp/issues/104) の棚卸し（[responsibility-inventory.md](./responsibility-inventory.md)）。本文書は棚卸しの **移行候補を決定** する。
 
-後続: Resources は [#106](https://github.com/gurezo/mdn-translation-ja-mcp/issues/106)、Prompts は [#107](https://github.com/gurezo/mdn-translation-ja-mcp/issues/107)、Tools 再設計は [#108](https://github.com/gurezo/mdn-translation-ja-mcp/issues/108)、Cursor 必須依存の解消は [#109](https://github.com/gurezo/mdn-translation-ja-mcp/issues/109)、他クライアント検証は [#110](https://github.com/gurezo/mdn-translation-ja-mcp/issues/110)、文書更新は [#111](https://github.com/gurezo/mdn-translation-ja-mcp/issues/111)。
+後続: Resources は [#106](https://github.com/gurezo/mdn-translation-ja-mcp/issues/106)、Prompts は [#107](https://github.com/gurezo/mdn-translation-ja-mcp/issues/107)、Tools 再設計は [#108](https://github.com/gurezo/mdn-translation-ja-mcp/issues/108)（判断は [tools.md](./tools.md)）、Cursor 必須依存の解消は [#109](https://github.com/gurezo/mdn-translation-ja-mcp/issues/109)、他クライアント検証は [#110](https://github.com/gurezo/mdn-translation-ja-mcp/issues/110)、文書更新は [#111](https://github.com/gurezo/mdn-translation-ja-mcp/issues/111)。
 
 ## 目的
 
@@ -136,7 +136,7 @@ Claude Code / VS Code 等での見え方の検証は #110。本設計は「同�
 
 CLI `npm run mdn:trans:review` は Tool のフォールバックであり、MCP の必須面にはしない。
 
-高レベル Tool（例: `mdn_trans_prepare`）の要否は #108 が判断する。本 Issue では **当面 4 Tools + Prompts で合成し、#108 まで新 Tool を足さない**。LLM による自然言語翻訳は Tool に取り込まない（#108 と同方針）。
+高レベル Tool（例: `mdn_trans_prepare`）は追加しない。判断と代替（Prompt 合成）は [#108](./tools.md) が固定する。本 Issue では **4 Tools + Prompts で合成し、新 Tool を足さない**。LLM による自然言語翻訳は Tool に取り込まない。
 
 ### Resources
 
@@ -278,7 +278,7 @@ Markdown は人手知識、JSON は機械サブセットである。JSON を Mar
 
 ### 凍結する範囲
 
-- 既存 4 Tools の **名前・引数・副作用の範囲は #108 まで維持** する。
+- 既存 4 Tools の **名前・引数・副作用の範囲は維持** する（[#108](./tools.md)）。
 - stdio と Streamable HTTP は常に同じ Tool / Resource / Prompt 集合を出す。
 - CLI `npm run mdn:trans:review` は MCP 面の必須ではないフォールバックとして残す。
 - Cursor 利用者は現行 `.cursor` のまま動く。本 Issue では `.cursor` / `.agents/skills` を移動・削除しない。
@@ -295,7 +295,7 @@ Markdown は人手知識、JSON は機械サブセットである。JSON を Mar
 | --- | --- |
 | #106 | Resource URI、正本（Markdown / JSON）、Tools と同一ソース |
 | #107 | Prompt 名、手順の所在、instructions の目標残量と Cursor パス削除 |
-| #108 | 4 Tools を維持したうえで高レベル Tool の要否を判断。本 Issue では新 Tool を足さない |
+| #108 | 4 Tools を維持し、高レベル Tool は追加しない（[tools.md](./tools.md)）。本 Issue では新 Tool を足さない |
 | #109 | `integrations/cursor/` への集約、optional 最小セット、`settings.json` 削除 |
 | #110 | 同じ `createMcpServer()` を他クライアントで検証 |
 | #111 | README を「MCP サーバー登録だけ」へ寄せる。本 Issue では更新しない |
@@ -310,7 +310,7 @@ Markdown は人手知識、JSON は機械サブセットである。JSON を Mar
 | instructions の残量 | Tool 制約・review 読み取り専用・ワークスペース・Prompt 名。Cursor Skill パスは削除 |
 | `.agents/skills` を正本にするか shared domain を切るか | 論理正本は domain Markdown（現状は `references/`）。`SKILL.md` はラッパ。物理移動は `src/domain/`（#106/#109） |
 | JSON と Skill references の同期 | 二重の正本を作らない。生成スクリプトの有無は #106 |
-| 4 Tools の名前・引数 | #108 まで維持 |
+| 4 Tools の名前・引数 | 維持する（[#108](./tools.md)） |
 | Cursor Rule / Skill の最小セット | 接続設定 + 薄い `01-mdn-mcp-tools.mdc`。00 Rule と workflow Skill は必須から外す |
 | 他クライアントでの見せ方 | 同じ三面を出す。個別 UX は #110 |
 

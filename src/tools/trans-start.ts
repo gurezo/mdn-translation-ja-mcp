@@ -12,7 +12,13 @@ export type TransStartArgs = {
 export function mdnTransStart(
   roots: WorkspaceRoots,
   args: TransStartArgs,
-): { message: string; sourceFile: string; destFile: string } {
+): {
+  message: string;
+  sourceFile: string;
+  destFile: string;
+  sourceRel: string;
+  destRel: string;
+} {
   const rel = docUrlToEnUsContentRelativePath(args.url);
   const sourceFile = path.join(roots.contentRoot, rel);
   const jaRel = rel.replace(/^files\/en-us\//i, "files/ja/");
@@ -52,5 +58,7 @@ export function mdnTransStart(
     message,
     sourceFile,
     destFile,
+    sourceRel: rel,
+    destRel: jaRel,
   };
 }

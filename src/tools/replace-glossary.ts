@@ -1,29 +1,15 @@
 import fs from "node:fs";
-import path from "node:path";
 
 import type { WorkspaceRoots } from "../shared/workspace.js";
 import { replaceGlossarySecondArgs } from "../shared/glossary-macro.js";
 import { loadGlossaryTerms } from "../shared/load-glossary-terms.js";
 import { getGlossaryTermsPath } from "../shared/paths.js";
+import { resolveJaFile } from "../shared/resolve-ja-file.js";
 
 export type ReplaceGlossaryArgs = {
   /** translated-content 配下の絶対パス、または files/ja/... からの相対パス */
   jaFile: string;
 };
-
-function resolveJaFile(roots: WorkspaceRoots, jaFile: string): string {
-  const p = path.isAbsolute(jaFile)
-    ? jaFile
-    : path.join(roots.translatedRoot, jaFile);
-  const normalized = path.normalize(p);
-  const base = path.resolve(roots.translatedRoot);
-  if (!normalized.startsWith(base + path.sep) && normalized !== base) {
-    throw new Error(
-      `指定パスは translated-content の外に出ています: ${jaFile}`,
-    );
-  }
-  return normalized;
-}
 
 export function mdnTransReplaceGlossary(
   roots: WorkspaceRoots,

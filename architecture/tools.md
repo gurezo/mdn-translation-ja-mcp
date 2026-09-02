@@ -14,6 +14,7 @@
 含める:
 
 - 既存 4 Tools の責務（引数、副作用、読み取り、やらないこと）
+- 高レベル Tool の要否判断
 - 既存 API との互換（名前・引数・副作用は維持）
 
 含めない:
@@ -86,3 +87,43 @@ MCP はエディタの開いているファイルを知らない。`jaFile` は�
 | 典型的な次の一手 | 人手確認項目の提示（Prompt `mdn_review`）。ユーザーが明示しない限り対象ファイルは編集しない |
 
 機械では検出しない項目（意訳の自然さ、識別子の非翻訳、カタカナと glossary の揃い、箇条書きの文体混在）は Prompt 側の人手確認に残す。
+
+## 高レベル Tool は追加しない
+
+[#105](./mcp-native.md) が保留した `mdn_trans_prepare` などの workflow Tool は **追加しない**。
+
+理由:
+
+- Tool 面は決定的な副作用・機械検査に限り、手順のオーケストレーションは Prompt に置く（#105）。
+- Prompt `mdn_translate` が既に `mdn_trans_start` → `mdn_trans_commit_get` → Resources → 翻訳 → `mdn_trans_replace_glossary` → `mdn_trans_review` を合成している（#107）。
+- `mdn_trans_prepare` は `start` と `commit_get` の合成であり、低レベル Tool と重複する。
+- Issue #108 も自然言語翻訳を Tool に取り込まない。既存 4 を維持したうえで必要性を判断すれば足りる。
+
+代替は Prompt 合成である。ツール専用クライアントは 4 Tools を順に呼ぶ。戻り値の機械可読化（`structuredContent`）は名前・引数・副作用を変えずに足してよい。
+
+```text
+mdn_translate（Prompt）
+  ├─ mdn_trans_start
+  ├─ mdn_trans_commit_get
+  ├─ Resources（ガイドライン）
+  ├─ クライアント LLM が翻訳
+  ├─ mdn_trans_replace_glossary
+  └─ mdn_trans_review
+```
+
+## 互換
+
+- 既存 4 Tools の **名前・引数・副作用の範囲は維持**する。改名・統合・削除はしない。
+- テキスト応答は維持する。`structuredContent` は互換な追加である。
+- stdio と Streamable HTTP は同じ Tool 集合を出す。
+
+## Issue #108 の完了対応
+
+| 完了条件 | 対応 |
+| --- | --- |
+| 既存 Tool の責務が明文化されている | 本ファイル「既存 4 Tools」 |
+| 高レベル Tool の必要性が判断されている | 「追加しない」（本節） |
+| 必要な場合は workflow Tool が実装されている | 不要のため実装しない |
+| 既存 Tool との重複がない | 新 Tool を足さない |
+| 後方互換性が考慮されている | 名前・引数・副作用を維持 |
+| Tool のテストが更新されている | 実装コミットで `commit-get` / `replace-glossary` / `tools/list` を追加 |

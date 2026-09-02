@@ -111,7 +111,7 @@ stdio（`src/index.ts`）と Streamable HTTP（`src/http.ts`）は、既存ど�
 
 サーバーが提供する知識・手順・操作は MCP の Tools / Resources / Prompts で完結する。特定クライアントのファイルパス（例: `.cursor/skills/...`）をサーバー指示に含めない。
 
-Claude Code / VS Code 等での見え方の検証は #110。本設計は「同じ `createMcpServer()` が同じ三面を出す」ことだけを約束する。
+Claude Code / VS Code 等での見え方の検証は [#110](./client-verification.md)。本設計は「同じ `createMcpServer()` が同じ三面を出す」ことだけを約束する。検証結果は MCP Inspector と stdio e2e で記録済み。
 
 ## Tools / Resources / Prompts の責務
 
@@ -291,14 +291,14 @@ Markdown は人手知識、JSON は機械サブセットである。JSON を Mar
 
 ### 後続 Issue への引き渡し
 
-| Issue | 本設計が渡す決定                                                                                        |
-| ----- | ------------------------------------------------------------------------------------------------------- |
-| #106  | Resource URI、正本（Markdown / JSON）、Tools と同一ソース                                               |
-| #107  | Prompt 名、手順の所在、instructions の目標残量と Cursor パス削除                                        |
-| #108  | 4 Tools を維持し、高レベル Tool は追加しない（[tools.md](./tools.md)）。本 Issue では新 Tool を足さない |
-| #109  | `integrations/cursor/` への集約、optional 最小セット、`settings.json` 削除（完了）                      |
-| #110  | 同じ `createMcpServer()` を他クライアントで検証                                                         |
-| #111  | README を「MCP サーバー登録だけ」へ寄せる。本 Issue では更新しない                                      |
+| Issue | 本設計が渡す決定                                                                                                                    |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| #106  | Resource URI、正本（Markdown / JSON）、Tools と同一ソース                                                                           |
+| #107  | Prompt 名、手順の所在、instructions の目標残量と Cursor パス削除                                                                    |
+| #108  | 4 Tools を維持し、高レベル Tool は追加しない（[tools.md](./tools.md)）。本 Issue では新 Tool を足さない                             |
+| #109  | `integrations/cursor/` への集約、optional 最小セット、`settings.json` 削除（完了）                                                  |
+| #110  | 同じ `createMcpServer()` を他クライアントで検証（[client-verification.md](./client-verification.md)。Inspector / stdio で確認済み） |
+| #111  | README を「MCP サーバー登録だけ」へ寄せる。本 Issue では更新しない                                                                  |
 
 ## 棚卸し未決事項への回答
 
@@ -312,7 +312,7 @@ Markdown は人手知識、JSON は機械サブセットである。JSON を Mar
 | JSON と Skill references の同期                        | 二重の正本を作らない。生成スクリプトの有無は #106                                                              |
 | 4 Tools の名前・引数                                   | 維持する（[#108](./tools.md)）                                                                                 |
 | Cursor Rule / Skill の最小セット                       | 接続設定 + 薄い `01-mdn-mcp-tools.mdc`。00 Rule と workflow Skill は必須から外す                               |
-| 他クライアントでの見せ方                               | 同じ三面を出す。個別 UX は #110                                                                                |
+| 他クライアントでの見せ方                               | 同じ三面を出す。個別 UX は [#110](./client-verification.md)（Inspector で確認済み）                            |
 
 ## Issue #105 の完了対応
 
@@ -335,3 +335,14 @@ Cursor Rules / Skills は MCP 利用の必須条件ではない。
 | Cursor 固有設定が optional と明記されている                   | README と [integrations/cursor/README.md](../integrations/cursor/README.md) |
 | setup script が不要なファイルをコピーしない                   | 既定は `mcp.json` のみ。`--with-rules` は任意                               |
 | Cursor integration を追加した場合のメリットが明文化されている | [integrations/cursor/README.md](../integrations/cursor/README.md)           |
+
+## Issue #110 の完了対応
+
+同じ `createMcpServer()` を Cursor 以外で検証した。詳細は [client-verification.md](./client-verification.md)。
+
+| 完了条件                                   | 対応                                                                     |
+| ------------------------------------------ | ------------------------------------------------------------------------ |
+| Cursor 以外のクライアントで MCP 接続できる | MCP Inspector（stdio / Streamable HTTP）                                 |
+| Tools / Resources / Prompts を利用できる   | Inspector CLI と [`src/index.stdio.test.ts`](../src/index.stdio.test.ts) |
+| `.cursor` なしで基本フローを確認できる     | 一時ワークスペースに `.cursor` を置かない                                |
+| 検証結果がドキュメント化されている         | [client-verification.md](./client-verification.md)                       |

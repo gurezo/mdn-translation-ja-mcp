@@ -8,6 +8,7 @@
     "build": "tsc -p tsconfig.build.json && node scripts/copy-shared-data.mjs",
     "start": "node dist/index.js",
     "start:http": "node dist/http.js",
+    "inspect": "npx --yes @modelcontextprotocol/inspector node dist/index.js",
     "mdn:trans:review": "node dist/cli/review.js",
     "setup:translated-content-cursor": "node scripts/setup-translated-content-cursor.mjs",
     "docs:clean": "rm -rf docs",

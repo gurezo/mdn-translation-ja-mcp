@@ -10,37 +10,13 @@ import { mdnTransCommitGet } from "./tools/commit-get.js";
 import { mdnTransReplaceGlossary } from "./tools/replace-glossary.js";
 import { mdnTransReview } from "./tools/review.js";
 
-function toolText(body: string) {
-  return {
-    content: [{ type: "text" as const, text: body }],
-  };
-}
-
-/** mdn_trans_review 専用: 読み取り専用であることをクライアントとエージェントの両方に伝える */
-function toolReviewResult(
+function toolText(
   body: string,
-  meta: {
-    jaFile: string;
-    findings: {
-      skill: string;
-      ruleId: string;
-      severity: string;
-      message: string;
-      excerpt?: string;
-    }[];
-    summaryBySkill: Record<string, number>;
-  },
+  structuredContent: Record<string, unknown>,
 ) {
   return {
     content: [{ type: "text" as const, text: body }],
-    structuredContent: {
-      tool: "mdn_trans_review",
-      readsFileOnly: true,
-      mustNotModifyReviewedFile: true,
-      jaFile: meta.jaFile,
-      findings: meta.findings,
-      summaryBySkill: meta.summaryBySkill,
-    },
+    structuredContent,
   };
 }
 
@@ -75,7 +51,13 @@ export function createMcpServer(): McpServer {
     async ({ url, overwrite }) => {
       const roots = resolveWorkspaceRoots();
       const r = mdnTransStart(roots, { url, overwrite });
-      return toolText(r.message);
+      return toolText(r.message, {
+        tool: "mdn_trans_start",
+        sourceFile: r.sourceFile,
+        destFile: r.destFile,
+        sourceRel: r.sourceRel,
+        destRel: r.destRel,
+      });
     },
   );
 
@@ -94,7 +76,11 @@ export function createMcpServer(): McpServer {
     async ({ url }) => {
       const roots = resolveWorkspaceRoots();
       const r = await mdnTransCommitGet(roots, { url });
-      return toolText(r.message);
+      return toolText(r.message, {
+        tool: "mdn_trans_commit_get",
+        jaFile: r.jaFile,
+        sourceCommit: r.sourceCommit,
+      });
     },
   );
 
@@ -119,7 +105,12 @@ export function createMcpServer(): McpServer {
         r.skipped.length > 0
           ? `\n未置換（用語未定義）: ${r.skipped.join(", ")}`
           : "";
-      return toolText(`${r.message}${skipped}`);
+      return toolText(`${r.message}${skipped}`, {
+        tool: "mdn_trans_replace_glossary",
+        jaFile: r.jaFile,
+        replaced: r.replaced,
+        skipped: r.skipped,
+      });
     },
   );
 
@@ -144,7 +135,10 @@ export function createMcpServer(): McpServer {
     async ({ jaFile }) => {
       const roots = resolveWorkspaceRoots();
       const r = mdnTransReview(roots, { jaFile });
-      return toolReviewResult(r.message, {
+      return toolText(r.message, {
+        tool: "mdn_trans_review",
+        readsFileOnly: true,
+        mustNotModifyReviewedFile: true,
         jaFile: r.jaFile,
         findings: r.findings,
         summaryBySkill: r.summaryBySkill,

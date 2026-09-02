@@ -220,3 +220,54 @@ translated-content ワークスペースへ `.cursor/rules` / `.cursor/skills` /
 | `.cursor/settings.json` の `mdn-wdb-doc-ja-mcp` | 現行サーバー名・トランスポートと不一致。旧プロジェクト残骸 |
 
 「削除」は便利な Cursor UX の全廃を意味しない。親 Issue #103 のとおり、optional integration として残してよい。
+
+## 目標ディレクトリ構成と shared domain
+
+本 Issue は正本の **論理的な所属** と目標ツリーを決める。実ファイルの移動は #106 / #109。移行完了まで `.cursor/` と `.agents/skills/` は現状維持する。
+
+### 目標ツリー（未移動）
+
+```text
+src/
+  create-mcp-server.ts      # Tools + Resources + Prompts を同一ファクトリで登録
+  index.ts / http.ts        # トランスポートのみ
+  mcp-server-instructions.ts
+  tools/                   # 既存 4 Tools
+  resources/               # #106 で追加
+  prompts/                 # #107 で追加
+  domain/                  # ガイドライン Markdown の将来の置き場（#106/#109）
+  shared/                  # workspace, paths, JSON ローダ
+  review/ git/ cli/
+
+integrations/
+  cursor/                  # #109 で .cursor 由来の optional 群を集約
+
+architecture/              # 設計文書（本 Issue）
+.cursor/ / .agents/skills/ # 移行完了まで現状維持
+```
+
+`src/index.ts` / `src/http.ts` はトランスポート専用とする。Resources / Prompts の登録をトランスポート側に置かない。
+
+### filesystem 操作と翻訳知識の分離
+
+| 層 | 役割 | 現状のパス |
+| --- | --- | --- |
+| filesystem / git | 原文コピー、front-matter、パス解決 | `src/tools` / `src/git` / `src/shared/workspace.ts` |
+| 翻訳知識（人手） | ガイドライン本文 | `.agents/skills/*/references/`（将来 `src/domain/`） |
+| 翻訳知識（機械） | レビュー・glossary 置換用 JSON | `src/shared/data/*.json` |
+
+Tools は filesystem と機械用 JSON を読む。Resources は人手 Markdown と機械 JSON を同じファイルから公開する。Prompts は手順だけを持ち、ガイドライン本文を複製しない。
+
+### 単一ソース
+
+二重の正本を作らない。
+
+| 層 | 正本 | 派生 |
+| --- | --- | --- |
+| 人が読むガイドライン | domain の Markdown（現状は `.agents/skills/*/references/`） | Resource が同じファイルを読む |
+| 機械チェック | `src/shared/data/*.json` | Tools と Resource が同一 JSON を読む |
+| Agent Skill ラッパ | `.agents/skills/*/SKILL.md` | 正本ではない。#109 で optional 化 |
+
+Markdown は人手知識、JSON は機械サブセットである。JSON を Markdown から生成するスクリプトの有無は #106 の実装詳細とする。
+
+矛盾（例: `glossary-terms.json` の「ブラウザ」と表記ルールの「ブラウザー」）は Resource 化時（#106）に正本へ揃える。ルール ID の所属ずれ（`STYLE_L10N_METADATA` 等）も #106 または #108 で文書と実装を一致させる。

@@ -180,3 +180,43 @@ Skill の `SKILL.md`（When to use / checklist）は Resource にしない。Pro
 **Cursor Skill パス（`.cursor/skills/mdn-translation-workflow`）への参照は削除する。** 他クライアントではそのパスが存在しない。
 
 本 Issue では方針のみ。instructions の実編集は #107。
+
+## Cursor 固有機能の責務
+
+Cursor 固有設定は MCP 利用の必須条件にしない。目標配置は Issue 文面どおり `integrations/cursor/`。本 Issue ではファイルを移動しない。実移動と setup の見直しは #109。
+
+```text
+integrations/
+└─ cursor/     … optional UX（接続雛形・薄い Rule・setup）
+```
+
+MCP クライアントが必要なのは **サーバー登録だけ** である。Cursor では `.cursor/mcp.json`（または同等の MCP 設定）がそれに当たる。Rules / Skills がなくても、Tools / Resources / Prompts で基本翻訳フローを実行できる状態を #109 の完了条件とする。
+
+### optional として残すもの
+
+| 現状 | 残す理由 |
+| --- | --- |
+| `.cursor/mcp.json`（本リポジトリ） | Cursor のサーバー登録形式 |
+| `translated-content/.cursor/mcp.json` の生成 | 同上。他クライアントは各自の設定形式 |
+| `scripts/setup-translated-content-cursor.mjs` | Cursor 向け一括セットアップ。#109 で Rules 自動コピーを optional 化する |
+| `examples/translated-content-cursor-*` | Cursor 向け雛形 |
+| `.cursor/rules/01-mdn-mcp-tools.mdc` の薄い残置 | Cursor エージェントがツール名をシェル実行する問題への optional 対策 |
+| `.cursor/skills` の残置 | Cursor で Skill を開く UX が便利なら残してよい。正本は Prompt |
+
+### 必須から外すもの（知識は MCP 側へ）
+
+| 現状 | 移行先 |
+| --- | --- |
+| `.cursor/rules/00-mdn-translation.mdc` | Resource（ガイドライン要約）および Prompt の前提節 |
+| `.cursor/skills/mdn-translation-workflow` | Prompt（`mdn_translate` / `mdn_sync` / `mdn_review`） |
+| `.agents/skills` の translated-content へのコピー | Resource。Skill ラッパは optional |
+
+translated-content ワークスペースへ `.cursor/rules` / `.cursor/skills` / `.agents/skills` をコピーしなくても、MCP サーバー登録だけで基本フローが走ることを #109 が保証する。
+
+### #109 で削除する候補
+
+| 対象 | 理由 |
+| --- | --- |
+| `.cursor/settings.json` の `mdn-wdb-doc-ja-mcp` | 現行サーバー名・トランスポートと不一致。旧プロジェクト残骸 |
+
+「削除」は便利な Cursor UX の全廃を意味しない。親 Issue #103 のとおり、optional integration として残してよい。

@@ -18,6 +18,7 @@ description: MDN 翻訳で頻出する用語の抜粋。{{glossary}} 第2引数�
 | http | HTTP | HTTP | プロトコル名 |
 | https | HTTPS | HTTPS | HTTP over TLS の略称 |
 | javascript | JavaScript | JavaScript | 言語名 |
+| computed_value | computed value | 計算値 | CSS 用語。カタカナにしない |
 
 ## {{glossary}} マクロ
 

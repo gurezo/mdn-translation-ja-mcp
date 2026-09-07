@@ -9,14 +9,17 @@ description: Looks up Mozilla L10N glossary terms and {{glossary}} macro usage f
 
 - 英語技術用語の訳語を決めるとき
 - `{{glossary("id", "表示名")}}` の第2引数を設定するとき
+- 用語集ページの `title` を `English (日本語)` にするとき
 - レビューで用語の一貫性を確認するとき
 
 ## Workflow
 
 1. 英語用語を [references/glossary-excerpt.md](references/glossary-excerpt.md) で検索
 2. 未掲載なら [references/glossary-lookup.md](references/glossary-lookup.md) の手順で Wiki を参照
-3. 訳語決定後、`mdn_trans_replace_glossary` で第2引数を補完
-4. 用語集にない場合は editorial-guideline / l10n-guideline に従う
+3. 既存日本語ページと同じ訳語があるときはそれに揃える
+4. 用語集ページの `title` は `English (日本語)`
+5. 訳語決定後、`mdn_trans_replace_glossary` で第2引数を補完
+6. 用語集にない場合は editorial-guideline / l10n-guideline に従う
 
 ## {{glossary}} 形式
 

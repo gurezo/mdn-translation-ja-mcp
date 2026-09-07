@@ -18,4 +18,4 @@ title: MCP Resources
 
 人手翻訳ではガイドライン 4 本（`mdn://guidelines/*` と `mdn://glossary`）を読んでください。`.agents/skills` をワークスペースへコピーする必要はありません。
 
-Skill の `SKILL.md`（When to use / checklist）は Resource ではありません。手順は [Prompts](./mcp-prompts.md) にあります。
+Skill の `SKILL.md`（When to use / checklist）は Resource ではありません。手順は [Prompts](./mcp-prompts.md) にあります。ガイドライン `references/` の更新手順は [Agent Skills](./agent-skills.md) の `harvest-review-findings` です。

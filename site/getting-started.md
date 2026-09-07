@@ -53,7 +53,7 @@ npm run build
 - [examples/mcp/vscode.mcp.json](../examples/mcp/vscode.mcp.json)
 - [examples/cursor/mcp.example.json](../examples/cursor/mcp.example.json)
 
-クライアント固有の置き場と Inspector の手順は [Client Integration](./client-integration.md) を参照してください。
+クライアント固有の置き場と Inspector の手順は [Client Integration](./client-integration.md) を参照してください。レビュー指摘の収集は [Agent Skills](./agent-skills.md) です。
 
 ## 最初の翻訳
 

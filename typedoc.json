@@ -16,6 +16,7 @@
     "site/mcp-resources.md",
     "site/mcp-prompts.md",
     "site/translation-workflow.md",
-    "site/client-integration.md"
+    "site/client-integration.md",
+    "site/agent-skills.md"
   ]
 }

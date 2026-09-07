@@ -25,6 +25,8 @@ Cursor で必要なのは接続設定だけです。
 
 薄い Rule や workflow Skill を足すメリットは [integrations/cursor/README.md](../integrations/cursor/README.md) にあります。基本フローの代替ではありません。
 
+レビュー指摘をガイドラインへ取り込むときは [Agent Skills](./agent-skills.md) の `harvest-review-findings` を使います。
+
 ## Claude Code
 
 [examples/mcp/claude-code.mcp.json](../examples/mcp/claude-code.mcp.json) をプロジェクトの `.mcp.json` として使います。

@@ -19,6 +19,7 @@ Cursor で使う場合に必要なのは MCP 接続設定だけです。接続 J
 | --- | --- |
 | [rules/01-mdn-mcp-tools.mdc](./rules/01-mdn-mcp-tools.mdc) | Cursor エージェントが `mdn_trans_*` をシェルコマンドと誤認しにくくなる |
 | `.cursor/skills/mdn-translation-workflow` | Cursor の Skill ピッカーから `mdn_translate` 相当の手順を開ける |
+| `.agents/skills/harvest-review-findings` | 閉じた JA PR のレビュー指摘を集め、ガイドライン Skills を更新する |
 
 どちらも Prompts / Resources の代替ではありません。Cursor のエージェント UX を足したいときだけ導入します。
 

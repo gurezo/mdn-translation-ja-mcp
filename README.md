@@ -16,6 +16,7 @@ MDN の本文はリポジトリに含めません。手元では
 - [MCP Prompts](site/mcp-prompts.md)
 - [Translation Workflow](site/translation-workflow.md)
 - [Client Integration](site/client-integration.md)
+- [Agent Skills](site/agent-skills.md)
 
 ## 目的
 

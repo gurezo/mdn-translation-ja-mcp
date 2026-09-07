@@ -15,7 +15,7 @@ export default tseslint.config(
     ],
   },
   {
-    files: ['scripts/**/*.mjs'],
+    files: ['scripts/**/*.mjs', '.agents/skills/**/scripts/**/*.mjs'],
     languageOptions: {
       globals: {
         console: 'readonly',

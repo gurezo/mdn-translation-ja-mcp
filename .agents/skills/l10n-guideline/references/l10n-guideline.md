@@ -69,4 +69,20 @@ Mozilla 日本語 L10N は、製品が日本語化されたと感じさせず、
 
 ## MDN 翻訳メタデータ
 
-翻訳ファイル front-matter の `l10n.sourceCommit` 等が適切か確認する（`mdn_trans_commit_get` で反映）。
+翻訳ファイル front-matter の `l10n.sourceCommit` 等が適切か確認する（`mdn_trans_commit_get` で反映）。英語版記事の翻訳元コミットハッシュを入れる。
+
+### 用語集ページ
+
+- `title` は英語名を残す: `Placeholder names (プレースホルダー名)`
+- `{{GlossarySidebar}}` は使わない（英語版でも廃止）。削除する
+
+### 原文の意味を落とさない
+
+- 原文の語句（`in various ways`、`any other form` など）を省略しない
+- 語の辞書的意味が原文とずれる訳は避ける（例: presented を「提示」としない。表示 / 表現）
+- タイトルや括弧内の英語展開も訳す（例: UDP (User Datagram Protocol)）
+- 英日併記（`Symbol(シンボル)`）は初出のみ。以降は概念なら日本語、コードなら英語
+- 原文のイタリック等の強調を訳でも維持する
+- Wikipedia リンクは概念が一致する言語版を選ぶ。日本語版が別概念なら英語版へ
+
+出典: [review-conventions](../../harvest-review-findings/references/review-conventions.md)

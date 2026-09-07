@@ -19,14 +19,21 @@ description: Applies Mozilla Japan L10N guidelines for natural Japanese translat
 - [ ] 「Web」→「ウェブ」
 - [ ] UI コンテクスト別表現（体言止め、動詞末尾等）を適用
 - [ ] `(` 前は半角空白、`)` 後は半角空白
-- [ ] front-matter の L10N メタデータが適切
+- [ ] front-matter の `l10n.sourceCommit` が英語版コミットハッシュ
+- [ ] 用語集 `title` は `English (日本語)`
+- [ ] `{{GlossarySidebar}}` を残さない
+- [ ] 原文の語句を省略せず、辞書的意味がずれる訳を避ける
+- [ ] 英日併記は初出のみ。括弧内の英語展開も訳す
+- [ ] 原文のイタリック等の強調を維持する
+- [ ] Wikipedia リンクは概念が一致する言語版を選ぶ
 
 ## Workflow
 
 1. 原文の意図を把握し、逐語訳でない訳案を作成
 2. UI 要素の種類を特定し、コンテクスト別ルールを適用
 3. [references/l10n-guideline.md](references/l10n-guideline.md) で詳細を確認
-4. 表記・用語は editorial-guideline / mozilla-l10n-glossary と併用
+4. レビュー慣行は harvest-review-findings の conventions と併用
+5. 表記・用語は editorial-guideline / mozilla-l10n-glossary と併用
 
 ## Additional resources
 

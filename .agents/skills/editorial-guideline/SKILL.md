@@ -13,7 +13,7 @@ description: Applies Mozilla Japan editorial guidelines for notation, katakana, 
 
 ## Quick checklist
 
-- [ ] 日本語と英数字の間に半角スペース
+- [ ] 日本語と英数字の間に半角スペース（英単語内部には空白を入れない）
 - [ ] 日付・数字・記憶容量の表記がガイドライン準拠
 - [ ] カタカナ長音ルール（-er/-or 等は長音、-eer/-ty 等は無長音）
 - [ ] メニュー表記 `[項目]`（前後半角スペース、三点リーダー省略）

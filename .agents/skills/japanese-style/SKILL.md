@@ -20,6 +20,7 @@ description: Applies Mozilla Japan Japanese style rules for desu-masu tone, hira
 | STYLE_KATAKANA_AND_GLOSSARY_CONSISTENCY | カタカナと {{glossary}} 第2引数の整合 |
 | STYLE_LIST_AND_PROCEDURE_VOICE | 体言止めとです・ます調の混在 |
 | STYLE_L10N_METADATA | l10n.sourceCommit 等のメタデータ |
+| STYLE_KANJI_WHEN_HIRAGANA_TOO_LONG | ひらがな連続で読みにくいときは漢字 |
 
 `mdn_trans_review` が自動検査する ID: `STYLE_HIRAGANA_*`（表記統一）、`STYLE_DESU_MASU_*`（文体ヒューリスティック）。`STYLE_KATAKANA_AND_GLOSSARY_CONSISTENCY`・`STYLE_LIST_AND_PROCEDURE_VOICE` は人手確認。
 

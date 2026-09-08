@@ -15,7 +15,7 @@ title: Client Verification
 | -------------- | -------------------------------------------------------------------- |
 | 日付           | 2026-09-02                                                           |
 | 主クライアント | MCP Inspector CLI / GUI（`@modelcontextprotocol/inspector@2.3.0`）   |
-| Node           | v24.16.0（サーバーの `engines` は `>=24 <25`）                       |
+| Node           | v24.16.0（サーバーの `engines` は `>=24`）                           |
 | プロトコル     | `2025-11-25`                                                         |
 | サーバー       | `mdn-translation-ja-mcp` `1.0.0`（`dist/index.js` / `dist/http.js`） |
 

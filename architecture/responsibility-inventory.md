@@ -1,3 +1,7 @@
+---
+title: Responsibility Inventory
+---
+
 # MCP / Cursor / Agent Skills の責務棚卸し
 
 親 Issue: [#103](https://github.com/gurezo/mdn-translation-ja-mcp/issues/103)

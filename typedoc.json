@@ -17,6 +17,10 @@
     "site/mcp-prompts.md",
     "site/translation-workflow.md",
     "site/client-integration.md",
-    "site/agent-skills.md"
+    "site/agent-skills.md",
+    "architecture/mcp-native.md",
+    "architecture/tools.md",
+    "architecture/client-verification.md",
+    "architecture/responsibility-inventory.md"
   ]
 }

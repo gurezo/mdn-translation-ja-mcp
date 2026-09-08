@@ -1,0 +1,242 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Client Verification | mdn-translation-ja-mcp</title><meta name="description" content="Documentation for mdn-translation-ja-mcp"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">mdn-translation-ja-mcp</a>
+<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb" aria-label="Breadcrumb">
+<li><a href="" aria-current="page">Client Verification</a></li></ul></div>
+<div class="tsd-panel tsd-typography"><h1 id="cursor-以外の-mcp-クライアント検証" class="tsd-anchor-link">Cursor 以外の MCP クライアント検証<a href="#cursor-以外の-mcp-クライアント検証" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>親 Issue: <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/103">#103</a>
+本 Issue: <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/110">#110</a></p>
+<p>入力: <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/105">#105</a> の <a href="MCP-native_Architecture.html">mcp-native.md</a>。同じ <code>createMcpServer()</code> が Tools / Resources / Prompts を出すことを、Cursor 以外のクライアントで確認する。</p>
+<h2 id="検証日と環境" class="tsd-anchor-link">検証日と環境<a href="#検証日と環境" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>日付</td>
+<td>2026-09-02</td>
+</tr>
+<tr>
+<td>主クライアント</td>
+<td>MCP Inspector CLI / GUI（<code>@modelcontextprotocol/inspector@2.3.0</code>）</td>
+</tr>
+<tr>
+<td>Node</td>
+<td>v24.16.0（サーバーの <code>engines</code> は <code>&gt;=22</code>）</td>
+</tr>
+<tr>
+<td>プロトコル</td>
+<td><code>2025-11-25</code></td>
+</tr>
+<tr>
+<td>サーバー</td>
+<td><code>mdn-translation-ja-mcp</code> <code>1.0.0</code>（<code>dist/index.js</code> / <code>dist/http.js</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>CI では同じ stdio 入口を公式 SDK <code>Client</code> + <code>StdioClientTransport</code> で固定する（<a href="../media/index.stdio.test.ts"><code>src/index.stdio.test.ts</code></a>）。Inspector 自体は npx 依存のため CI には載せない。</p>
+<h2 id="完了条件" class="tsd-anchor-link">完了条件<a href="#完了条件" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>完了条件</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cursor 以外のクライアントで MCP 接続できる</td>
+<td>MCP Inspector（stdio / Streamable HTTP）で <code>initialize</code> 成功</td>
+</tr>
+<tr>
+<td>Tools を利用できる</td>
+<td>4 件を列挙し、一時ワークスペースで 4 Tools を順に呼び出し</td>
+</tr>
+<tr>
+<td>Resources を利用できる</td>
+<td>7 URI を列挙し、<code>mdn://guidelines/editorial</code> を取得</td>
+</tr>
+<tr>
+<td>Prompts を利用できる</td>
+<td>3 件を列挙し、<code>mdn_translate</code> を取得</td>
+</tr>
+<tr>
+<td><code>.cursor</code> ディレクトリなしで基本フローを確認できる</td>
+<td>一時ディレクトリに <code>.cursor</code> を置かず、フロー完了後も未作成</td>
+</tr>
+<tr>
+<td>検証結果がドキュメント化されている</td>
+<td>本文書</td>
+</tr>
+</tbody>
+</table>
+<p>Claude Code / VS Code は設定例のみ（未実機）。README / GitHub Pages の全面更新は <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/111">#111</a>。</p>
+<h2 id="再現手順（stdio）" class="tsd-anchor-link">再現手順（stdio）<a href="#再現手順（stdio）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>書き込み Tool は一時ディレクトリに対してだけ実行する。手元の <code>translated-content</code> は使わない。</p>
+<pre><code class="bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">build</span><br/><br/><span class="hl-4"># GUI（本リポジトリの cwd。環境変数は Inspector の -e で渡す）</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">inspect</span><br/><br/><span class="hl-4"># CLI（target は --cli の直後。dist は絶対パス）</span><br/><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-2">--yes</span><span class="hl-1"> </span><span class="hl-3">@modelcontextprotocol/inspector</span><span class="hl-1"> </span><span class="hl-2">--cli</span><span class="hl-1"> </span><span class="hl-3">node</span><span class="hl-1"> </span><span class="hl-3">/absolute/path/to/dist/index.js</span><span class="hl-1"> </span><span class="hl-5">\</span><br/><span class="hl-1">  </span><span class="hl-2">-e</span><span class="hl-1"> </span><span class="hl-3">MDN_CONTENT_ROOT=/tmp/verify/content</span><span class="hl-1"> </span><span class="hl-5">\</span><br/><span class="hl-1">  </span><span class="hl-2">-e</span><span class="hl-1"> </span><span class="hl-3">MDN_TRANSLATED_CONTENT_ROOT=/tmp/verify/translated-content</span><span class="hl-1"> </span><span class="hl-5">\</span><br/><span class="hl-1">  </span><span class="hl-2">--cwd</span><span class="hl-1"> </span><span class="hl-3">/tmp/verify</span><span class="hl-1"> </span><span class="hl-5">\</span><br/><span class="hl-1">  </span><span class="hl-2">--method</span><span class="hl-1"> </span><span class="hl-3">tools/list</span>
+</code><button type="button">Copy</button></pre>
+
+<p>一時ワークスペースの最小構成:</p>
+<ul>
+<li><code>content/</code> を git リポジトリにし、サンプル <code>files/en-us/.../index.md</code> を 1 コミットする（<code>mdn_trans_commit_get</code> 用）</li>
+<li><code>translated-content/</code> は空でよい</li>
+<li><code>.cursor</code> は作らない</li>
+</ul>
+<h2 id="inspector-cli-で確認したコマンドと要約" class="tsd-anchor-link">Inspector CLI で確認したコマンドと要約<a href="#inspector-cli-で確認したコマンドと要約" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>すべて <code>--format json</code>。結果は <code>result</code> オブジェクト。</p>
+<h3 id="接続（）" class="tsd-anchor-link">接続（<code>initialize</code>）<a href="#接続（）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="bash"><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-2">--yes</span><span class="hl-1"> </span><span class="hl-3">@modelcontextprotocol/inspector</span><span class="hl-1"> </span><span class="hl-2">--cli</span><span class="hl-1"> </span><span class="hl-3">node</span><span class="hl-1"> </span><span class="hl-3">dist/index.js</span><span class="hl-1"> </span><span class="hl-2">--method</span><span class="hl-1"> </span><span class="hl-3">initialize</span>
+</code><button type="button">Copy</button></pre>
+
+<ul>
+<li><code>serverInfo.name</code>: <code>mdn-translation-ja-mcp</code></li>
+<li>capabilities: <code>tools</code> / <code>resources</code> / <code>prompts</code>（いずれも <code>listChanged: true</code>）</li>
+<li><code>instructions</code> は Prompt 名へ誘導し、<code>.cursor</code> パスを含まない</li>
+</ul>
+<h3 id="tools" class="tsd-anchor-link">Tools<a href="#tools" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="bash"><span class="hl-0">--method</span><span class="hl-1"> </span><span class="hl-3">tools/list</span><br/><span class="hl-0">--method</span><span class="hl-1"> </span><span class="hl-3">tools/call</span><span class="hl-1"> </span><span class="hl-2">--tool-name</span><span class="hl-1"> </span><span class="hl-3">mdn_trans_start</span><span class="hl-1"> </span><span class="hl-2">--tool-arg</span><span class="hl-1"> </span><span class="hl-3">url=https://developer.mozilla.org/en-US/docs/Glossary/E2E_inspector</span><br/><span class="hl-0">--method</span><span class="hl-1"> </span><span class="hl-3">tools/call</span><span class="hl-1"> </span><span class="hl-2">--tool-name</span><span class="hl-1"> </span><span class="hl-3">mdn_trans_commit_get</span><span class="hl-1"> </span><span class="hl-2">--tool-arg</span><span class="hl-1"> </span><span class="hl-3">url=https://developer.mozilla.org/en-US/docs/Glossary/E2E_inspector</span><br/><span class="hl-0">--method</span><span class="hl-1"> </span><span class="hl-3">tools/call</span><span class="hl-1"> </span><span class="hl-2">--tool-name</span><span class="hl-1"> </span><span class="hl-3">mdn_trans_replace_glossary</span><span class="hl-1"> </span><span class="hl-2">--tool-arg</span><span class="hl-1"> </span><span class="hl-3">jaFile=files/ja/glossary/e2e_inspector/index.md</span><br/><span class="hl-0">--method</span><span class="hl-1"> </span><span class="hl-3">tools/call</span><span class="hl-1"> </span><span class="hl-2">--tool-name</span><span class="hl-1"> </span><span class="hl-3">mdn_trans_review</span><span class="hl-1"> </span><span class="hl-2">--tool-arg</span><span class="hl-1"> </span><span class="hl-3">jaFile=files/ja/glossary/e2e_inspector/index.md</span>
+</code><button type="button">Copy</button></pre>
+
+<p>列挙: <code>mdn_trans_start</code> / <code>mdn_trans_commit_get</code> / <code>mdn_trans_replace_glossary</code> / <code>mdn_trans_review</code></p>
+<p>呼び出し結果（structuredContent）:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mdn_trans_start</code></td>
+<td><code>destRel</code>: <code>files/ja/glossary/e2e_inspector/index.md</code></td>
+</tr>
+<tr>
+<td><code>mdn_trans_commit_get</code></td>
+<td>40 桁の <code>sourceCommit</code></td>
+</tr>
+<tr>
+<td><code>mdn_trans_replace_glossary</code></td>
+<td><code>replaced: 1</code></td>
+</tr>
+<tr>
+<td><code>mdn_trans_review</code></td>
+<td><code>readsFileOnly: true</code>、対象ファイル未変更</td>
+</tr>
+</tbody>
+</table>
+<h3 id="resources" class="tsd-anchor-link">Resources<a href="#resources" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="bash"><span class="hl-0">--method</span><span class="hl-1"> </span><span class="hl-3">resources/list</span><br/><span class="hl-0">--method</span><span class="hl-1"> </span><span class="hl-3">resources/read</span><span class="hl-1"> </span><span class="hl-2">--uri</span><span class="hl-1"> </span><span class="hl-3">mdn://guidelines/editorial</span>
+</code><button type="button">Copy</button></pre>
+
+<p>列挙（7 URI）:</p>
+<ul>
+<li><code>mdn://guidelines/editorial</code></li>
+<li><code>mdn://guidelines/l10n</code></li>
+<li><code>mdn://guidelines/japanese-style</code></li>
+<li><code>mdn://glossary</code></li>
+<li><code>mdn://data/glossary-terms</code></li>
+<li><code>mdn://data/review-rules</code></li>
+<li><code>mdn://data/prohibited-expressions</code></li>
+</ul>
+<p><code>mdn://guidelines/editorial</code> は <code>text/markdown</code> で本文を取得できた。</p>
+<h3 id="prompts" class="tsd-anchor-link">Prompts<a href="#prompts" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="bash"><span class="hl-0">--method</span><span class="hl-1"> </span><span class="hl-3">prompts/list</span><br/><span class="hl-0">--method</span><span class="hl-1"> </span><span class="hl-3">prompts/get</span><span class="hl-1"> </span><span class="hl-2">--prompt-name</span><span class="hl-1"> </span><span class="hl-3">mdn_translate</span><span class="hl-1"> </span><span class="hl-5">\</span><br/><span class="hl-1">  </span><span class="hl-2">--prompt-args</span><span class="hl-1"> </span><span class="hl-3">url=https://developer.mozilla.org/en-US/docs/Glossary/E2E_inspector</span>
+</code><button type="button">Copy</button></pre>
+
+<p>列挙: <code>mdn_translate</code> / <code>mdn_sync</code> / <code>mdn_review</code></p>
+<p><code>mdn_translate</code> の本文に対象 URL と <code>mdn_trans_start</code> が含まれ、<code>.cursor</code> パスは含まれない。</p>
+<h2 id="streamable-http-スモーク" class="tsd-anchor-link">Streamable HTTP スモーク<a href="#streamable-http-スモーク" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="bash"><span class="hl-6">PORT</span><span class="hl-1">=</span><span class="hl-3">13050</span><span class="hl-1"> </span><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">start:http</span><br/><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-2">--yes</span><span class="hl-1"> </span><span class="hl-3">@modelcontextprotocol/inspector</span><span class="hl-1"> </span><span class="hl-2">--cli</span><span class="hl-1"> </span><span class="hl-3">http://127.0.0.1:13050/mcp</span><span class="hl-1"> </span><span class="hl-5">\</span><br/><span class="hl-1">  </span><span class="hl-2">--transport</span><span class="hl-1"> </span><span class="hl-3">http</span><span class="hl-1"> </span><span class="hl-2">--method</span><span class="hl-1"> </span><span class="hl-3">initialize</span><br/><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-2">--yes</span><span class="hl-1"> </span><span class="hl-3">@modelcontextprotocol/inspector</span><span class="hl-1"> </span><span class="hl-2">--cli</span><span class="hl-1"> </span><span class="hl-3">http://127.0.0.1:13050/mcp</span><span class="hl-1"> </span><span class="hl-5">\</span><br/><span class="hl-1">  </span><span class="hl-2">--transport</span><span class="hl-1"> </span><span class="hl-3">http</span><span class="hl-1"> </span><span class="hl-2">--method</span><span class="hl-1"> </span><span class="hl-3">tools/list</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>initialize</code> と <code>tools/list</code>（同じ 4 Tools）に成功した。stdio と同じ <code>createMcpServer()</code> である。</p>
+<h2 id="なし" class="tsd-anchor-link"><code>.cursor</code> なし<a href="#なし" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>検証用一時ディレクトリの親・<code>translated-content</code> のいずれにも <code>.cursor</code> を置かず、フロー完了後も作成されなかった。接続に必要なのはサーバー登録（Inspector では CLI の target / <code>-e</code>）だけである。</p>
+<h2 id="他クライアントの設定例（未実機）" class="tsd-anchor-link">他クライアントの設定例（未実機）<a href="#他クライアントの設定例（未実機）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>形式はクライアント固有。サーバー側の契約は同じ（<code>node dist/index.js</code> + 環境変数）。JSON の正本は <a href="../media/README-1.md">examples/mcp/README.md</a> です。</p>
+<ul>
+<li>Claude Code: <a href="../media/claude-code.mcp.json">examples/mcp/claude-code.mcp.json</a>（プロジェクトの <code>.mcp.json</code>）</li>
+<li>VS Code: <a href="../media/vscode.mcp.json">examples/mcp/vscode.mcp.json</a>（<code>.vscode/mcp.json</code>）</li>
+</ul>
+<h2 id="issue-110-の完了対応" class="tsd-anchor-link">Issue #110 の完了対応<a href="#issue-110-の完了対応" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>完了条件</th>
+<th>対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cursor 以外のクライアントで MCP 接続できる</td>
+<td>本ファイル「接続」「Streamable HTTP スモーク」</td>
+</tr>
+<tr>
+<td>Tools を利用できる</td>
+<td>「Tools」</td>
+</tr>
+<tr>
+<td>Resources を利用できる</td>
+<td>「Resources」</td>
+</tr>
+<tr>
+<td>Prompts を利用できる</td>
+<td>「Prompts」</td>
+</tr>
+<tr>
+<td><code>.cursor</code> ディレクトリなしで基本フローを確認できる</td>
+<td>「<code>.cursor</code> なし」</td>
+</tr>
+<tr>
+<td>検証結果がドキュメント化されている</td>
+<td>本文書</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
+<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>On This Page</h3></summary>
+<div class="tsd-accordion-details"><a href="#cursor-以外の-mcp-クライアント検証"><span>Cursor 以外の <wbr/>MCP クライアント検証</span></a>
+<ul>
+<li><a href="#検証日と環境"><span>検証日と環境</span></a></li>
+<li><a href="#完了条件"><span>完了条件</span></a></li>
+<li><a href="#再現手順（stdio）"><span>再現手順（stdio）</span></a></li>
+<li><a href="#inspector-cli-で確認したコマンドと要約"><span>Inspector <wbr/>CLI で確認したコマンドと要約</span></a></li>
+<li>
+<ul>
+<li><a href="#接続（）"><span>接続（）</span></a></li>
+<li><a href="#tools"><span>Tools</span></a></li>
+<li><a href="#resources"><span>Resources</span></a></li>
+<li><a href="#prompts"><span>Prompts</span></a></li></ul></li>
+<li><a href="#streamable-http-スモーク"><span>Streamable <wbr/>HTTP スモーク</span></a></li>
+<li><a href="#なし"><span> なし</span></a></li>
+<li><a href="#他クライアントの設定例（未実機）"><span>他クライアントの設定例（未実機）</span></a></li>
+<li><a href="#issue-110-の完了対応"><span>Issue #110 の完了対応</span></a></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="../modules.html">mdn-translation-ja-mcp</a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+<li>Loading...</li></ul></nav></div></div></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

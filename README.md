@@ -66,7 +66,7 @@ git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 
 ### ランタイム
 
-- [Node.js](https://nodejs.org/) 22 以上（LTS 推奨）
+- [Node.js](https://nodejs.org/) 24.x
 - MCP クライアント（stdio または Streamable HTTP）。HTTP 必須ではありません。Cursor Rules / Skills は任意です。
 
 ### サーバーのビルド
@@ -217,7 +217,7 @@ npm run docs:publish
 | ワークスペースが解決できない | `MDN_CONTENT_ROOT` と `MDN_TRANSLATED_CONTENT_ROOT` は **両方**セットするか、**両方**未設定にする。 |
 | `content` / `translated-content` が見つからない | 親ディレクトリに両方があるか。または上記環境変数で正しい絶対パスを指定。 |
 | `mdn_trans_commit_get` が git 関連で失敗する | `content` が **fork した [mdn/content](https://github.com/mdn/content) を clone** したリポジトリか、対象ファイルが追跡されているか。 |
-| Node のバージョンエラー | `package.json` の `engines` は `node >= 22`。 |
+| Node のバージョンエラー | `package.json` の `engines` は `node >=24 <25`。 |
 | `mdn_trans_review` がシェルで見つからない | **MCP ツールとして呼ぶ**（`npm start` では解決しない）。クライアントにサーバーが接続済みか。フォールバック: `npm run mdn:trans:review -- --jaFile=files/ja/.../index.md` |
 
 ## ライセンスと第三者表記

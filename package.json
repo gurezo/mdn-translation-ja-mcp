@@ -23,7 +23,7 @@
     "test:watch": "vitest"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

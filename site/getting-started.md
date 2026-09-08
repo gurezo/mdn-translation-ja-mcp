@@ -26,7 +26,7 @@ git clone https://github.com/gurezo/mdn-translation-ja-mcp.git
 
 上流は [mdn/content](https://github.com/mdn/content) と [mdn/translated-content](https://github.com/mdn/translated-content) です。自分のアカウントへ fork してから clone してください。
 
-ランタイムは [Node.js](https://nodejs.org/) 22 以上（LTS 推奨）です。MCP クライアントは stdio または Streamable HTTP に対応していればどれでも構いません。
+ランタイムは [Node.js](https://nodejs.org/) 24 以上（LTS 推奨）です。MCP クライアントは stdio または Streamable HTTP に対応していればどれでも構いません。
 
 ## サーバーのビルド
 

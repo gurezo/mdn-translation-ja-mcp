@@ -1,0 +1,1249 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Responsibility Inventory | mdn-translation-ja-mcp</title><meta name="description" content="Documentation for mdn-translation-ja-mcp"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">mdn-translation-ja-mcp</a>
+<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb" aria-label="Breadcrumb">
+<li><a href="" aria-current="page">Responsibility Inventory</a></li></ul></div>
+<div class="tsd-panel tsd-typography"><h1 id="mcp-cursor--agent-skills-の責務棚卸し" class="tsd-anchor-link">MCP / Cursor / Agent Skills の責務棚卸し<a href="#mcp-cursor--agent-skills-の責務棚卸し" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>親 Issue: <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/103">#103</a>
+本 Issue: <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/104">#104</a></p>
+<p>後続: アーキテクチャ境界の確定は <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/105">#105</a>（<a href="MCP-native_Architecture.html">mcp-native.md</a>）。本文書の分類は棚卸し時点の <strong>移行候補</strong> である。責務の決定は <a href="http://mcp-native.md">mcp-native.md</a> を正とする。</p>
+<h2 id="目的" class="tsd-anchor-link">目的<a href="#目的" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>mdn-translation-ja-mcp</code> には、MCP Tools、<code>.cursor</code>、<code>.agents/skills</code> など複数の場所に MDN 日本語翻訳の知識と手順が分散している。MCP-native 化（#103）の前に、それぞれが現在どの役割を担っているかを一覧し、次の 5 分類へ割り当てる。</p>
+<ol>
+<li>MCP Tool に置くべきもの</li>
+<li>MCP Resource に置くべきもの</li>
+<li>MCP Prompt に置くべきもの</li>
+<li>MCP クライアント固有設定として残すもの</li>
+<li>廃止可能なもの</li>
+</ol>
+<p>本 Issue の成果物はこの文書のみである。ランタイムコードの変更、ディレクトリ再配置、README / GitHub Pages の本格更新は行わない（それぞれ #105 以降 / #111）。</p>
+<h2 id="調査範囲" class="tsd-anchor-link">調査範囲<a href="#調査範囲" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>対象</th>
+<th>パス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP サーバー実装</td>
+<td><code>src/</code>（Tools、instructions、review、shared）</td>
+</tr>
+<tr>
+<td>Cursor 固有設定</td>
+<td><code>.cursor/</code>（mcp.json、rules、skills、settings）</td>
+</tr>
+<tr>
+<td>Agent Skills</td>
+<td><code>.agents/skills/</code></td>
+</tr>
+<tr>
+<td>機械チェック用データ</td>
+<td><code>src/shared/data/</code></td>
+</tr>
+<tr>
+<td>Cursor 向けセットアップ</td>
+<td><code>scripts/setup-translated-content-cursor.mjs</code></td>
+</tr>
+<tr>
+<td>利用例</td>
+<td><code>integrations/cursor/</code></td>
+</tr>
+<tr>
+<td>利用者向け手順</td>
+<td><code>README.md</code></td>
+</tr>
+<tr>
+<td>GitHub Pages</td>
+<td><code>docs/</code>（TypeDoc 出力）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="現状の配置" class="tsd-anchor-link">現状の配置<a href="#現状の配置" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="text">Cursor
+ ├─ .cursor/mcp.json
+ ├─ .cursor/rules
+ ├─ .cursor/skills
+ └─ .agents/skills
+        ↓
+   MCP Server（Tools のみ）
+   ├─ MCP_SERVER_INSTRUCTIONS
+   └─ src/shared/data
+        ↓
+   content / translated-content
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="mermaid">flowchart TD
+  subgraph cursorClient [Cursor client]
+    mcpJson[".cursor/mcp.json"]
+    rules[".cursor/rules"]
+    cursorSkill[".cursor/skills/mdn-translation-workflow"]
+    agentSkills[".agents/skills x4"]
+  end
+  subgraph mcpServer [MCP Server]
+    instructions[MCP_SERVER_INSTRUCTIONS]
+    tools[Tools x4]
+    data["src/shared/data JSON"]
+  end
+  subgraph repos [Local repos]
+    content[content]
+    translated[translated-content]
+  end
+  cursorClient --> mcpServer
+  tools --> data
+  tools --> content
+  tools --> translated
+  instructions -->|"手順は Cursor Skill 参照"| cursorSkill
+  tools -->|"レビューは skills 由来と表記"| agentSkills
+</code><button type="button">Copy</button></pre>
+
+<p>要点:</p>
+<ul>
+<li>MCP サーバーは <strong>Tools のみ</strong> を登録している。<code>registerResource</code> / <code>registerPrompt</code> は未使用。</li>
+<li><code>MCP_SERVER_INSTRUCTIONS</code> は翻訳手順を <code>.cursor/skills/mdn-translation-workflow</code> へ誘導する。MCP サーバー単体では標準ワークフローを完結できない。</li>
+<li><code>mdn_trans_review</code> の説明は「<code>.agents/skills</code> 由来」と書くが、ランタイムは Skills ファイルを読まず <code>src/shared/data</code> の JSON を使う。</li>
+</ul>
+<h2 id="5-分類の枠" class="tsd-anchor-link">5 分類の枠<a href="#5-分類の枠" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>以降の節で各機能を次へ割り当てる。割り当ては #105 で確定するまでの候補である。</p>
+<table>
+<thead>
+<tr>
+<th>分類</th>
+<th>意味</th>
+<th>本リポジトリでの現状</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP Tool</td>
+<td>副作用のある操作、または機械実行可能な検査</td>
+<td>4 Tools が存在</td>
+</tr>
+<tr>
+<td>MCP Resource</td>
+<td>クライアントが読むガイドライン・用語・ルールデータ</td>
+<td>未登録</td>
+</tr>
+<tr>
+<td>MCP Prompt</td>
+<td>標準翻訳フロー・呼び出し制約などの手順テンプレート</td>
+<td>未登録</td>
+</tr>
+<tr>
+<td>クライアント固有</td>
+<td>Cursor の UI / Agent UX に依存する設定</td>
+<td><code>.cursor</code> と setup スクリプト</td>
+</tr>
+<tr>
+<td>廃止候補</td>
+<td>重複・残骸。本 Issue では削除しない</td>
+<td>後述</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cursor-rules-skills-の役割" class="tsd-anchor-link">Cursor Rules / Skills の役割<a href="#cursor-rules-skills-の役割" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>.cursor/</code> は Cursor クライアント固有の接続設定・エージェント制約・ワークフロー知識である。翻訳作業では <code>translated-content</code> 側へコピーまたは symlink しないと、MCP サーバー接続だけでは同じ体験にならない。</p>
+<h3 id="_" class="tsd-anchor-link"><code>.cursor/mcp.json</code><a href="#_" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>役割</td>
+<td>本リポジトリを Cursor で開いたときの MCP サーバー起動設定（stdio）</td>
+</tr>
+<tr>
+<td>サーバー名</td>
+<td><code>mdn-translation-ja</code></td>
+</tr>
+<tr>
+<td>起動</td>
+<td><code>node ${workspaceFolder}/dist/index.js</code></td>
+</tr>
+<tr>
+<td>環境変数</td>
+<td><code>MDN_CONTENT_ROOT</code> / <code>MDN_TRANSLATED_CONTENT_ROOT</code>（兄弟ディレクトリ想定）</td>
+</tr>
+<tr>
+<td>必須性</td>
+<td>Cursor で本サーバーを使うには同等の設定が必要。形式は Cursor 固有</td>
+</tr>
+</tbody>
+</table>
+<p><code>translated-content</code> ワークスペースでは、このファイルではなく <code>translated-content/.cursor/mcp.json</code>（setup スクリプトまたは examples から生成）を使う。</p>
+<h3 id="_-1" class="tsd-anchor-link"><code>.cursor/rules/00-mdn-translation.mdc</code><a href="#_-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>役割</td>
+<td>MDN 日本語翻訳の基本制約（原則・非翻訳対象・用語マクロ・フォーマット）</td>
+</tr>
+<tr>
+<td>適用</td>
+<td><code>globs: [&quot;**/*.md&quot;]</code>、<code>alwaysApply: false</code></td>
+</tr>
+<tr>
+<td>含む知識</td>
+<td>です・ます調、コードブロック非翻訳、<code>{{glossary}}</code> 2 引数、メニューは <code>&quot;ラベル&quot;</code></td>
+</tr>
+<tr>
+<td>他への誘導</td>
+<td>MCP 呼び出しは <code>01-mdn-mcp-tools.mdc</code>、詳細ガイドラインは <code>.agents/skills/</code></td>
+</tr>
+<tr>
+<td>重複</td>
+<td><code>.agents/skills</code> の l10n / japanese-style / glossary と原則が重なる</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_-2" class="tsd-anchor-link"><code>.cursor/rules/01-mdn-mcp-tools.mdc</code><a href="#_-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>役割</td>
+<td>MCP ツールをシェルコマンドと誤認しないための呼び出し制約</td>
+</tr>
+<tr>
+<td>適用</td>
+<td><code>globs: [&quot;**/*&quot;]</code>、<code>alwaysApply: true</code></td>
+</tr>
+<tr>
+<td>含む知識</td>
+<td>4 ツール名、<code>mdn_trans_review</code> の <code>jaFile</code>、読み取り専用制約、CLI フォールバック、<code>translated-content</code> ワークスペースでの接続先</td>
+</tr>
+<tr>
+<td>必須性</td>
+<td>Cursor エージェントがツール名をターミナルで実行しようとする問題への対策。他 MCP クライアントでは不要な場合がある</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_-3" class="tsd-anchor-link"><code>.cursor/skills/mdn-translation-workflow/SKILL.md</code><a href="#_-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>役割</td>
+<td>標準翻訳フロー（開始 → 翻訳 → sourceCommit → glossary → レビュー）</td>
+</tr>
+<tr>
+<td>前提</td>
+<td>3 リポジトリが兄弟、<code>translated-content/.cursor/mcp.json</code> 済み、Rules のコピー推奨</td>
+</tr>
+<tr>
+<td>翻訳実施時</td>
+<td><code>.agents/skills</code> の 4 スキルを参照するよう指示</td>
+</tr>
+<tr>
+<td>MCP との関係</td>
+<td><code>MCP_SERVER_INSTRUCTIONS</code> がこの Skill を「翻訳手順」として参照する</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_-4" class="tsd-anchor-link"><code>.cursor/skills/mdn-translation-workflow/references/mcp-tools.md</code><a href="#_-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>役割</td>
+<td>4 Tools の対応表、パス指定、mcp.json 例、エージェント向け呼び出し手順</td>
+</tr>
+<tr>
+<td>重複</td>
+<td><code>01-mdn-mcp-tools.mdc</code>、README、<code>MCP_SERVER_INSTRUCTIONS</code> と同じ制約を再掲</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_-5" class="tsd-anchor-link"><code>.cursor/settings.json</code><a href="#_-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>役割</td>
+<td>不明。キー <code>mdn-wdb-doc-ja-mcp</code> と localhost:3000 の REST エンドポイント</td>
+</tr>
+<tr>
+<td>現状</td>
+<td>現行 MCP サーバー名 <code>mdn-translation-ja</code> および stdio / Streamable HTTP 実装と一致しない</td>
+</tr>
+<tr>
+<td>扱い</td>
+<td>旧プロジェクト名の残骸として廃止候補（本 Issue では削除しない）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cursor-側の依存関係（要約）" class="tsd-anchor-link">Cursor 側の依存関係（要約）<a href="#cursor-側の依存関係（要約）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="text">.cursor/mcp.json          … 接続（クライアント固有）
+.cursor/rules/01-*.mdc    … ツール呼び出し UX（クライアント固有、常時）
+.cursor/rules/00-*.mdc    … 翻訳原則の要約（ドメイン知識の薄いコピー）
+.cursor/skills/workflow   … 標準フロー（MCP Prompt 候補）
+.cursor/settings.json     … 現行実装と無関係
+</code><button type="button">Copy</button></pre>
+
+<p>翻訳作業ワークスペース（<code>translated-content</code>）では、上記のうち接続設定と <code>01-mdn-mcp-tools.mdc</code> 相当が setup スクリプトで複製される。<code>00-mdn-translation.mdc</code> と workflow Skill、<code>.agents/skills</code> は README 上「任意」だが、人手翻訳・手順遵守には事実上必要になっている。</p>
+<h2 id="agent-skills-の役割" class="tsd-anchor-link">Agent Skills の役割<a href="#agent-skills-の役割" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>.agents/skills/</code> は mozilla-japan 翻訳ガイドラインを Cursor Agent Skill 形式にしたもの。人手の翻訳・レビュー用のドメイン知識であり、MCP サーバーは実行時にこれらの Markdown を読まない。</p>
+<p><code>mdn_trans_review</code> はスキル名（<code>REVIEW_SKILL_ORDER</code>）で検出をグループ化するが、検査本体は <code>src/shared/data</code> へ抽出した JSON と専用チェッカーである。</p>
+<h3 id="共通構造" class="tsd-anchor-link">共通構造<a href="#共通構造" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>各スキルは <code>SKILL.md</code>（いつ使うか・チェックリスト・手順）と <code>references/</code>（出典から抜粋した詳細）からなる。</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>出典</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>editorial-guideline</code></td>
+<td><a href="https://github.com/mozilla-japan/translation/wiki/Editorial-Guideline">https://github.com/mozilla-japan/translation/wiki/Editorial-Guideline</a></td>
+</tr>
+<tr>
+<td><code>l10n-guideline</code></td>
+<td><a href="https://github.com/mozilla-japan/translation/wiki/L10N-Guideline">https://github.com/mozilla-japan/translation/wiki/L10N-Guideline</a></td>
+</tr>
+<tr>
+<td><code>mozilla-l10n-glossary</code></td>
+<td><a href="https://github.com/mozilla-japan/translation/wiki/Mozilla-L10N-Glossary">https://github.com/mozilla-japan/translation/wiki/Mozilla-L10N-Glossary</a></td>
+</tr>
+<tr>
+<td><code>japanese-style</code></td>
+<td>日本語の文体スプレッドシート（<a href="http://style-rules.md">style-rules.md</a> の sourceUrl）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_-6" class="tsd-anchor-link"><code>editorial-guideline</code><a href="#_-6" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>役割</td>
+<td>表記・約物・単位・カタカナ長音・ブランディング・頻出用語</td>
+</tr>
+<tr>
+<td>人手</td>
+<td>半角スペース、日付・数字・容量、メニュー <code>[項目]</code>、引用符「」</td>
+</tr>
+<tr>
+<td>機械チェックへ抽出</td>
+<td>禁止約物（―、～）、頻出語（ウェブアプリケーション、ブラウザー、バイナリー、構文、ログイン等）、MDN 見出し慣行（仕様書 / ブラウザーの互換性）</td>
+</tr>
+<tr>
+<td>機械に載っていない例</td>
+<td>カタカナ長音の一般規則、単位の詳細、メニュー三点リーダー省略</td>
+</tr>
+</tbody>
+</table>
+<p>禁止表現リスト <code>prohibited-expressions.json</code> も editorial-guideline スキル名で報告される（プレースホルダ「要翻訳」等）。references 本文からの直接抽出ではない。</p>
+<h3 id="_-7" class="tsd-anchor-link"><code>l10n-guideline</code><a href="#_-7" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>役割</td>
+<td>意訳・自然な日本語、UI コンテクスト別表現、です・ます調、L10N メタデータ</td>
+</tr>
+<tr>
+<td>人手</td>
+<td>逐語訳回避、UI の体言止め / 動詞末尾、「Web」→「ウェブ」、括弧前後の空白</td>
+</tr>
+<tr>
+<td>機械チェック</td>
+<td><code>findingsFromL10nMetadata</code>: front-matter の <code>l10n.sourceCommit</code> のみ（ルール ID <code>STYLE_L10N_METADATA</code>）</td>
+</tr>
+<tr>
+<td>機械に載っていない例</td>
+<td>意訳の自然さ、UI コンテクスト別フレーズ</td>
+</tr>
+</tbody>
+</table>
+<p><code>STYLE_L10N_METADATA</code> は japanese-style の ID 表にも載るが、実装の <code>skill</code> フィールドは <code>l10n-guideline</code>。</p>
+<h3 id="_-8" class="tsd-anchor-link"><code>mozilla-l10n-glossary</code><a href="#_-8" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>役割</td>
+<td>英語技術用語の訳語と <code>{{glossary(&quot;id&quot;, &quot;表示名&quot;)}}</code> の第 2 引数</td>
+</tr>
+<tr>
+<td>人手</td>
+<td><code>glossary-excerpt.md</code> 検索、未掲載時は Wiki（<code>glossary-lookup.md</code>）</td>
+</tr>
+<tr>
+<td>機械</td>
+<td><code>mdn_trans_replace_glossary</code> が <code>glossary-terms.json</code> で第 2 引数を補完。<code>mdn_trans_review</code> は 1 引数マクロを <code>GLOSSARY_SINGLE_ARG</code> として検出</td>
+</tr>
+<tr>
+<td>JSON との関係</td>
+<td>Skill 本文が <code>src/shared/data/glossary-terms.json</code> を MCP 用語データとして明示。excerpt は人が読む抜粋、JSON は機械用のサブセット</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_-9" class="tsd-anchor-link"><code>japanese-style</code><a href="#_-9" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>役割</td>
+<td>です・ます調、ひらがな / 漢字、箇条書き・手順の文体</td>
+</tr>
+<tr>
+<td>人手確認 ID</td>
+<td><code>STYLE_KATAKANA_AND_GLOSSARY_CONSISTENCY</code>、<code>STYLE_LIST_AND_PROCEDURE_VOICE</code></td>
+</tr>
+<tr>
+<td>機械チェック</td>
+<td><code>STYLE_HIRAGANA_*</code>（下さい / の為 / 出来る / 全て / 読込み / 貼付け）、<code>STYLE_DESU_MASU_*</code>（である。 / だ。）</td>
+</tr>
+<tr>
+<td>ID のずれ</td>
+<td>人手用 ID <code>STYLE_DESU_MASU_AND_DEARU_MIX</code> に対し、機械側 ID は <code>STYLE_DESU_MASU_DEARU</code> / <code>STYLE_DESU_MASU_DA</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="agent-skills-と-mcp-の関係（要約）" class="tsd-anchor-link">Agent Skills と MCP の関係（要約）<a href="#agent-skills-と-mcp-の関係（要約）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="text">.agents/skills/*/SKILL.md + references/
+        │ 人手翻訳・人手レビュー
+        │
+        ├─ 抽出済み ─► src/shared/data/*.json  ─► mdn_trans_review
+        │                                         mdn_trans_replace_glossary
+        └─ 未抽出   ─► エージェントが Skill を読んで判断（MCP 未接続では届かない）
+</code><button type="button">Copy</button></pre>
+
+<p>translated-content ワークスペースで Skills を使わない場合、機械チェック可能なサブセット以外のガイドラインはエージェントに届かない。これが「MCP を繋いだだけでは想定した翻訳体験にならない」主因の一つである。</p>
+<h2 id="mcp-tools-と-skill-data-の依存関係" class="tsd-anchor-link">MCP Tools と Skill / data の依存関係<a href="#mcp-tools-と-skill-data-の依存関係" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="トランスポートと入口" class="tsd-anchor-link">トランスポートと入口<a href="#トランスポートと入口" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>入口</th>
+<th>パス</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stdio</td>
+<td><code>src/index.ts</code> → <code>createMcpServer()</code></td>
+<td>Cursor の <code>mcp.json</code> <code>command</code> から起動</td>
+</tr>
+<tr>
+<td>Streamable HTTP</td>
+<td><code>src/http.ts</code> → 同じ <code>createMcpServer()</code></td>
+<td><code>npm run start:http</code>。機能集合は stdio と同一</td>
+</tr>
+<tr>
+<td>CLI フォールバック</td>
+<td><code>src/cli/review.ts</code></td>
+<td><code>npm run mdn:trans:review</code>。<code>mdn_trans_review</code> 相当。MCP 未接続時のみ</td>
+</tr>
+</tbody>
+</table>
+<p>Resources / Prompts は未登録。サーバー説明は <code>src/mcp-server-instructions.ts</code> の <code>MCP_SERVER_INSTRUCTIONS</code>（Cursor のサーバー指示）。</p>
+<h3 id="ワークスペース解決" class="tsd-anchor-link">ワークスペース解決<a href="#ワークスペース解決" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>全 Tools が <code>resolveWorkspaceRoots()</code>（<code>src/shared/workspace.ts</code>）を使う。</p>
+<ol>
+<li><code>MDN_CONTENT_ROOT</code> と <code>MDN_TRANSLATED_CONTENT_ROOT</code> を両方指定</li>
+<li>未設定ならプロセス cwd の親にある <code>content</code> / <code>translated-content</code></li>
+</ol>
+<p>Skill ファイルは参照しない。パス解決は環境変数とディレクトリ配置のみ。</p>
+<h3 id="tools-一覧と依存" class="tsd-anchor-link">Tools 一覧と依存<a href="#tools-一覧と依存" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>実装</th>
+<th>書き込み</th>
+<th>Skill 依存</th>
+<th>data 依存</th>
+<th>その他</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mdn_trans_start</code></td>
+<td><code>src/tools/trans-start.ts</code></td>
+<td><code>translated-content</code> へ原文コピー</td>
+<td>なし</td>
+<td>なし</td>
+<td>URL 解決 <code>mdn-url-resolve.ts</code></td>
+</tr>
+<tr>
+<td><code>mdn_trans_commit_get</code></td>
+<td><code>src/tools/commit-get.ts</code></td>
+<td><code>l10n.sourceCommit</code> を書き込み</td>
+<td>なし</td>
+<td>なし</td>
+<td>git <code>get-source-commit.ts</code>、front-matter</td>
+</tr>
+<tr>
+<td><code>mdn_trans_replace_glossary</code></td>
+<td><code>src/tools/replace-glossary.ts</code></td>
+<td>第 2 引数付きに置換して保存</td>
+<td>なし（JSON のみ）</td>
+<td><code>glossary-terms.json</code></td>
+<td><code>glossary-macro.ts</code></td>
+</tr>
+<tr>
+<td><code>mdn_trans_review</code></td>
+<td><code>src/tools/review.ts</code></td>
+<td>なし（readOnlyHint）</td>
+<td>なし（ランタイムは JSON + チェッカー）</td>
+<td><code>review-rules.json</code>、<code>prohibited-expressions.json</code></td>
+<td>スキル名は結果のグループ化にのみ使用</td>
+</tr>
+</tbody>
+</table>
+<p><code>mdn_trans_review</code> の説明文・レポートは「<code>.agents/skills</code> 由来」と書くが、ファイル I/O は対象 <code>index.md</code> の読み取りと <code>src/shared/data</code>（ビルド後は <code>dist/shared/data</code>）のみ。</p>
+<h3 id="_-10" class="tsd-anchor-link"><code>src/shared/data</code><a href="#_-10" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>scripts/copy-shared-data.mjs</code> が <code>tsc</code> 後に JSON を <code>dist/shared/data</code> へ複製する。パス解決は <code>src/shared/paths.ts</code>。</p>
+<table>
+<thead>
+<tr>
+<th>ファイル</th>
+<th>利用者</th>
+<th>由来</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>glossary-terms.json</code></td>
+<td><code>mdn_trans_replace_glossary</code></td>
+<td>用語集の機械用サブセット</td>
+<td>11 語。<code>id</code> → <code>secondArg</code></td>
+</tr>
+<tr>
+<td><code>review-rules.json</code></td>
+<td><code>mdn_trans_review</code>（<code>findingsFromRuleItems</code>）</td>
+<td><code>.agents/skills</code> references から抽出と明記</td>
+<td>禁止約物、頻出語、見出し慣行、ひらがな、だ・であるヒューリスティック</td>
+</tr>
+<tr>
+<td><code>prohibited-expressions.json</code></td>
+<td><code>mdn_trans_review</code>（<code>findingsFromProhibited</code>）</td>
+<td>editorial-guideline を前提にした初期リスト</td>
+<td>「要翻訳」等のプレースホルダと TODO / FIXME / [WIP]</td>
+</tr>
+</tbody>
+</table>
+<p><code>review-rules.json</code> の <code>skill</code> フィールドは editorial-guideline / japanese-style。l10n と glossary の機械チェックは JSON ではなく専用チェッカー。</p>
+<h4 id="データとガイドラインのずれ" class="tsd-anchor-link">データとガイドラインのずれ<a href="#データとガイドラインのずれ" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<ul>
+<li><code>glossary-terms.json</code> の <code>browser.secondArg</code> は「ブラウザ」。<code>review-rules.json</code> の <code>EDITORIAL_TERM_BROWSER_SHORT</code> と <a href="http://glossary-lookup.md">glossary-lookup.md</a> は「ブラウザー」を要求する。</li>
+<li><code>review-rules.json</code> の <code>retrievedAt</code> は 2026-06-02、<code>prohibited-expressions.json</code> は 2026-03-22、Skill references の <code>retrievedAt</code> は 2026-05-31。同期元が一つではない。</li>
+</ul>
+<h3 id="レビューエンジン" class="tsd-anchor-link">レビューエンジン<a href="#レビューエンジン" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>src/review/run-guideline-review.ts</code> が次を合成する。</p>
+<table>
+<thead>
+<tr>
+<th>チェッカー</th>
+<th>ソース</th>
+<th>報告スキル</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>findingsFromRuleItems</code></td>
+<td><code>review-rules.json</code></td>
+<td>各 item の <code>skill</code></td>
+</tr>
+<tr>
+<td><code>findingsFromProhibited</code></td>
+<td><code>prohibited-expressions.json</code></td>
+<td>常に <code>editorial-guideline</code></td>
+</tr>
+<tr>
+<td><code>findingsFromL10nMetadata</code></td>
+<td>front-matter</td>
+<td><code>l10n-guideline</code>（<code>STYLE_L10N_METADATA</code>）</td>
+</tr>
+<tr>
+<td><code>findingsFromGlossaryMacros</code></td>
+<td>本文の 1 引数 <code>{{glossary}}</code></td>
+<td><code>mozilla-l10n-glossary</code>（<code>GLOSSARY_SINGLE_ARG</code>）</td>
+</tr>
+</tbody>
+</table>
+<p><code>REVIEW_SKILL_ORDER</code> は 4 スキル名。未自動項目（意訳、カタカナと glossary の整合、リスト文体）はレポートで人手確認を促すだけ。</p>
+<h3 id="が依存する-cursor-側知識" class="tsd-anchor-link"><code>MCP_SERVER_INSTRUCTIONS</code> が依存する Cursor 側知識<a href="#が依存する-cursor-側知識" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>src/mcp-server-instructions.ts</code> は次をサーバー指示に含める。</p>
+<ul>
+<li>4 Tools はシェルではない</li>
+<li><code>mdn_trans_review</code> は読み取り専用</li>
+<li>兄弟ディレクトリまたは環境変数</li>
+<li><code>mdn_trans_start</code> はコピーのみ</li>
+<li><strong>「MCP 翻訳手順は <code>.cursor/skills/mdn-translation-workflow</code> を参照」</strong></li>
+</ul>
+<p>最後の行により、MCP サーバーの利用説明が Cursor Skill パスに結合している。他クライアントではこのパスは存在しない。</p>
+<h2 id="setup-examples--readme--github-pages" class="tsd-anchor-link">setup / examples / README / GitHub Pages<a href="#setup-examples--readme--github-pages" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="_-11" class="tsd-anchor-link"><code>scripts/setup-translated-content-cursor.mjs</code><a href="#_-11" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>npm run setup:translated-content-cursor</code>。<code>translated-content/.cursor/</code> に次を生成する。</p>
+<ul>
+<li><code>mcp.json</code>（<code>dist/index.js</code> の絶対パスと環境変数）</li>
+<li>（任意 <code>--with-rules</code>）<code>rules/01-mdn-mcp-tools.mdc</code>（<code>integrations/cursor/rules/</code> からコピー）</li>
+</ul>
+<p><code>.agents/skills</code> と workflow Skill、<code>00-mdn-translation.mdc</code> はコピーしない。README では Rules / Skills を「任意」と案内する。</p>
+<p>Cursor 向け optional セットアップ。他 MCP クライアントでは不要。最低限はサーバー登録だけである。</p>
+<h3 id="_-12" class="tsd-anchor-link"><code>integrations/cursor/</code><a href="#_-12" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>ファイル</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mcp.example.json</code></td>
+<td><code>translated-content/.cursor/mcp.json</code> の雛形（絶対パスのプレースホルダ）</td>
+</tr>
+<tr>
+<td><code>rules/01-mdn-mcp-tools.mdc</code></td>
+<td>setup が <code>--with-rules</code> のときコピーする Rule。本リポジトリの <code>.cursor/rules/01-mdn-mcp-tools.mdc</code> より短い（CLI フォールバックと workspace 節が簡略）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="readmemd" class="tsd-anchor-link"><a href="http://README.md">README.md</a><a href="#readmemd" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Cursor 前提の利用者向け手順。調査対象としての役割:</p>
+<ul>
+<li>3 リポジトリ並列、fork → clone、<code>translated-content/.cursor/mcp.json</code></li>
+<li>setup スクリプトと Rules コピー</li>
+<li>翻訳フロー最短（4 Tools の順序）</li>
+<li>Skills / Rules の任意展開（symlink）</li>
+<li>トラブルシュート（MCP をシェルと誤認した場合を含む）</li>
+</ul>
+<p>MCP 指示・Rules・workflow Skill と内容が重複する。本格更新は #111。</p>
+<h3 id="github-pages（）" class="tsd-anchor-link">GitHub Pages（<code>docs/</code>）<a href="#github-pages（）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>TypeDoc の API リファレンスのみ（<code>typedoc.json</code> の <code>out: &quot;docs&quot;</code>）。<code>npm run docs:clean</code> がディレクトリを削除するため、本棚卸し文書はここに置かない。</p>
+<p>アーキテクチャ・責務・翻訳ガイドラインは Pages に未掲載。公開面の更新は #111。</p>
+<h2 id="mcp-移行対象と-cursor-残置の分類" class="tsd-anchor-link">MCP 移行対象と Cursor 残置の分類<a href="#mcp-移行対象と-cursor-残置の分類" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>以下は現状に基づく <strong>移行候補</strong> である。Tools / Resources / Prompts の責務確定、Cursor integration の配置、既存 API 互換は <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/105">#105</a> が行う。本 Issue ではファイルを移動・削除しない。</p>
+<h3 id="1-mcp-tool-に置くべきもの" class="tsd-anchor-link">1. MCP Tool に置くべきもの<a href="#1-mcp-tool-に置くべきもの" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>副作用のある操作と、機械実行可能な検査。粒度の再設計は <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/108">#108</a>。</p>
+<table>
+<thead>
+<tr>
+<th>現状</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mdn_trans_start</code></td>
+<td>原文ファイルのコピー</td>
+</tr>
+<tr>
+<td><code>mdn_trans_commit_get</code></td>
+<td>git 履歴取得と front-matter 書き込み</td>
+</tr>
+<tr>
+<td><code>mdn_trans_replace_glossary</code></td>
+<td>用語 JSON に基づく本文置換</td>
+</tr>
+<tr>
+<td><code>mdn_trans_review</code></td>
+<td>機械レビュー（読み取り専用）</td>
+</tr>
+</tbody>
+</table>
+<p>CLI <code>mdn:trans:review</code> は Tool のフォールバックであり、MCP の必須面にはしない。stdio / HTTP は同じ Tool 集合を維持する。</p>
+<h3 id="2-mcp-resource-に置くべきもの" class="tsd-anchor-link">2. MCP Resource に置くべきもの<a href="#2-mcp-resource-に置くべきもの" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>クライアントが読む翻訳知識。実装は <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/106">#106</a>。</p>
+<table>
+<thead>
+<tr>
+<th>現状の置き場</th>
+<th>Resource 化する内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.agents/skills/editorial-guideline/references/</code></td>
+<td>表記ガイドライン</td>
+</tr>
+<tr>
+<td><code>.agents/skills/l10n-guideline/references/</code></td>
+<td>L10N ガイドライン</td>
+</tr>
+<tr>
+<td><code>.agents/skills/japanese-style/references/style-rules.md</code></td>
+<td>文体ルール</td>
+</tr>
+<tr>
+<td><code>.agents/skills/mozilla-l10n-glossary/references/</code></td>
+<td>用語抜粋と Wiki 参照手順</td>
+</tr>
+<tr>
+<td><code>src/shared/data/glossary-terms.json</code></td>
+<td>機械用 glossary（Tool も継続利用）</td>
+</tr>
+<tr>
+<td><code>src/shared/data/review-rules.json</code></td>
+<td>機械チェックルール</td>
+</tr>
+<tr>
+<td><code>src/shared/data/prohibited-expressions.json</code></td>
+<td>禁止・注意表現</td>
+</tr>
+</tbody>
+</table>
+<p>Skill の <code>SKILL.md</code>（When to use / checklist）は Resource の短い案内にするか、Prompt 側の手順に含めるか #105 で決める。</p>
+<h3 id="3-mcp-prompt-に置くべきもの" class="tsd-anchor-link">3. MCP Prompt に置くべきもの<a href="#3-mcp-prompt-に置くべきもの" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>標準手順と呼び出し制約。実装は <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/107">#107</a>。</p>
+<table>
+<thead>
+<tr>
+<th>現状の置き場</th>
+<th>Prompt 化する内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.cursor/skills/mdn-translation-workflow/SKILL.md</code></td>
+<td>翻訳開始 → 翻訳 → sourceCommit → glossary → レビュー</td>
+</tr>
+<tr>
+<td><code>.cursor/skills/mdn-translation-workflow/references/mcp-tools.md</code></td>
+<td>ツール対応表とパス指定</td>
+</tr>
+<tr>
+<td><code>MCP_SERVER_INSTRUCTIONS</code> の手順・制約</td>
+<td>シェル誤認禁止、review 読み取り専用、コピーのみ、パス規則</td>
+</tr>
+<tr>
+<td><code>.cursor/rules/01-mdn-mcp-tools.mdc</code> の制約本文</td>
+<td>同上（Cursor Rule としては optional に縮小）</td>
+</tr>
+<tr>
+<td><code>.cursor/rules/00-mdn-translation.mdc</code> の翻訳原則</td>
+<td>ドメイン要約。Resource と重複するため Prompt の前提節か Resource へ</td>
+</tr>
+</tbody>
+</table>
+<p>サーバー instructions を Prompt / Resource へ寄せたあと、instructions は「Prompt を使え」程度に薄くできる。#105 の互換方針待ち。</p>
+<h3 id="4-mcp-クライアント固有設定として残すもの" class="tsd-anchor-link">4. MCP クライアント固有設定として残すもの<a href="#4-mcp-クライアント固有設定として残すもの" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Cursor の UI / Agent UX。MCP 利用の必須条件にはしない（#109 で必須依存を外す）。</p>
+<table>
+<thead>
+<tr>
+<th>現状</th>
+<th>残す理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.cursor/mcp.json</code>（本リポジトリ）</td>
+<td>Cursor のサーバー登録形式</td>
+</tr>
+<tr>
+<td><code>translated-content/.cursor/mcp.json</code> の生成</td>
+<td>同上。他クライアントは各自の設定形式</td>
+</tr>
+<tr>
+<td><code>scripts/setup-translated-content-cursor.mjs</code></td>
+<td>Cursor 向け一括セットアップ</td>
+</tr>
+<tr>
+<td><code>integrations/cursor/</code></td>
+<td>Cursor 向け雛形</td>
+</tr>
+<tr>
+<td><code>.cursor/rules/01-mdn-mcp-tools.mdc</code> の薄い残置</td>
+<td>Cursor エージェントがツール名をシェル実行する問題への optional 対策</td>
+</tr>
+<tr>
+<td><code>.cursor/skills</code> の残置</td>
+<td>Cursor で Skill を開く UX が便利なら optional integration</td>
+</tr>
+</tbody>
+</table>
+<p>#105 の目標配置 <code>integrations/cursor/</code> は、上記 optional 群の行き先候補である。</p>
+<h3 id="5-廃止可能なもの（候補。本-issue-では削除しない）" class="tsd-anchor-link">5. 廃止可能なもの（候補。本 Issue では削除しない）<a href="#5-廃止可能なもの（候補。本-issue-では削除しない）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>対象</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.cursor/settings.json</code> の <code>mdn-wdb-doc-ja-mcp</code></td>
+<td>現行サーバー名・トランスポートと不一致。旧プロジェクト残骸</td>
+</tr>
+<tr>
+<td>MCP 呼び出し制約の多重コピー</td>
+<td>instructions / Rules / Skill / examples Rule / README の 5 系統。Prompt へ集約したあと冗長分を落とせる</td>
+</tr>
+<tr>
+<td><code>.cursor/rules/00-mdn-translation.mdc</code> の独立維持</td>
+<td>Agent Skills / 将来 Resource の要約コピー。Prompt か Resource があれば必須ではない</td>
+</tr>
+<tr>
+<td><code>glossary-terms.json</code> の <code>browser</code> → 「ブラウザ」</td>
+<td>表記ルール「ブラウザー」と矛盾。廃止というよりデータ修正候補（#106 または glossary 系 Issue）</td>
+</tr>
+</tbody>
+</table>
+<p>「廃止」はファイル削除を意味しない。親 Issue #103 のとおり、便利な Cursor UX は optional として残してよい。</p>
+<h3 id="分類マトリクス（要約）" class="tsd-anchor-link">分類マトリクス（要約）<a href="#分類マトリクス（要約）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>要素</th>
+<th>Tool</th>
+<th>Resource</th>
+<th>Prompt</th>
+<th>クライアント固有</th>
+<th>廃止候補</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4 MCP Tools</td>
+<td>残す</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>src/shared/data/*.json</code></td>
+<td>Tool が読む</td>
+<td>公開する</td>
+<td></td>
+<td></td>
+<td>用語の矛盾は修正候補</td>
+</tr>
+<tr>
+<td><code>.agents/skills</code> references</td>
+<td></td>
+<td>公開する</td>
+<td></td>
+<td>optional Skill として残せる</td>
+<td></td>
+</tr>
+<tr>
+<td>workflow Skill</td>
+<td></td>
+<td></td>
+<td>公開する</td>
+<td>optional</td>
+<td></td>
+</tr>
+<tr>
+<td><code>MCP_SERVER_INSTRUCTIONS</code></td>
+<td></td>
+<td></td>
+<td>寄せる</td>
+<td></td>
+<td>重複分は縮小</td>
+</tr>
+<tr>
+<td><code>.cursor/rules/01-*</code></td>
+<td></td>
+<td></td>
+<td>本文を寄せる</td>
+<td>薄い Rule として残せる</td>
+<td>冗長コピー</td>
+</tr>
+<tr>
+<td><code>.cursor/rules/00-*</code></td>
+<td></td>
+<td>または Prompt</td>
+<td>または Prompt</td>
+<td></td>
+<td>独立維持は不要になり得る</td>
+</tr>
+<tr>
+<td>setup / examples / mcp.json</td>
+<td></td>
+<td></td>
+<td></td>
+<td>残す</td>
+<td></td>
+</tr>
+<tr>
+<td><code>.cursor/settings.json</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>残骸</td>
+</tr>
+</tbody>
+</table>
+<h2 id="重複ルール・ワークフロー" class="tsd-anchor-link">重複ルール・ワークフロー<a href="#重複ルール・ワークフロー" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>同一趣旨が複数の置き場にあり、MCP 接続だけではどれが正本か分からない。</p>
+<h3 id="mcp-ツールをシェルで実行するな-review-は読み取り専用" class="tsd-anchor-link">MCP ツールをシェルで実行するな / review は読み取り専用<a href="#mcp-ツールをシェルで実行するな-review-は読み取り専用" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>同じ制約が次に繰り返し書かれている。</p>
+<table>
+<thead>
+<tr>
+<th>置き場</th>
+<th>差分</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/mcp-server-instructions.ts</code></td>
+<td>最優先として 4 ツール名と review 読み取り専用</td>
+</tr>
+<tr>
+<td><code>.cursor/rules/01-mdn-mcp-tools.mdc</code></td>
+<td>alwaysApply。CLI フォールバックと setup 案内あり</td>
+</tr>
+<tr>
+<td><code>integrations/cursor/rules/01-mdn-mcp-tools.mdc</code></td>
+<td>上記の短縮版。setup が <code>--with-rules</code> のときこちらをコピー</td>
+</tr>
+<tr>
+<td><code>.cursor/skills/mdn-translation-workflow/SKILL.md</code></td>
+<td>ツール対応表とチャット例</td>
+</tr>
+<tr>
+<td><code>.cursor/skills/mdn-translation-workflow/references/mcp-tools.md</code></td>
+<td>対応表・mcp.json 例・呼び出し手順</td>
+</tr>
+<tr>
+<td><code>.cursor/rules/00-mdn-translation.mdc</code></td>
+<td>MCP 節で 01 へ誘導、review 制約を再掲</td>
+</tr>
+<tr>
+<td><code>README.md</code></td>
+<td>ツール表、チャット例、トラブルシュート</td>
+</tr>
+<tr>
+<td><code>mdn_trans_review</code> の description と <code>REVIEW_READ_ONLY_BANNER</code></td>
+<td>ツール応答にも同じ制約</td>
+</tr>
+</tbody>
+</table>
+<p>正本候補は MCP Prompt（＋ Tool の annotations / structuredContent）。Cursor Rule は optional な再掲に縮小できる。</p>
+<h3 id="標準翻訳フロー（5-手順）" class="tsd-anchor-link">標準翻訳フロー（5 手順）<a href="#標準翻訳フロー（5-手順）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>置き場</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.cursor/skills/mdn-translation-workflow/SKILL.md</code></td>
+<td>start → <code>.agents/skills</code> で翻訳 → commit_get → replace_glossary → review</td>
+</tr>
+<tr>
+<td><code>README.md</code>「翻訳フロー（最短）」</td>
+<td>同じ 4 Tools の順序。翻訳実施（人手）の節は短い</td>
+</tr>
+<tr>
+<td><code>MCP_SERVER_INSTRUCTIONS</code></td>
+<td>フロー本体は書かず Skill パスへ誘導</td>
+</tr>
+</tbody>
+</table>
+<p>正本候補は MCP Prompt。README は #111 で Prompt への参照に寄せる。</p>
+<h3 id="翻訳原則（です・ます、コード非翻訳、意訳）" class="tsd-anchor-link">翻訳原則（です・ます、コード非翻訳、意訳）<a href="#翻訳原則（です・ます、コード非翻訳、意訳）" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>置き場</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.cursor/rules/00-mdn-translation.mdc</code></td>
+<td>要約。<code>**/*.md</code> に条件適用</td>
+</tr>
+<tr>
+<td><code>.agents/skills/l10n-guideline</code></td>
+<td>意訳・ですます・UI・メタデータ</td>
+</tr>
+<tr>
+<td><code>.agents/skills/japanese-style</code></td>
+<td>ですます混在、ひらがな、リスト文体</td>
+</tr>
+<tr>
+<td><code>review-rules.json</code> の <code>STYLE_DESU_MASU_*</code></td>
+<td>である。 / だ。 のヒューリスティック</td>
+</tr>
+</tbody>
+</table>
+<p>00 Rule は Skills の薄いコピー。Resource 公開後は必須でなくなる。</p>
+<h3 id="用語・表記" class="tsd-anchor-link">用語・表記<a href="#用語・表記" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>置き場</th>
+<th>機械 / 人手</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.agents/skills/editorial-guideline/references</code></td>
+<td>人手。長音・単位・メニューなど</td>
+</tr>
+<tr>
+<td><code>.agents/skills/mozilla-l10n-glossary/references</code></td>
+<td>人手。excerpt + Wiki 手順</td>
+</tr>
+<tr>
+<td><code>review-rules.json</code></td>
+<td>機械。頻出語・禁止約物・見出しのサブセット</td>
+</tr>
+<tr>
+<td><code>prohibited-expressions.json</code></td>
+<td>機械。プレースホルダ</td>
+</tr>
+<tr>
+<td><code>glossary-terms.json</code></td>
+<td>機械。11 語の第 2 引数</td>
+</tr>
+</tbody>
+</table>
+<p>抽出漏れ（長音規則など）とデータの矛盾（「ブラウザ」 vs 「ブラウザー」）がある。Resource 化時に正本を一つに揃える必要がある（#106）。</p>
+<h3 id="ルール-id-の所属ずれ" class="tsd-anchor-link">ルール ID の所属ずれ<a href="#ルール-id-の所属ずれ" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Skill 文書上の所属</th>
+<th>実装の <code>skill</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>STYLE_L10N_METADATA</code></td>
+<td>japanese-style の ID 表</td>
+<td><code>l10n-guideline</code>（<code>l10n-metadata.ts</code>）</td>
+</tr>
+<tr>
+<td><code>STYLE_DESU_MASU_AND_DEARU_MIX</code></td>
+<td>japanese-style の人手 ID</td>
+<td>機械 ID は <code>STYLE_DESU_MASU_DEARU</code> / <code>STYLE_DESU_MASU_DA</code></td>
+</tr>
+<tr>
+<td><code>STYLE_KATAKANA_AND_GLOSSARY_CONSISTENCY</code></td>
+<td>japanese-style</td>
+<td>未自動</td>
+</tr>
+<tr>
+<td><code>STYLE_LIST_AND_PROCEDURE_VOICE</code></td>
+<td>japanese-style</td>
+<td>未自動</td>
+</tr>
+</tbody>
+</table>
+<p>レビュー結果のスキル別集計と Skill 文書の ID 表が一致しない。</p>
+<h3 id="cursor-セットアップ手順の重複" class="tsd-anchor-link">Cursor セットアップ手順の重複<a href="#cursor-セットアップ手順の重複" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>置き場</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>README.md</code>「translated-content リポジトリ側で行うこと」</td>
+<td>mcp.json 手書き、setup、Rules コピー、Skills 任意</td>
+</tr>
+<tr>
+<td><code>scripts/setup-translated-content-cursor.mjs</code> の stdout</td>
+<td>生成後の Cursor リロード手順</td>
+</tr>
+<tr>
+<td>workflow Skill の Prerequisites</td>
+<td>3 リポジトリ兄弟、mcp.json、Rules コピー推奨</td>
+</tr>
+</tbody>
+</table>
+<p>#109 / #111 で「MCP サーバー登録だけ」に寄せると、この塊を縮小できる。</p>
+<h2 id="105-へ渡す未決事項" class="tsd-anchor-link">#105 へ渡す未決事項<a href="#105-へ渡す未決事項" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>本文書は分類候補までとする。決定は <a href="MCP-native_Architecture.html">mcp-native.md</a> を正とする。</p>
+<ul>
+<li>Tools / Resources / Prompts の責務定義とディレクトリ構成（<code>integrations/cursor/</code> を含む）</li>
+<li><code>MCP_SERVER_INSTRUCTIONS</code> を Prompt へ移したあとのサーバー指示の残量</li>
+<li><code>.agents/skills</code> を Resource のソース・オブ・トゥルースにするか、shared domain を別に切るか</li>
+<li><code>src/shared/data</code> と Skill references の同期方法（単一ソース）</li>
+<li>既存 4 Tools の名前・引数を #108 まで維持するか</li>
+<li>Cursor Rule / Skill を optional として残す最小セット</li>
+<li>stdio / HTTP 以外のクライアント（Claude Code / VS Code 等）で Resource / Prompt をどう見せるか（#110）</li>
+</ul>
+<h2 id="issue-104-の完了対応" class="tsd-anchor-link">Issue #104 の完了対応<a href="#issue-104-の完了対応" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>完了条件</th>
+<th>この文書での対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.cursor</code> の全 Rules / Skills の役割が一覧化されている</td>
+<td>「Cursor Rules / Skills の役割」</td>
+</tr>
+<tr>
+<td><code>.agents/skills</code> の全 Skill の役割が一覧化されている</td>
+<td>「Agent Skills の役割」</td>
+</tr>
+<tr>
+<td>MCP Tools が依存している Skill / data が明確になっている</td>
+<td>「MCP Tools と Skill / data の依存関係」</td>
+</tr>
+<tr>
+<td>MCP へ移行するものと Cursor 側へ残すものが分類されている</td>
+<td>「MCP 移行対象と Cursor 残置の分類」</td>
+</tr>
+<tr>
+<td>重複しているルール・ワークフローが特定されている</td>
+<td>「重複ルール・ワークフロー」</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
+<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>On This Page</h3></summary>
+<div class="tsd-accordion-details"><a href="#mcp-cursor--agent-skills-の責務棚卸し"><span>MCP / <wbr/>Cursor / <wbr/>Agent <wbr/>Skills の責務棚卸し</span></a>
+<ul>
+<li><a href="#目的"><span>目的</span></a></li>
+<li><a href="#調査範囲"><span>調査範囲</span></a></li>
+<li><a href="#現状の配置"><span>現状の配置</span></a></li>
+<li><a href="#5-分類の枠"><span>5 分類の枠</span></a></li>
+<li><a href="#cursor-rules-skills-の役割"><span>Cursor <wbr/>Rules / <wbr/>Skills の役割</span></a></li>
+<li>
+<ul>
+<li><a href="#_"><span></span></a></li>
+<li><a href="#_-1"><span></span></a></li>
+<li><a href="#_-2"><span></span></a></li>
+<li><a href="#_-3"><span></span></a></li>
+<li><a href="#_-4"><span></span></a></li>
+<li><a href="#_-5"><span></span></a></li>
+<li><a href="#cursor-側の依存関係（要約）"><span>Cursor 側の依存関係（要約）</span></a></li></ul></li>
+<li><a href="#agent-skills-の役割"><span>Agent <wbr/>Skills の役割</span></a></li>
+<li>
+<ul>
+<li><a href="#共通構造"><span>共通構造</span></a></li>
+<li><a href="#_-6"><span></span></a></li>
+<li><a href="#_-7"><span></span></a></li>
+<li><a href="#_-8"><span></span></a></li>
+<li><a href="#_-9"><span></span></a></li>
+<li><a href="#agent-skills-と-mcp-の関係（要約）"><span>Agent <wbr/>Skills と <wbr/>MCP の関係（要約）</span></a></li></ul></li>
+<li><a href="#mcp-tools-と-skill-data-の依存関係"><span>MCP <wbr/>Tools と <wbr/>Skill / data の依存関係</span></a></li>
+<li>
+<ul>
+<li><a href="#トランスポートと入口"><span>トランスポートと入口</span></a></li>
+<li><a href="#ワークスペース解決"><span>ワークスペース解決</span></a></li>
+<li><a href="#tools-一覧と依存"><span>Tools 一覧と依存</span></a></li>
+<li><a href="#_-10"><span></span></a></li>
+<li>
+<ul>
+<li><a href="#データとガイドラインのずれ"><span>データとガイドラインのずれ</span></a></li></ul></li>
+<li><a href="#レビューエンジン"><span>レビューエンジン</span></a></li>
+<li><a href="#が依存する-cursor-側知識"><span> が依存する <wbr/>Cursor 側知識</span></a></li></ul></li>
+<li><a href="#setup-examples--readme--github-pages"><span>setup / examples / <wbr/>README / <wbr/>Git<wbr/>Hub <wbr/>Pages</span></a></li>
+<li>
+<ul>
+<li><a href="#_-11"><span></span></a></li>
+<li><a href="#_-12"><span></span></a></li>
+<li><a href="#readmemd"><span>README.md</span></a></li>
+<li><a href="#github-pages（）"><span>Git<wbr/>Hub <wbr/>Pages（）</span></a></li></ul></li>
+<li><a href="#mcp-移行対象と-cursor-残置の分類"><span>MCP 移行対象と <wbr/>Cursor 残置の分類</span></a></li>
+<li>
+<ul>
+<li><a href="#1-mcp-tool-に置くべきもの"><span>1. <wbr/>MCP <wbr/>Tool に置くべきもの</span></a></li>
+<li><a href="#2-mcp-resource-に置くべきもの"><span>2. <wbr/>MCP <wbr/>Resource に置くべきもの</span></a></li>
+<li><a href="#3-mcp-prompt-に置くべきもの"><span>3. <wbr/>MCP <wbr/>Prompt に置くべきもの</span></a></li>
+<li><a href="#4-mcp-クライアント固有設定として残すもの"><span>4. <wbr/>MCP クライアント固有設定として残すもの</span></a></li>
+<li><a href="#5-廃止可能なもの（候補。本-issue-では削除しない）"><span>5. 廃止可能なもの（候補。本 <wbr/>Issue では削除しない）</span></a></li>
+<li><a href="#分類マトリクス（要約）"><span>分類マトリクス（要約）</span></a></li></ul></li>
+<li><a href="#重複ルール・ワークフロー"><span>重複ルール・ワークフロー</span></a></li>
+<li>
+<ul>
+<li><a href="#mcp-ツールをシェルで実行するな-review-は読み取り専用"><span>MCP ツールをシェルで実行するな / review は読み取り専用</span></a></li>
+<li><a href="#標準翻訳フロー（5-手順）"><span>標準翻訳フロー（5 手順）</span></a></li>
+<li><a href="#翻訳原則（です・ます、コード非翻訳、意訳）"><span>翻訳原則（です・ます、コード非翻訳、意訳）</span></a></li>
+<li><a href="#用語・表記"><span>用語・表記</span></a></li>
+<li><a href="#ルール-id-の所属ずれ"><span>ルール <wbr/>ID の所属ずれ</span></a></li>
+<li><a href="#cursor-セットアップ手順の重複"><span>Cursor セットアップ手順の重複</span></a></li></ul></li>
+<li><a href="#105-へ渡す未決事項"><span>#105 へ渡す未決事項</span></a></li>
+<li><a href="#issue-104-の完了対応"><span>Issue #104 の完了対応</span></a></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="../modules.html">mdn-translation-ja-mcp</a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+<li>Loading...</li></ul></nav></div></div></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

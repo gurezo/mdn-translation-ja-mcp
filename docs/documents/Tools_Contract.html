@@ -1,0 +1,278 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Tools Contract | mdn-translation-ja-mcp</title><meta name="description" content="Documentation for mdn-translation-ja-mcp"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">mdn-translation-ja-mcp</a>
+<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb" aria-label="Breadcrumb">
+<li><a href="" aria-current="page">Tools Contract</a></li></ul></div>
+<div class="tsd-panel tsd-typography"><h1 id="mcp-tools-の責務と翻訳ワークフロー-api" class="tsd-anchor-link">MCP Tools の責務と翻訳ワークフロー API<a href="#mcp-tools-の責務と翻訳ワークフロー-api" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>親 Issue: <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/103">#103</a>
+本 Issue: <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/108">#108</a></p>
+<p>入力: <a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/105">#105</a> の <a href="MCP-native_Architecture.html">mcp-native.md</a>、<a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/107">#107</a> の Prompts。</p>
+<h2 id="目的" class="tsd-anchor-link">目的<a href="#目的" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>既存 4 MCP Tools の名前・引数・副作用を明文化し、翻訳ワークフロー API の粒度を固定する。Tool は決定的な repository / metadata / validation 操作に限定する。自然言語翻訳はクライアント LLM が行い、手順の合成は Prompt が担う。</p>
+<h2 id="スコープ" class="tsd-anchor-link">スコープ<a href="#スコープ" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>含める:</p>
+<ul>
+<li>既存 4 Tools の責務（引数、副作用、読み取り、やらないこと）</li>
+<li>高レベル Tool の要否判断</li>
+<li>既存 API との互換（名前・引数・副作用は維持）</li>
+</ul>
+<p>含めない:</p>
+<ul>
+<li>README / GitHub Pages の刷新（<a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/111">#111</a>）</li>
+<li>Cursor Rules / Skills の移動（<a href="https://github.com/gurezo/mdn-translation-ja-mcp/issues/109">#109</a>）</li>
+<li>レビューチェッカーのルール ID 所属変更（Tool API ではない）</li>
+</ul>
+<p>登録は <a href="../modules/create-mcp-server.html">src/create-mcp-server.ts</a>。stdio と Streamable HTTP は同じ集合を出す。</p>
+<h2 id="既存-4-tools" class="tsd-anchor-link">既存 4 Tools<a href="#既存-4-tools" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><a href="MCP-native_Architecture.html">mcp-native.md</a> の Tool 面（決定的な副作用・機械検査）を、呼び出し契約として展開する。</p>
+<p>共通制約:</p>
+<ul>
+<li>4 Tools は MCP ツールであり、シェルコマンド・npm スクリプトではない。</li>
+<li>ワークスペースは兄弟ディレクトリ、または <code>MDN_CONTENT_ROOT</code> / <code>MDN_TRANSLATED_CONTENT_ROOT</code>。</li>
+<li>LLM による自然言語翻訳はどの Tool にも含めない。</li>
+<li>CLI <code>npm run mdn:trans:review</code> は <code>mdn_trans_review</code> のフォールバックであり、MCP の必須面ではない。</li>
+</ul>
+<h3 id="_" class="tsd-anchor-link"><code>mdn_trans_start</code><a href="#_" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>実装</td>
+<td><a href="../modules/tools_trans-start.html">src/tools/trans-start.ts</a> <code>mdnTransStart</code></td>
+</tr>
+<tr>
+<td>引数</td>
+<td><code>url</code>（必須。<code>https://developer.mozilla.org/en-US/docs/...</code>）。<code>overwrite</code>（任意 boolean）</td>
+</tr>
+<tr>
+<td>副作用</td>
+<td><code>content</code> の <code>files/en-us/&lt;category&gt;/&lt;slug...&gt;/index.md</code> を <code>translated-content</code> の <code>files/ja/&lt;category&gt;/&lt;slug...&gt;/index.md</code> へコピー。親ディレクトリが無ければ作成する。既存ファイルは <code>overwrite: true</code> のときだけ上書き</td>
+</tr>
+<tr>
+<td>読み取り</td>
+<td>content の原文 <code>index.md</code></td>
+</tr>
+<tr>
+<td>やらないこと</td>
+<td>本文の翻訳、<code>_redirects.txt</code> の変更、他ドキュメントのリンク修正、<code>l10n.sourceCommit</code> の書き込み、LLM 実行</td>
+</tr>
+<tr>
+<td>典型的な次の一手</td>
+<td><code>mdn_trans_commit_get</code>（Prompt <code>mdn_translate</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>URL 側の <code>/docs/</code> はファイルパスに現れない。解決は <a href="../modules/shared_mdn-url-resolve.html">src/shared/mdn-url-resolve.ts</a>。</p>
+<h3 id="_-1" class="tsd-anchor-link"><code>mdn_trans_commit_get</code><a href="#_-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>実装</td>
+<td><a href="../modules/tools_commit-get.html">src/tools/commit-get.ts</a> <code>mdnTransCommitGet</code></td>
+</tr>
+<tr>
+<td>引数</td>
+<td><code>url</code>（必須。<code>mdn_trans_start</code> と同じ形式）</td>
+</tr>
+<tr>
+<td>副作用</td>
+<td>対応する翻訳ファイルの front-matter に <code>l10n.sourceCommit</code> を書き込む。仕様として <code>page-type</code> と <code>sidebar</code> を削除する</td>
+</tr>
+<tr>
+<td>読み取り</td>
+<td>content の git 履歴（対象原文パスの最新コミット）</td>
+</tr>
+<tr>
+<td>やらないこと</td>
+<td>原文コピー、本文の翻訳・再翻訳、glossary 置換、LLM 実行</td>
+</tr>
+<tr>
+<td>典型的な次の一手</td>
+<td>新規翻訳では Resources 参照のあとクライアント LLM が翻訳。既存訳の同期ではここで終わり（Prompt <code>mdn_sync</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>翻訳ファイルが無いときは失敗する。先に <code>mdn_trans_start</code> が必要。git 取得は <a href="../modules/git_get-source-commit.html">src/git/get-source-commit.ts</a>、front-matter は <a href="../modules/shared_translation-front-matter.html">src/shared/translation-front-matter.ts</a>。</p>
+<h3 id="_-2" class="tsd-anchor-link"><code>mdn_trans_replace_glossary</code><a href="#_-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>実装</td>
+<td><a href="../modules/tools_replace-glossary.html">src/tools/replace-glossary.ts</a> <code>mdnTransReplaceGlossary</code></td>
+</tr>
+<tr>
+<td>引数</td>
+<td><code>jaFile</code>（必須。translated-content 内の絶対パス、または <code>files/ja/</code> からの相対）</td>
+</tr>
+<tr>
+<td>副作用</td>
+<td>1 引数 <code>{{glossary(&quot;id&quot;)}}</code> を用語 JSON に基づき第 2 引数付きへ置換して保存。置換が 0 件なら書き込まない。用語未定義の id は skipped</td>
+</tr>
+<tr>
+<td>読み取り</td>
+<td>対象 <code>index.md</code> と <code>glossary-terms.json</code>（Resource <code>mdn://data/glossary-terms</code> と同一ファイル）</td>
+</tr>
+<tr>
+<td>やらないこと</td>
+<td>訳語の新規決定、ガイドライン本文の解釈、レビュー、LLM 実行。translated-content 外へのパスは拒否</td>
+</tr>
+<tr>
+<td>典型的な次の一手</td>
+<td><code>mdn_trans_review</code>（Prompt <code>mdn_translate</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>MCP はエディタの開いているファイルを知らない。<code>jaFile</code> は呼び出し側が明示する。</p>
+<h3 id="_-3" class="tsd-anchor-link"><code>mdn_trans_review</code><a href="#_-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>実装</td>
+<td><a href="../modules/tools_review.html">src/tools/review.ts</a> <code>mdnTransReview</code></td>
+</tr>
+<tr>
+<td>引数</td>
+<td><code>jaFile</code>（必須。<code>mdn_trans_replace_glossary</code> と同じパス規則）</td>
+</tr>
+<tr>
+<td>副作用</td>
+<td>なし（<code>readOnlyHint</code>）。対象ファイルへ書き込まない</td>
+</tr>
+<tr>
+<td>読み取り</td>
+<td>対象 <code>index.md</code>（<code>O_RDONLY</code>）と機械ルール（<code>review-rules.json</code>、<code>prohibited-expressions.json</code>。各 Resource と同一ファイル）</td>
+</tr>
+<tr>
+<td>やらないこと</td>
+<td>findings を理由にした自動修正、対象ファイルの整形・追記、シェルでの代替スキャン、LLM 実行。translated-content 外へのパスは拒否</td>
+</tr>
+<tr>
+<td>典型的な次の一手</td>
+<td>人手確認項目の提示（Prompt <code>mdn_review</code>）。ユーザーが明示しない限り対象ファイルは編集しない</td>
+</tr>
+</tbody>
+</table>
+<p>機械では検出しない項目（意訳の自然さ、識別子の非翻訳、カタカナと glossary の揃い、箇条書きの文体混在）は Prompt 側の人手確認に残す。</p>
+<h2 id="高レベル-tool-は追加しない" class="tsd-anchor-link">高レベル Tool は追加しない<a href="#高レベル-tool-は追加しない" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><a href="MCP-native_Architecture.html">#105</a> が保留した <code>mdn_trans_prepare</code> などの workflow Tool は <strong>追加しない</strong>。</p>
+<p>理由:</p>
+<ul>
+<li>Tool 面は決定的な副作用・機械検査に限り、手順のオーケストレーションは Prompt に置く（#105）。</li>
+<li>Prompt <code>mdn_translate</code> が既に <code>mdn_trans_start</code> → <code>mdn_trans_commit_get</code> → Resources → 翻訳 → <code>mdn_trans_replace_glossary</code> → <code>mdn_trans_review</code> を合成している（#107）。</li>
+<li><code>mdn_trans_prepare</code> は <code>start</code> と <code>commit_get</code> の合成であり、低レベル Tool と重複する。</li>
+<li>Issue #108 も自然言語翻訳を Tool に取り込まない。既存 4 を維持したうえで必要性を判断すれば足りる。</li>
+</ul>
+<p>代替は Prompt 合成である。ツール専用クライアントは 4 Tools を順に呼ぶ。戻り値の機械可読化（<code>structuredContent</code>）は名前・引数・副作用を変えずに足してよい。</p>
+<pre><code class="text">mdn_translate（Prompt）
+  ├─ mdn_trans_start
+  ├─ mdn_trans_commit_get
+  ├─ Resources（ガイドライン）
+  ├─ クライアント LLM が翻訳
+  ├─ mdn_trans_replace_glossary
+  └─ mdn_trans_review
+</code><button type="button">Copy</button></pre>
+
+<h2 id="互換" class="tsd-anchor-link">互換<a href="#互換" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li>既存 4 Tools の <strong>名前・引数・副作用の範囲は維持</strong>する。改名・統合・削除はしない。</li>
+<li>テキスト応答は維持する。<code>structuredContent</code> は互換な追加である。</li>
+<li>stdio と Streamable HTTP は同じ Tool 集合を出す。</li>
+</ul>
+<h2 id="issue-108-の完了対応" class="tsd-anchor-link">Issue #108 の完了対応<a href="#issue-108-の完了対応" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>完了条件</th>
+<th>対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>既存 Tool の責務が明文化されている</td>
+<td>本ファイル「既存 4 Tools」</td>
+</tr>
+<tr>
+<td>高レベル Tool の必要性が判断されている</td>
+<td>「追加しない」（本節）</td>
+</tr>
+<tr>
+<td>必要な場合は workflow Tool が実装されている</td>
+<td>不要のため実装しない</td>
+</tr>
+<tr>
+<td>既存 Tool との重複がない</td>
+<td>新 Tool を足さない</td>
+</tr>
+<tr>
+<td>後方互換性が考慮されている</td>
+<td>名前・引数・副作用を維持</td>
+</tr>
+<tr>
+<td>Tool のテストが更新されている</td>
+<td>実装コミットで <code>commit-get</code> / <code>replace-glossary</code> / <code>tools/list</code> を追加</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
+<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>On This Page</h3></summary>
+<div class="tsd-accordion-details"><a href="#mcp-tools-の責務と翻訳ワークフロー-api"><span>MCP <wbr/>Tools の責務と翻訳ワークフロー <wbr/>API</span></a>
+<ul>
+<li><a href="#目的"><span>目的</span></a></li>
+<li><a href="#スコープ"><span>スコープ</span></a></li>
+<li><a href="#既存-4-tools"><span>既存 4 <wbr/>Tools</span></a></li>
+<li>
+<ul>
+<li><a href="#_"><span></span></a></li>
+<li><a href="#_-1"><span></span></a></li>
+<li><a href="#_-2"><span></span></a></li>
+<li><a href="#_-3"><span></span></a></li></ul></li>
+<li><a href="#高レベル-tool-は追加しない"><span>高レベル <wbr/>Tool は追加しない</span></a></li>
+<li><a href="#互換"><span>互換</span></a></li>
+<li><a href="#issue-108-の完了対応"><span>Issue #108 の完了対応</span></a></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="../modules.html">mdn-translation-ja-mcp</a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+<li>Loading...</li></ul></nav></div></div></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

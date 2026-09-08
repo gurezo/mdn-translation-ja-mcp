@@ -1,3 +1,7 @@
+---
+title: Tools Contract
+---
+
 # MCP Tools の責務と翻訳ワークフロー API
 
 親 Issue: [#103](https://github.com/gurezo/mdn-translation-ja-mcp/issues/103)

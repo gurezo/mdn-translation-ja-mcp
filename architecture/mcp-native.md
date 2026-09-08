@@ -1,3 +1,7 @@
+---
+title: MCP-native Architecture
+---
+
 # MCP-native アーキテクチャと責務境界
 
 親 Issue: [#103](https://github.com/gurezo/mdn-translation-ja-mcp/issues/103)

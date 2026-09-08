@@ -1,3 +1,7 @@
+---
+title: Client Verification
+---
+
 # Cursor 以外の MCP クライアント検証
 
 親 Issue: [#103](https://github.com/gurezo/mdn-translation-ja-mcp/issues/103)

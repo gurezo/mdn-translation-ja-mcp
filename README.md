@@ -7,16 +7,18 @@ MDN の本文はリポジトリに含めません。手元では
 [mdn/content](https://github.com/mdn/content) および
 [mdn/translated-content](https://github.com/mdn/translated-content) を GitHub 上で **fork** し、その fork を **clone** して参照する想定です。
 
-利用者向けの詳細は GitHub Pages（TypeDoc）の次のページです。
+利用者向けの詳細は [https://gurezo.net/mdn-translation-ja-mcp/](https://gurezo.net/mdn-translation-ja-mcp/) の次のページです。
 
-- [Architecture](site/architecture.md)
-- [Getting Started](site/getting-started.md)
-- [MCP Tools](site/mcp-tools.md)
-- [MCP Resources](site/mcp-resources.md)
-- [MCP Prompts](site/mcp-prompts.md)
-- [Translation Workflow](site/translation-workflow.md)
-- [Client Integration](site/client-integration.md)
-- [Agent Skills](site/agent-skills.md)
+- [Architecture](https://gurezo.net/mdn-translation-ja-mcp/documents/Architecture.html)
+- [Getting Started](https://gurezo.net/mdn-translation-ja-mcp/documents/Getting_Started.html)
+- [MCP Tools](https://gurezo.net/mdn-translation-ja-mcp/documents/MCP_Tools.html)
+- [MCP Resources](https://gurezo.net/mdn-translation-ja-mcp/documents/MCP_Resources.html)
+- [MCP Prompts](https://gurezo.net/mdn-translation-ja-mcp/documents/MCP_Prompts.html)
+- [Translation Workflow](https://gurezo.net/mdn-translation-ja-mcp/documents/Translation_Workflow.html)
+- [Client Integration](https://gurezo.net/mdn-translation-ja-mcp/documents/Client_Integration.html)
+- [Agent Skills](https://gurezo.net/mdn-translation-ja-mcp/documents/Agent_Skills.html)
+
+移行前の公開先は [https://gurezo.github.io/mdn-translation-ja-mcp/](https://gurezo.github.io/mdn-translation-ja-mcp/) です。停止の判断は [#132](https://github.com/gurezo/mdn-translation-ja-mcp/issues/132) で行います。
 
 ## 目的
 
@@ -93,7 +95,7 @@ npm run build
 - MCP 共通: [examples/mcp/README.md](examples/mcp/README.md)（Claude Code / VS Code / Inspector）
 - Cursor: [examples/cursor/mcp.example.json](examples/cursor/mcp.example.json)
 
-クライアント別の置き場は [site/client-integration.md](site/client-integration.md) を参照してください。
+クライアント別の置き場は [Client Integration](https://gurezo.net/mdn-translation-ja-mcp/documents/Client_Integration.html) を参照してください。
 
 ### `content` / `translated-content` のパス解決
 
@@ -117,7 +119,7 @@ npm run build
 
 `jaFile` は translated-content 内の絶対パス、または `files/ja/` からの相対パスです。MCP はエディタの「開いているファイル」を知りません。
 
-詳細は [site/mcp-tools.md](site/mcp-tools.md) です。
+詳細は [MCP Tools](https://gurezo.net/mdn-translation-ja-mcp/documents/MCP_Tools.html) です。
 
 ## MCP Resources
 
@@ -133,7 +135,7 @@ npm run build
 | `mdn://data/review-rules` | 機械チェックルール（`mdn_trans_review` と同一） |
 | `mdn://data/prohibited-expressions` | 禁止・注意表現 |
 
-詳細は [site/mcp-resources.md](site/mcp-resources.md) です。
+詳細は [MCP Resources](https://gurezo.net/mdn-translation-ja-mcp/documents/MCP_Resources.html) です。
 
 ## MCP Prompts
 
@@ -145,7 +147,7 @@ npm run build
 | `mdn_sync` | `url` | 既存訳の `l10n.sourceCommit` 同期 |
 | `mdn_review` | `jaFile` | 機械レビューと人手確認項目 |
 
-詳細は [site/mcp-prompts.md](site/mcp-prompts.md) です。
+詳細は [MCP Prompts](https://gurezo.net/mdn-translation-ja-mcp/documents/MCP_Prompts.html) です。
 
 ## 翻訳フロー
 
@@ -158,7 +160,7 @@ npm run build
 5. **`mdn_trans_replace_glossary`** — `{{glossary}}` 第 2 引数を補完する
 6. **`mdn_trans_review`** — 機械チェックする（対象ファイルは変更しない）
 
-既存訳の同期は `mdn_sync`、レビューだけなら `mdn_review` です。手順の全体は [site/translation-workflow.md](site/translation-workflow.md) です。
+既存訳の同期は `mdn_sync`、レビューだけなら `mdn_review` です。手順の全体は [Translation Workflow](https://gurezo.net/mdn-translation-ja-mcp/documents/Translation_Workflow.html) です。
 
 ## Cursor integration（optional）
 
@@ -194,7 +196,7 @@ npm run inspect
 
 ## API ドキュメント（TypeDoc）
 
-TypeScript API リファレンスと上記の利用者向けページを TypeDoc で生成します（出力先は `docs/`）。
+TypeScript API リファレンスと上記の利用者向けページを TypeDoc で生成します（出力先は `docs/`）。公開済みのページは [https://gurezo.net/mdn-translation-ja-mcp/](https://gurezo.net/mdn-translation-ja-mcp/) です。
 
 ```bash
 # 生成済みドキュメントの削除

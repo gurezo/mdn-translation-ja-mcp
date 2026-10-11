@@ -110,3 +110,73 @@ Pages 用の GitHub Actions は無い。`.github/workflows/ci.yml` は `main` �
 `docs/media/` は Markdown、JSON、LICENSE、テストファイルである。HTML ではない。
 
 sitemap、`CNAME`、canonical 用の別ファイルは無い。
+
+## クリーンビルド
+
+2026-10-11、作業ブランチ上で Node.js 24.16.0 を使い、リポジトリルートで次を実行した。
+
+```bash
+npm ci
+npm run docs:build
+```
+
+どちらも成功した。TypeDoc は error 0、warning 4 で `./docs` に HTML を出した。警告は次のとおり。
+
+- `examples/mcp/` と `examples/cursor/` はディレクトリであり、出力へコピーされない
+- `architecture/mcp-native.md` と `architecture/responsibility-inventory.md` の mermaid コードブロックは、`highlightLanguages` に無いため強調表示されない
+
+再生成後のファイル数は 135 のままである。`git diff` は 69 ファイル。差分は `Defined in` の GitHub blob URL に埋め込まれたコミット SHA だけである。生成時点の `HEAD` が変わるたびにこの SHA は変わる。HTML の構造、相対パス、本文は変わらない。この SHA 差分はコミットしていない。`git checkout -- docs` でコミット済みの `docs/` に戻した。
+
+## パス
+
+HTML 116 ページを確認した。
+
+| 項目 | 結果 |
+| --- | --- |
+| ルートの `data-base` | `"./"`（`index.html`、`modules.html`、`hierarchy.html`） |
+| 1 階層下の `data-base` | `"../"` |
+| CSS / JS / SVG | 相対パス（例: `assets/style.css`、`../assets/style.css`） |
+| ルート絶対パス（`href="/`、`src="/`） | 無し |
+| `<link rel="canonical">` | 無し |
+| `sitemap.xml` | 無し |
+
+検索インデックスは別 JSON ではない。`docs/assets/search.js` が `window.searchData` を持つ。ナビゲーションも `docs/assets/navigation.js` が `window.navigationData` を持つ。検索結果とナビのリンクは `document.documentElement.dataset.base` にページ相対パスを足して作る。`data-base` が `./` または `../` なので、文書 URL のディレクトリを基準に解決する。
+
+ローカルリンク 2627 件のうち、ファイルとして存在しないのは次の 4 件だけである。いずれも `docs/documents/MCP-native_Architecture.html` にある。
+
+- `../`（README へのディレクトリリンク）
+- `../media/mcp` が 2 件、`../media/cursor` が 1 件
+
+後者は、TypeDoc がディレクトリを `media/` にコピーしない警告と一致する。サブパスに依存しない既存のリンクである。画像ファイルは `docs/assets/icons.svg` のみで、各ページから相対参照されている。
+
+外部の `http` / `https` リンクは 291 件ある。ソース定義への GitHub blob URL が中心で、公開ホスト名ではない。リポジトリ内に `gurezo.github.io` の URL は無い。
+
+## サブパス配信
+
+`docs/` を `/mdn-translation-ja-mcp/` として静的配信し、確認した。サーバーは Python の `http.server`（`127.0.0.1:4173`）。
+
+| URL | 結果 |
+| --- | --- |
+| `/mdn-translation-ja-mcp` | 301 で `/mdn-translation-ja-mcp/` へ |
+| `/mdn-translation-ja-mcp/` | 200、`text/html` |
+| `/mdn-translation-ja-mcp/index.html` | 200、`text/html` |
+| `/mdn-translation-ja-mcp/assets/style.css` | 200、`text/css` |
+| `/mdn-translation-ja-mcp/assets/main.js` | 200、`text/javascript` |
+| `/mdn-translation-ja-mcp/assets/search.js` | 200。先頭は `window.searchData` |
+| `/mdn-translation-ja-mcp/assets/navigation.js` | 200 |
+| `/mdn-translation-ja-mcp/assets/icons.svg` | 200、`image/svg+xml` |
+| `/mdn-translation-ja-mcp/documents/Getting_Started.html` | 200 |
+| `/mdn-translation-ja-mcp/functions/tools_review.mdnTransReview.html` | 200 |
+| `/mdn-translation-ja-mcp/media/README.md` | 200、`application/octet-stream`（生の Markdown） |
+| `/assets/style.css`（サイト直下） | 404 |
+
+末尾スラッシュの有無で、相対 URL の解決先が変わる。
+
+| 文書 URL | `assets/style.css` の解決先 |
+| --- | --- |
+| `https://gurezo.net/mdn-translation-ja-mcp` | `https://gurezo.net/assets/style.css`（壊れる） |
+| `https://gurezo.net/mdn-translation-ja-mcp/` | `https://gurezo.net/mdn-translation-ja-mcp/assets/style.css` |
+| `https://gurezo.net/mdn-translation-ja-mcp/index.html` | 同上 |
+| 下層の `../assets/style.css` | サブパス内の `assets/style.css` |
+
+ディレクトリ URL が末尾スラッシュ付きで開ければ、CSS、JS、検索スクリプト、SVG、下層 HTML への直接アクセスは、生成設定を変えずに動く。現行の GitHub Pages URL も同じサブパス形である。

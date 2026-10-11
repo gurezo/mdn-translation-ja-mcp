@@ -14,6 +14,7 @@
     "docs:clean": "rm -rf docs",
     "docs:build": "npm run docs:clean && typedoc --options typedoc.json",
     "docs:publish": "npm run docs:build",
+    "docs:verify": "node scripts/verify-docs-artifact.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

@@ -203,9 +203,14 @@ npm run docs:clean
 # ドキュメント生成（docs/ を再生成）
 npm run docs:build
 
+# 必須ファイルの確認
+npm run docs:verify
+
 # docs:publish は docs:build と同じ（ローカルで docs/ を更新する）
 npm run docs:publish
 ```
+
+portal への供給手順は [architecture/docs-supply.md](architecture/docs-supply.md) を参照してください。
 
 ## トラブルシュート
 

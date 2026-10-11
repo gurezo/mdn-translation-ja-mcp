@@ -18,7 +18,7 @@ MDN の本文はリポジトリに含めません。手元では
 - [Client Integration](https://gurezo.net/mdn-translation-ja-mcp/documents/Client_Integration.html)
 - [Agent Skills](https://gurezo.net/mdn-translation-ja-mcp/documents/Agent_Skills.html)
 
-移行前の公開先は [https://gurezo.github.io/mdn-translation-ja-mcp/](https://gurezo.github.io/mdn-translation-ja-mcp/) です。停止の判断は [#132](https://github.com/gurezo/mdn-translation-ja-mcp/issues/132) で行います。
+公開先はこの URL だけです。移行前の [https://gurezo.github.io/mdn-translation-ja-mcp/](https://gurezo.github.io/mdn-translation-ja-mcp/) は非公開です。リダイレクトは無く、再公開しません。
 
 ## 目的
 
@@ -196,7 +196,7 @@ npm run inspect
 
 ## API ドキュメント（TypeDoc）
 
-TypeScript API リファレンスと上記の利用者向けページを TypeDoc で生成します（出力先は `docs/`）。公開済みのページは [https://gurezo.net/mdn-translation-ja-mcp/](https://gurezo.net/mdn-translation-ja-mcp/) です。
+TypeScript API リファレンスと上記の利用者向けページを TypeDoc で生成します（出力先は `docs/`）。公開先は [https://gurezo.net/mdn-translation-ja-mcp/](https://gurezo.net/mdn-translation-ja-mcp/) だけです。
 
 ```bash
 # 生成済みドキュメントの削除
@@ -208,11 +208,17 @@ npm run docs:build
 # 必須ファイルの確認
 npm run docs:verify
 
-# docs:publish は docs:build と同じ（ローカルで docs/ を更新する）
+# docs:publish は docs:build と同じ（ローカルで docs/ を更新する。リモートへは送らない）
 npm run docs:publish
 ```
 
-portal への供給手順は [architecture/docs-supply.md](architecture/docs-supply.md) を参照してください。
+公開の主体は [gurezo/portal](https://github.com/gurezo/portal) です。このリポジトリから Firebase Hosting へはデプロイしません。
+
+ドキュメントを更新するときは、portal の `scripts/mdn-translation-ja-mcp.sha` を 40 文字のコミット SHA に差し替え、portal の `main` へマージします。ブランチ名は書きません。生成と配置の詳細は [architecture/docs-supply.md](architecture/docs-supply.md) と portal の README です。
+
+本番で問題が起きたときの戻しは、Firebase コンソールの Hosting でサイト `gurezo-portal` を開き、Release history から以前のリリースへ戻します。`hosting:clone` は、プレビューチャネルの現行リリースを live へコピーする用途です。過去リリースの選択には使いません。戻しは Angular サイトと、取り込んでいる静的ドキュメント一式を含むサイト全体の差し替えです。
+
+検証結果と、旧 GitHub Pages を再公開しない方針は [architecture/docs-migration-validation.md](architecture/docs-migration-validation.md) です。
 
 ## トラブルシュート
 
